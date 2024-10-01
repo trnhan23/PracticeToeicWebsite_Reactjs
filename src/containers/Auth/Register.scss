@@ -1,0 +1,106 @@
+.register-container {
+    .register-background {
+        height: 100vh;
+        background: url('../../assets/login-image.jpg');
+        opacity: 1;
+        align-items: center;
+
+        .register-content {
+            width: 1000px;
+            margin: auto;
+            border-radius: 10px;
+            background: white;
+            position: absolute;
+            top: 100px;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            height: 650px;
+            justify-content: center;
+            align-items: center;
+
+            display: flex;
+
+            .form-content {
+                width: 50%;
+                height: 100%;
+                margin: 0 20px !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+
+                .content-image {
+                    margin-top: 115px;
+                    background: url('../../assets/logo.png') center center no-repeat;
+                    background-size: cover;
+                    height: 200px;
+                    width: 305px;
+
+                }
+
+                .content-text {
+                    font-size: 18px;
+                    text-align: justify;
+                }
+
+            }
+
+            .sign-up {
+                width: 50%;
+                height: 100%;
+                margin-right: 20px;
+                margin-left: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+
+                .text-sign-up {
+                    font-size: 38px;
+                    text-align: center;
+                    font-weight: bold;
+                }
+
+                .sign-up-input {
+                    margin: 10px 0;
+
+                    label {
+                        font-size: 16px;
+                    }
+
+                    input {
+                        font-size: 16px;
+                    }
+
+                    .custom-input-password,
+                    .custom-confirm-password {
+                        position: relative;
+
+                        i {
+                            position: absolute;
+                            right: 10px;
+                            top: 10px;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                .btn-sign-up {
+                    width: 100%;
+                    margin: 10px 0;
+                    height: 35px;
+                    border-radius: 15px;
+                    outline: none;
+                    border: none;
+                    color: black;
+                    font-size: 18px;
+                    background-color: white;
+                    border: 1px solid;
+                    cursor: pointer;
+                }
+
+            }
+
+        }
+    }
+}

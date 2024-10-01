@@ -1,0 +1,115 @@
+.login-background {
+    height: 100vh;
+    background: url('../../assets/login-image.jpg');
+
+    .login-container {
+        width: 500px;
+        margin: auto;
+        border-radius: 10px;
+        background: white;
+        position: absolute;
+        top: 120px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 650px;
+        justify-content: center;
+        align-items: center;
+
+        .login-content {
+            padding: 15px;
+
+            .logo-login {
+                margin-left: 25px;
+                background: url('../../assets/logo.png') center center no-repeat;
+                background-size: contain;
+                height: 150px;
+                width: 500px;
+                padding-left: 10px;
+            }
+
+            .text-login {
+                text-align: center;
+                font-weight: 600;
+                font-size: 30px;
+                padding-top: 10px;
+            }
+
+            .login-input {
+                margin: 7px 0px;
+
+                .custom-input-password {
+                    position: relative;
+
+                    i {
+                        position: absolute;
+                        right: 10px;
+                        top: 10px;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .btn-login {
+                width: 100%;
+                margin: 10px 0;
+                height: 35px;
+                border-radius: 15px;
+                outline: none;
+                border: none;
+                color: black;
+                font-size: 18px;
+                background-color: white;
+                border: 1px solid;
+            }
+
+            .forgot-register {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+
+                .forgot-password,
+                .register {
+                    font-size: 12px;
+                    color: rgb(107, 103, 103);
+                }
+            }
+
+            .social-login {
+                display: flex;
+                text-align: center;
+                justify-content: center;
+                margin-top: 10px;
+
+
+                .google {
+                    font-size: 30px;
+                    background: #c32424;
+                    border-radius: 50%;
+                    height: 50px;
+                    width: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+
+                .facebook {
+                    font-size: 30px;
+                    background: #307aaf;
+                    border-radius: 50%;
+                    height: 50px;
+                    width: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

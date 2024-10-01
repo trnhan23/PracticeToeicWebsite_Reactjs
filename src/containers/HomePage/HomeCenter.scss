@@ -1,0 +1,193 @@
+.home-center-container {
+    margin-bottom: 300px;
+
+    .home-header-banner {
+        background: url('../../assets/header-background.jpg');
+        height: 400px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: bottom;
+        text-align: center;
+        position: relative;
+
+        .title1 {
+            text-align: center;
+            font-size: 50px;
+            text-shadow: 1px 1px 1px #333;
+            margin-bottom: 15px;
+            color: cornflowerblue;
+            padding-top: 80px;
+        }
+
+        .title2 {
+            text-align: center;
+            font-size: 17px;
+            margin-bottom: 15px;
+            color: cornflowerblue;
+        }
+
+        button {
+            margin: 0 auto;
+            color: white;
+            border-radius: 25px;
+            background-color: cornflowerblue;
+            cursor: pointer;
+            padding: 10px 10px;
+            font-size: 18px;
+        }
+    }
+
+    .services {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: absolute;
+        top: 375px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+    }
+
+    .service {
+        height: 250px;
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 10px;
+        background: white;
+        border: 2px solid #dee2e6;
+
+        i {
+            content: "\f1de";
+            border: 1px solid;
+            font-size: 40px;
+            border-radius: 50px;
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(100, 149, 237, 1), rgba(100, 149, 237, 0.2));
+            color: white;
+        }
+    }
+
+    .home-center-content {
+        margin-top: 200px;
+
+        .title1 {
+            text-align: center;
+            font-size: 30px;
+            text-shadow: 1px 1px 1px #333;
+            margin-bottom: 15px;
+            color: cornflowerblue;
+        }
+
+        .title2 {
+            text-align: center;
+            font-size: 15px;
+            color: black;
+
+        }
+
+        .title3 {
+            display: flex;
+            width: 100%;
+            margin-top: 30px;
+            align-items: center;
+            justify-content: center;
+
+            .title3-1 {
+                background: url('../../assets/study.jpg');
+                height: 300px;
+                width: 600px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-size: cover;
+
+            }
+
+            .title3-2 {
+                width: 50%;
+                align-content: center;
+                padding: 30px;
+
+                .title3-2-1 {
+                    color: rgb(126, 167, 243);
+                    font-size: 25px;
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+
+                .title3-2-2 {
+                    font-size: 15px;
+                    text-align: justify;
+
+                }
+            }
+        }
+
+    }
+
+    .home-center-contentnext {
+        margin-top: 30px;
+
+        .content1 {
+            text-align: center;
+            font-size: 30px;
+            text-shadow: 1px 1px 1px #333;
+            margin-bottom: 15px;
+            color: cornflowerblue;
+        }
+
+        .content2 {
+            text-align: center;
+            font-size: 15px;
+            color: black;
+
+        }
+
+        .content3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 1200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+
+            .content3s {
+                height: 250px;
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                border-radius: 10px;
+                background: white;
+                border: 2px solid #dee2e6;
+                cursor: pointer;
+                border-right: 4px solid cornflowerblue;
+
+                border-bottom: 4px solid cornflowerblue;
+
+                i {
+                    content: "\f1de";
+                    border: 1px solid;
+                    font-size: 40px;
+                    border-radius: 50px;
+                    padding: 20px;
+                    background: linear-gradient(to bottom, rgba(100, 149, 237, 1), rgba(100, 149, 237, 0.2));
+                    color: white;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+
+}
