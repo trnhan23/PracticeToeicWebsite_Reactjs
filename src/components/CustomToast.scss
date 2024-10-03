@@ -2,6 +2,7 @@
 
 .toast-container {
   .toast-item {
+    border-radius: 10px;
     white-space: pre-wrap;
     box-shadow: 0 0 5px 5px $box-shadow-color;
     -webkit-box-shadow: 0 0 5px 5px $box-shadow-color;
@@ -25,7 +26,7 @@
     .toast-close {
       position: absolute;
       right: 10px;
-      top:10px;
+      top: 10px;
       color: $common-text-color;
       font-size: $base-size;
       padding: 0;
@@ -50,6 +51,7 @@
         .fixed-scroll-bar {
           height: 50px;
         }
+
         .date {
           float: right;
           font-size: $base-size - 2px;

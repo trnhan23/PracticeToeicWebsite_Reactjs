@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import { push } from "connected-react-router";
 
 import * as actions from "../../store/actions";
-import './Login.scss';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { handleLoginApi } from '../../services/userService';
 
+import CustomScrollbars from '../../components/CustomScrollbars';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
-import CustomScrollbars from '../../components/CustomScrollbars';
+import './Login.scss';
+import { handleLoginApi } from '../../services/userService';
+
 
 
 class Login extends Component {
@@ -63,7 +64,6 @@ class Login extends Component {
         this.setState({
             isShowPassword: !this.state.isShowPassword
         })
-
     }
 
     render() {
@@ -92,7 +92,7 @@ class Login extends Component {
                                     <div className='custom-input-password' >
                                         <input className='form-control'
                                             onChange={(event) => { this.handleOnChangePassword(event) }}
-                                            type={this.state.isShowPassword ? "text" : 'password'}
+                                            type={this.state.isShowPassword ? 'text' : 'password'}
                                             placeholder='Enter your password'>
                                         </input>
                                         <span onClick={() => { this.hanldeShowHidePassword() }}>
@@ -122,7 +122,6 @@ class Login extends Component {
                     </div>
                     <HomeFooter />
                 </CustomScrollbars>
-
             </Fragment>
         )
     }
@@ -130,7 +129,7 @@ class Login extends Component {
 
 const mapStateToProps = state => {
     return {
-        language: state.app.language
+        // language: state.app.language
     };
 };
 

@@ -49,9 +49,15 @@
         }
 
         .right-content {
+            // width: 10%;
+            // display: block;
+            // align-content: center;
+
             width: 10%;
-            display: block;
+            display: flex;
             align-content: center;
+            justify-content: center;
+            align-items: center;
 
             .btn-right-content {
                 border-radius: 50px;
@@ -61,7 +67,7 @@
                 cursor: pointer;
                 border: none;
                 outline: none;
-                margin-left: 40px;
+                white-space: nowrap;
             }
         }
 

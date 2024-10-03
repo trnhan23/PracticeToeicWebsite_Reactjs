@@ -1,17 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
-import * as actions from "../../store/actions";
-import './Register.scss';
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
+import CustomScrollbars from '../../components/CustomScrollbars';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
-
-import CustomScrollbars from '../../components/CustomScrollbars';
+import * as actions from "../../store/actions";
+import './Register.scss';
 import { SIGNUP } from '../../utils';
+import { createNewUserService } from '../../services/userService';
 
+import ToastUtil from '../../utils/ToastUtil';
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +22,7 @@ class Register extends Component {
             email: '',
             password: '',
             confirmPassword: '',
+            errMessage: '',
         }
     }
 
@@ -62,8 +63,41 @@ class Register extends Component {
         }
     }
 
-    render() {
+    handleRegisterUser = async () => {
+        this.setState({ errMessage: '' });
+        try {
+            let data = await createNewUserService({
+                fullName: this.state.fullName,
+                email: this.state.email,
+                password: this.state.password
+            });
+            console.log("Users: ", data);
+            if (data && data.errCode !== 0) {
+                this.setState({
+                    errMessage: data.errMessage
+                });
+                ToastUtil.error("Registration Failed", data.errMessage);
+                this.setState({
+                    errMessage: data.errMessage
+                });
+            }
+            if (data && data.errCode === 0) {
+                // this.props.userLoginSuccess(data.user)
+                console.log('register succeeds')
+                // this.props.navigate('/home');
+            }
+        } catch (error) {
+            if (error.response) {
 
+                const errMessage = error.response.data.message;
+                this.setState({ errMessage });
+            }
+            console.log('Error', error.response || error);
+        }
+    }
+
+    render() {
+        const { showToast, errMessage, time } = this.state;
         return (
             <Fragment>
                 <HomeHeader></HomeHeader>
@@ -85,7 +119,6 @@ class Register extends Component {
                                             Hãy bắt đầu hành trình học tập của bạn ngay hôm nay và đạt được số điểm mong muốn!
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <div className='sign-up'>
@@ -147,9 +180,15 @@ class Register extends Component {
                                         </div>
 
                                     </div>
-                                    <div className='col-12' ><button className='btn-sign-up'>Sign Up</button>
+                                    <div className='col-12' style={{ color: 'red' }}>
+                                        {this.state.errMessage}
                                     </div>
-
+                                    <div className='col-12' >
+                                        <button
+                                            className='btn-sign-up'
+                                            onClick={() => { this.handleRegisterUser() }}>
+                                            Sign Up</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
