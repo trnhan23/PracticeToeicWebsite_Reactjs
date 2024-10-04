@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import HomeHeader from './HomeHeader';
 import HomeCenter from './HomeCenter';
 import HomeFooter from './HomeFooter';
+import HomeTest from './HomeTest';
+import CustomScrollbars from '../../components/CustomScrollbars';
+
 class HomePage extends Component {
 
     render() {
@@ -10,13 +13,13 @@ class HomePage extends Component {
 
         return (
             <div>
-                <HomeHeader></HomeHeader>
-                {/* <HomeHeader></HomeHeader>
-                <HomeCenter></HomeCenter>
-                <HomeFooter></HomeFooter> */}
-                <div>
-                HomePage
-                </div>
+                {/* <HomeHeader></HomeHeader> */}
+                <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
+                    <HomeHeader></HomeHeader>
+                    <HomeCenter></HomeCenter>
+                    <HomeTest></HomeTest>
+                    <HomeFooter></HomeFooter>
+                </CustomScrollbars>
             </div>
         );
     }

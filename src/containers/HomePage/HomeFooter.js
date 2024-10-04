@@ -14,21 +14,21 @@ class HomeFooter extends Component {
                     <div className='home-footer-content'>
                         <div className='footer-content1'>
                             <div className='fontcontent'>Tài nguyên</div>
-                            <p>Thư viện đề thi</p>
-                            <p>Blog</p>
-                            <p>Nhóm học tập</p>
+                            <div>Thư viện đề thi</div>
+                            <div>Blog</div>
+                            <div>Nhóm học tập</div>
                         </div>
                         <div className='footer-content2'>
                             <div className='fontcontent'>Hỗ trợ</div>
-                            <p>Hướng dẫn sử dụng</p>
-                            <p>Chăm sóc khách hàng</p>
-                            <p>Phản hồi hiếu nại</p>
+                            <div>Hướng dẫn sử dụng</div>
+                            <div>Chăm sóc khách hàng</div>
+                            <div>Phản hồi hiếu nại</div>
                         </div>
                         <div className='footer-content3'>
                             <div className='fontcontent'>SKILLUP</div>
-                            <p>Liên hệ</p>
-                            <p>Điều khoản bảo mật</p>
-                            <p>Điều khoản sử dụng</p>
+                            <div>Liên hệ</div>
+                            <div>Điều khoản bảo mật</div>
+                            <div>Điều khoản sử dụng</div>
                         </div>
                     </div>
                 </div>

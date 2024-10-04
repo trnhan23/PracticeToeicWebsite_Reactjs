@@ -11,10 +11,12 @@ class HomeCenter extends Component {
             <React.Fragment>
                 <div className='home-center-container'>
                     <div className='home-header-banner'>
-                        <div className='title1'>HỌC TIẾNG ANH MỌI LÚC MỌI NƠI</div>
-                        <div className='title2'>Website cung cấp những kiến thức cần thiết về ngữ pháp, topic từ vựng theo chủ đề. Ngoài ra bạn còn có thể thi thử online
-                            để đánh giá năng lực của bản thân</div>
-                        <button>Luyện thi ngay!</button>
+                        <div className='home-banner'>
+                            <div className='title1'>HỌC TIẾNG ANH MỌI LÚC MỌI NƠI!</div>
+                            <div className='title2'>Website cung cấp những kiến thức cần thiết về ngữ pháp, topic từ vựng theo chủ đề. Ngoài ra bạn còn có thể thi thử online
+                                để đánh giá năng lực của bản thân.</div>
+                            <button>Luyện thi ngay!</button>
+                        </div>
                     </div>
                     <div class="services">
                         <div class="service">

@@ -2,7 +2,7 @@
     margin-bottom: 300px;
 
     .home-header-banner {
-        background: url('../../assets/header-background.jpg');
+        background-image: url('../../assets/header-background.jpg');
         height: 400px;
         background-repeat: no-repeat;
         background-size: cover;
@@ -10,30 +10,37 @@
         text-align: center;
         position: relative;
 
-        .title1 {
-            text-align: center;
-            font-size: 50px;
-            text-shadow: 1px 1px 1px #333;
-            margin-bottom: 15px;
-            color: cornflowerblue;
-            padding-top: 80px;
-        }
+        .home-banner {
+            background-image: linear-gradient(rgba(66, 65, 65, 0.25), rgba(71, 71, 71, 0.1));
+            height: 400px;
 
-        .title2 {
-            text-align: center;
-            font-size: 17px;
-            margin-bottom: 15px;
-            color: cornflowerblue;
-        }
+            .title1 {
+                text-align: center;
+                font-size: 50px;
+                text-shadow: 1px 1px 1px #333;
+                margin-bottom: 15px;
+                color: #365299;
+                padding-top: 80px;
+                text-shadow: none;
+            }
 
-        button {
-            margin: 0 auto;
-            color: white;
-            border-radius: 25px;
-            background-color: cornflowerblue;
-            cursor: pointer;
-            padding: 10px 10px;
-            font-size: 18px;
+            .title2 {
+                text-align: center;
+                font-size: 17px;
+                margin-bottom: 15px;
+                color: #2C4EB5;
+            }
+
+            button {
+                margin: 0 auto;
+                color: white;
+                border-radius: 25px;
+                background-color: #35509A;
+                cursor: pointer;
+                padding: 10px 10px;
+                font-size: 18px;
+                border: none;
+            }
         }
     }
 
@@ -50,7 +57,7 @@
 
     .service {
         height: 250px;
-        width: 200px;
+        width: 250px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -77,9 +84,9 @@
         .title1 {
             text-align: center;
             font-size: 30px;
-            text-shadow: 1px 1px 1px #333;
             margin-bottom: 15px;
-            color: cornflowerblue;
+            color: #0A73AC;
+            font-weight: bold;
         }
 
         .title2 {
@@ -97,13 +104,10 @@
             justify-content: center;
 
             .title3-1 {
-                background: url('../../assets/study.jpg');
+                background: url('../../assets/study.jpg') center center no-repeat;
                 height: 300px;
-                width: 600px;
+                width: 400px;
                 background-size: contain;
-                background-repeat: no-repeat;
-                background-size: cover;
-
             }
 
             .title3-2 {
@@ -112,7 +116,7 @@
                 padding: 30px;
 
                 .title3-2-1 {
-                    color: rgb(126, 167, 243);
+                    color: #2984B6;
                     font-size: 25px;
                     text-align: center;
                     margin-bottom: 20px;
@@ -121,7 +125,6 @@
                 .title3-2-2 {
                     font-size: 15px;
                     text-align: justify;
-
                 }
             }
         }
@@ -134,9 +137,9 @@
         .content1 {
             text-align: center;
             font-size: 30px;
-            text-shadow: 1px 1px 1px #333;
             margin-bottom: 15px;
-            color: cornflowerblue;
+            color: #0A73AC;
+            font-weight: bold;
         }
 
         .content2 {
@@ -151,10 +154,10 @@
             justify-content: space-between;
             align-items: center;
             position: absolute;
-            top: 1200px;
             left: 50%;
             transform: translateX(-50%);
             width: 80%;
+            margin: 30px 0;
 
             .content3s {
                 height: 250px;

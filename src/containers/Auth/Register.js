@@ -10,8 +10,10 @@ import * as actions from "../../store/actions";
 import './Register.scss';
 import { SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
-
+import { validateAlphabetic } from '../../validation/Validated'
 import ToastUtil from '../../utils/ToastUtil';
+import _ from 'lodash';
+
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -27,9 +29,18 @@ class Register extends Component {
     }
 
     handleOnChangeFullname = (event) => {
-        this.setState({
-            fullName: event.target.value
-        })
+        const value = event.target.value;
+
+        if (validateAlphabetic(value)) {
+            this.setState({
+                errMessage: '',
+                fullName: value
+            });
+        } else {
+            this.setState({
+                errMessage: "Only alphabetic characters are allowed"
+            });
+        }
     }
 
     handleOnChangeEmail = (event) => {
@@ -66,12 +77,16 @@ class Register extends Component {
     handleRegisterUser = async () => {
         this.setState({ errMessage: '' });
         try {
+
             let data = await createNewUserService({
                 fullName: this.state.fullName,
                 email: this.state.email,
                 password: this.state.password
             });
-            console.log("Users: ", data);
+            if (data === ''){
+                ToastUtil.error("Registration Failed", "No Null");
+                return;
+            }
             if (data && data.errCode !== 0) {
                 this.setState({
                     errMessage: data.errMessage
@@ -82,9 +97,8 @@ class Register extends Component {
                 });
             }
             if (data && data.errCode === 0) {
-                // this.props.userLoginSuccess(data.user)
                 console.log('register succeeds')
-                // this.props.navigate('/home');
+                this.props.navigate('/login');
             }
         } catch (error) {
             if (error.response) {
