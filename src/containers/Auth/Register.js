@@ -10,7 +10,7 @@ import * as actions from "../../store/actions";
 import './Register.scss';
 import { SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
-import { validateAlphabetic } from '../../validation/Validated'
+import { validateAlphabetic, validateEmail } from '../../validation/Validated'
 import ToastUtil from '../../utils/ToastUtil';
 import _ from 'lodash';
 
@@ -38,15 +38,16 @@ class Register extends Component {
             });
         } else {
             this.setState({
-                errMessage: "Only alphabetic characters are allowed"
+                errMessage: "Chỉ nhập kí tự chữ"
             });
         }
     }
 
     handleOnChangeEmail = (event) => {
+        const email = event.target.value;
         this.setState({
-            email: event.target.value
-        })
+            email: email
+        });
     }
 
     handleOnChangePassword = (event) => {
@@ -74,19 +75,53 @@ class Register extends Component {
         }
     }
 
+    checkNull = () => {
+        let fullName = this.state.fullName;
+        let email = this.state.email;
+        let password = this.state.password;
+        let confPass = this.confirmPassword;
+        if (fullName === '' || email === '' || password === '' || confPass === '')
+            return false;
+        return true;
+    }
+
+    checkEmail = () => {
+        let email = this.state.email;
+        if (validateEmail(email) || email === '') {
+            this.setState({
+                errMessage: ''
+            });
+        } else {
+            this.setState({
+                errMessage: "Email không hợp lệ"
+            });
+        }
+    }
+
     handleRegisterUser = async () => {
         this.setState({ errMessage: '' });
         try {
+            //kiểm tra các trường rỗng
+            if (!this.checkNull()) {
+                this.setState({
+                    errMessage: "Nhập đầy đủ thông tin"
+                });
+                return;
+            }
+
+            //kiểm tra pass với confirmpass có giống nhau không
+            if (this.state.password !== this.state.confirmPassword) {
+                this.setState({
+                    errMessage: "Mật khẩu không trùng khớp"
+                });
+                return;
+            }
 
             let data = await createNewUserService({
                 fullName: this.state.fullName,
                 email: this.state.email,
                 password: this.state.password
             });
-            if (data === ''){
-                ToastUtil.error("Registration Failed", "No Null");
-                return;
-            }
             if (data && data.errCode !== 0) {
                 this.setState({
                     errMessage: data.errMessage
@@ -97,7 +132,6 @@ class Register extends Component {
                 });
             }
             if (data && data.errCode === 0) {
-                console.log('register succeeds')
                 this.props.navigate('/login');
             }
         } catch (error) {
@@ -156,6 +190,7 @@ class Register extends Component {
                                             placeholder='Enter your email'
                                             value={this.state.email}
                                             onChange={(event) => this.handleOnChangeEmail(event)}
+                                            onBlur={() => { this.checkEmail() }}
                                             type='email'
                                         >
                                         </input>
