@@ -8,7 +8,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import * as actions from "../../store/actions";
 import './Register.scss';
-import { SIGNUP } from '../../utils';
+import { ROLE, SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
 import { validateAlphabetic, validateEmail } from '../../validation/Validated'
 import ToastUtil from '../../utils/ToastUtil';
@@ -120,7 +120,8 @@ class Register extends Component {
             let data = await createNewUserService({
                 fullName: this.state.fullName,
                 email: this.state.email,
-                password: this.state.password
+                password: this.state.password,
+                roleId: ROLE.User
             });
             if (data && data.errCode !== 0) {
                 this.setState({

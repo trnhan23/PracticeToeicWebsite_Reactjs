@@ -17,6 +17,11 @@ export const SIGNUP = {
     PW: 'password'
 }
 
+export const ROLE = {
+    Admin: 'R1',
+    User: 'R2'
+}
+
 export const manageActions = {
     ADD: "ADD",
     EDIT: "EDIT",
