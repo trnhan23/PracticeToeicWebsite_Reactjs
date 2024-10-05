@@ -1,17 +1,65 @@
 export const adminMenu = [
-    { //hệ thống
-        name: 'menu.system.header', menus: [
+    //quản lý người dùng
+    {
+        name: 'menu.admin.parent-user-manage',
+        menus: [
             {
-                name: 'menu.system.system-administrator.header',
-                subMenus: [
-                    { name: 'menu.system.system-administrator.user-manage', link: '/system/user-manage' },
-                    { name: 'menu.system.system-administrator.user-redux', link: '/system/user-redux' },
-                    { name: 'menu.system.system-administrator.test-manage', link: '/system/test-manage' },
-                    { name: 'menu.system.system-administrator.vocabulary-manage', link: '/system/vocabulary-manage' },
-                    { name: 'menu.system.system-administrator.blog-manage', link: '/system/blog-manage' },
-                ]
+                name: 'menu.admin.user-manage.admin', link: '/system/user-manage'
             },
-            // { name: 'menu.system.system-parameter.header', link: '/system/system-parameter' },
+            {
+                name: 'menu.admin.user-manage.user'
+            },
+            {
+                name: 'menu.admin.user-manage.redux', link: '/system/user-redux'
+            },
+        ]
+    },
+
+    //quản lý bài thi
+    {
+        name: 'menu.admin.parent-test-manage',
+        menus: [
+            {
+                name: 'menu.admin.test-manage.add', link: '/system/test-manage'
+            },
+            {
+                name: 'menu.admin.test-manage.update'
+            },
+            {
+                name: 'menu.admin.test-manage.delete'
+            },
+        ]
+    },
+
+    //quản lý từ vựng
+    {
+        name: 'menu.admin.parent-vocabulary-manage',
+        menus: [
+            {
+                name: 'menu.admin.vocabulary-manage.add', link: '/system/vocabulary-manage'
+            },
+            {
+                name: 'menu.admin.vocabulary-manage.update'
+            },
+            {
+                name: 'menu.admin.vocabulary-manage.delete'
+            },
+        ]
+    },
+
+    //quản lý bài viết
+    {
+        name: 'menu.admin.parent-blog-manage',
+        menus: [
+            {
+                name: 'menu.admin.blog-manage.add', link: '/system/blog-manage'
+            },
+            {
+                name: 'menu.admin.blog-manage.update'
+            },
+            {
+                name: 'menu.admin.blog-manage.delete'
+            },
         ]
     },
 ];

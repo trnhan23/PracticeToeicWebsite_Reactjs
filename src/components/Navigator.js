@@ -47,11 +47,21 @@ class Menu extends Component {
                             </ul>
                         </div>
                     </Fragment>
-                ) : (
-                    <Link to={link} className="menu-link" onClick={onLinkClick}>
-                        <FormattedMessage id={name} />
-                    </Link>
-                )}
+                ) :
+                    // (
+                    //     <Link to={link} className="menu-link" onClick={onLinkClick}>
+                    //         <FormattedMessage id={name} />
+                    //     </Link>
+                    // )}
+                    link ? (
+                        <Link to={link} className="menu-link" onClick={onLinkClick}>
+                            <FormattedMessage id={name} />
+                        </Link>
+                    ) : (
+                        <span className="menu-link">
+                            <FormattedMessage id={name} />
+                        </span>
+                    )}
             </li>
         );
     }
@@ -67,9 +77,19 @@ class SubMenu extends Component {
         const { name, link, onLinkClick } = this.props;
         return (
             <li className={"sub-menu " + this.getItemClass(link)}>
-                <Link to={link} className="sub-menu-link" onClick={onLinkClick}>
+                {/* <Link to={link} className="sub-menu-link" onClick={onLinkClick}>
                     <FormattedMessage id={name} />
-                </Link>
+                </Link> */}
+                {link ? (
+                    <Link to={link} className="sub-menu-link" onClick={onLinkClick}>
+                        <FormattedMessage id={name} />
+                    </Link>
+                ) : (
+                    <span className="sub-menu-link">
+                        <FormattedMessage id={name} />
+                    </span>
+                )}
+
             </li>
         );
     }
