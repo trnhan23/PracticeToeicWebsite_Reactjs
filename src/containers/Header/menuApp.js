@@ -6,6 +6,9 @@ export const adminMenu = [
                 subMenus: [
                     { name: 'menu.system.system-administrator.user-manage', link: '/system/user-manage' },
                     { name: 'menu.system.system-administrator.user-redux', link: '/system/user-redux' },
+                    { name: 'menu.system.system-administrator.test-manage', link: '/system/test-manage' },
+                    { name: 'menu.system.system-administrator.vocabulary-manage', link: '/system/vocabulary-manage' },
+                    { name: 'menu.system.system-administrator.blog-manage', link: '/system/blog-manage' },
                 ]
             },
             // { name: 'menu.system.system-parameter.header', link: '/system/system-parameter' },
