@@ -38,7 +38,7 @@ class Menu extends Component {
                         >
                             <FormattedMessage id={name} />
                             <div className="icon-right">
-                                <i class="fas fa-angle-right"></i>
+                                <i className="fas fa-angle-right"></i>
                             </div>
                         </span>
                         <div>
