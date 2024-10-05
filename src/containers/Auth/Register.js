@@ -145,7 +145,6 @@ class Register extends Component {
     }
 
     render() {
-        const { showToast, errMessage, time } = this.state;
         return (
             <Fragment>
                 <HomeHeader></HomeHeader>

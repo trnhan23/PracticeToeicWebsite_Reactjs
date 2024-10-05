@@ -38,7 +38,7 @@ class Menu extends Component {
                         >
                             <FormattedMessage id={name} />
                             <div className="icon-right">
-                                <i className={"far fa-angle-right"} />
+                                <i class="fas fa-angle-right"></i>
                             </div>
                         </span>
                         <div>
@@ -48,10 +48,10 @@ class Menu extends Component {
                         </div>
                     </Fragment>
                 ) : (
-                        <Link to={link} className="menu-link" onClick={onLinkClick}>
-                            <FormattedMessage id={name} />
-                        </Link>
-                    )}
+                    <Link to={link} className="menu-link" onClick={onLinkClick}>
+                        <FormattedMessage id={name} />
+                    </Link>
+                )}
             </li>
         );
     }
@@ -161,20 +161,6 @@ class Navigator extends Component {
     componentDidMount() {
         this.checkActiveMenu();
     };
-
-    // componentWillReceiveProps(nextProps, prevState) {
-    //     const { location, setAccountMenuPath, setSettingMenuPath } = this.props;
-    //     const { location: nextLocation } = nextProps;
-    //     if (location !== nextLocation) {
-    //         let pathname = nextLocation && nextLocation.pathname;
-    //         if ((pathname.startsWith('/account/') || pathname.startsWith('/fds/account/'))) {
-    //             setAccountMenuPath(pathname);
-    //         }
-    //         if (pathname.startsWith('/settings/')) {
-    //             setSettingMenuPath(pathname);
-    //         };
-    //     };
-    // };
 
     componentDidUpdate(prevProps, prevState) {
         const { location } = this.props;

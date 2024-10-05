@@ -5,8 +5,6 @@ import './HomeCenter.scss'
 class HomeCenter extends Component {
 
     render() {
-
-
         return (
             <React.Fragment>
                 <div className='home-center-container'>

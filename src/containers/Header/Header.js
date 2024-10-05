@@ -14,12 +14,12 @@ class Header extends Component {
         return (
             <div className="header-container">
                 {/* thanh navigator */}
-                {/* <div className="header-tabs-container">
+                <div className="header-tabs-container">
                     <Navigator menus={adminMenu} />
-                </div> */}
+                </div>
 
                 {/* nút logout */}
-                <div className="btn btn-logout" onClick={processLogout}>
+                <div className="btn btn-logout" onClick={processLogout} title='Log out'>
                     <i className="fas fa-sign-out-alt"></i>
                 </div>
             </div>

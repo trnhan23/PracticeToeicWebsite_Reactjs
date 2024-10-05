@@ -13,7 +13,6 @@ class HomeHeader extends Component {
                         <div className='left-content'>
                             <div className='header-logo'></div>
                         </div>
-
                         <div className='center-content'>
                             <div className='child-content'>
                                 <div><b>Trang chủ</b></div>
