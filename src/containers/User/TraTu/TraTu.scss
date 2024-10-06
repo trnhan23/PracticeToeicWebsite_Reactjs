@@ -1,5 +1,143 @@
-.tra-tu-container {
-    border: 1px solid red;
-    height: 500px;
-    width: 100%;
+.search-vocabulary {
+    height: 100%;
+    background: url('../../../assets/SearchVocabulary/vocal.jpg') no-repeat center bottom;
+    background-size: cover;
+    text-align: center;
+    position: relative;
+    padding: 50px 0;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .search-vocabulary-container {
+        width: 1500px !important;
+        padding: 30px;
+        background-color: rgba(249, 249, 249, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        max-height: -webkit-fill-available;
+
+        .search-vocabulary-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            justify-content: center;
+
+            i {
+                font-size: 4rem;
+                margin-right: 15px;
+                color: rgba(100, 149, 237, 1);
+            }
+
+            .search-vocabulary-title-one {
+                font-size: 3rem;
+                font-weight: 700;
+                color: rgb(104, 152, 241);
+            }
+        }
+
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-vocabulary-input {
+            display: flex;
+            margin-bottom: 25px;
+
+            input {
+                flex: 1;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 1.1rem;
+                margin-right: 15px;
+                transition: border-color 0.3s;
+                font-size: 24px;
+
+                &:focus {
+                    border-color: #007BFF;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                }
+            }
+
+            button {
+                padding: 12px 24px;
+                background-color: rgba(100, 149, 237, 1);
+                ;
+                color: white;
+                border: none;
+                border-radius: 30px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+                font-size: 24px;
+
+                &:hover {
+                    background-color: #2e89eb;
+                    transform: translateY(-2px);
+                }
+            }
+        }
+
+        .search-vocabulary-content {
+            .vocabulary-result {
+                background-color: white;
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                margin-top: 20px;
+                transition: background-color 0.3s;
+                height: 550px;
+                overflow-y: auto;
+
+                &:hover {
+                    background-color: #f8f9fa;
+                }
+
+                .vocabulary-header {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 20px;
+
+
+                    h3 {
+                        margin: 0;
+                        font-size: 1.8rem;
+                        color: rgba(100, 149, 237, 1);
+                        font-weight: 600;
+                    }
+                }
+
+                .vocabulary-definition {
+                    display: flex;
+                    text-align: left;
+                    font-size: 17px;
+
+                    p {
+                        margin: 0;
+                        font-weight: 600;
+                        font-size: 1.1rem; // Tăng kích thước chữ
+                    }
+
+                    ul {
+                        margin-top: 10px;
+                        padding-left: 20px;
+                    }
+
+                    li {
+                        margin-bottom: 8px;
+                        color: #444;
+                        transition: color 0.3s;
+
+                        &:hover {
+                            color: #007BFF; // Đổi màu chữ khi hover
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
