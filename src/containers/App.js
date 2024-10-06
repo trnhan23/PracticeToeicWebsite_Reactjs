@@ -10,7 +10,7 @@ import Home from '../routes/Home';
 import Login from './Auth/Login.js';
 import System from '../routes/System';
 import { CustomToastCloseButton } from '../components/CustomToast';
-import HomePage from './HomePage/HomePage.js';
+import HomePage from './User/HomePage/HomePage.js';
 import Register from './Auth/Register.js';
 
 class App extends Component {
@@ -40,8 +40,8 @@ class App extends Component {
                     <div className="main-container">
                         <span className="content-container">
                             <Switch>
-                                <Route path={path.HOME} exact component={(Home)} />
-                                <Route path={path.HOMEPAGE} component={(HomePage)} />
+                                {/* <Route path={path.HOME} exact component={(Home)} /> */}
+                                <Route path={path.HOMEPAGE} exact component={(HomePage)} />
                                 <Route path={path.REGISTER} component={(Register)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />

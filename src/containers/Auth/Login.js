@@ -6,8 +6,8 @@ import * as actions from "../../store/actions";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import CustomScrollbars from '../../components/CustomScrollbars';
-import HomeHeader from '../HomePage/HomeHeader';
-import HomeFooter from '../HomePage/HomeFooter';
+import HomeHeader from '../User/HomePage/HomeHeader';
+import HomeFooter from '../User/HomePage/HomeFooter';
 import './Login.scss';
 import { handleLoginApi } from '../../services/userService';
 
@@ -46,8 +46,7 @@ class Login extends Component {
             }
             if (data && data.errCode === 0) {
                 let x = this.props.userLoginSuccess(data.user);
-                console.log('login succeeds: ', x);
-                // this.props.navigate('/home');
+                this.props.navigate('/home');
             }
         } catch (error) {
             if (error.response) {
@@ -65,6 +64,7 @@ class Login extends Component {
             isShowPassword: !this.state.isShowPassword
         })
     }
+
 
     render() {
         return (

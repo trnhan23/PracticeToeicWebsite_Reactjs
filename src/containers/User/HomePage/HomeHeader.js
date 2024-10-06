@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './HomeHeader.scss'
-import * as actions from "../../store/actions";
+import * as actions from "../../../store/actions";
+import { push } from "connected-react-router";
+import { path } from '../../../utils';
 
 class HomeHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isMenuOpen: false,
+            currentPath: window.location.pathname, //lấy url hiện tại
         };
         this.toggleMenu = this.toggleMenu.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -21,8 +24,12 @@ class HomeHeader extends Component {
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
 
-    toggleMenu() {
-        this.setState({ isMenuOpen: !this.state.isMenuOpen });
+    toggleMenu = (checkLogin) => {
+        if (!checkLogin) {
+            this.props.navigate('/login');
+        } else {
+            this.setState({ isMenuOpen: !this.state.isMenuOpen });
+        }
     }
 
     handleClickOutside(event) {
@@ -32,7 +39,7 @@ class HomeHeader extends Component {
     }
 
     render() {
-        const { isMenuOpen } = this.state;
+        const { isMenuOpen, currentPath } = this.state;
         const { isLoggedIn, userInfor, processLogout } = this.props;
         return (
             <React.Fragment>
@@ -43,23 +50,23 @@ class HomeHeader extends Component {
                             <div className='header-logo'></div>
                         </div>
                         <div className='center-content'>
-                            <div className='child-content'>
-                                <div><b>Trang chủ</b></div>
+                            <div className={`child-content ${currentPath === path.HOMEPAGE ? 'active' : ''}`}>
+                                <div><a href={path.HOMEPAGE}><b>Trang chủ</b></a></div>
                             </div>
-                            <div className='child-content'>
-                                <div><b>Tra từ</b></div>
+                            <div className={`child-content ${currentPath === path.SEARCHWORD ? 'active' : ''}`}>
+                                <div><a href={path.SEARCHWORD}><b>Tra từ</b></a></div>
                             </div>
-                            <div className='child-content'>
-                                <div><b>Đề thi TOEIC</b></div>
+                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                                <div><a href="#"><b>Đề thi TOEIC</b></a></div>
                             </div>
-                            <div className='child-content'>
-                                <div><b>Flashcards</b></div>
+                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                                <div><a href="#"><b>Flashcards</b></a></div>
                             </div>
-                            <div className='child-content'>
-                                <div><b>Blog</b></div>
+                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                                <div><a href="#"><b>Blog</b></a></div>
                             </div>
-                            <div className='child-content'>
-                                <div><b>Kết quả luyện thi</b></div>
+                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                                <div><a href="#"><b>Kết quả luyện thi</b></a></div>
                             </div>
                         </div>
 
@@ -70,7 +77,7 @@ class HomeHeader extends Component {
                             >
                                 <button
                                     className='btn-right-content dropdown-toggle'
-                                    onClick={this.toggleMenu}
+                                    onClick={() => { this.toggleMenu(isLoggedIn) }}
                                 >
                                     {userInfor && userInfor.fullName ? userInfor.fullName : 'Đăng nhập'}
                                 </button>
@@ -82,7 +89,7 @@ class HomeHeader extends Component {
                                         <div className="dropdown-divider"></div>
                                         <a
                                             className="dropdown-item"
-                                            href="#"
+                                            href="/login"
                                             onClick={processLogout}
                                         >
                                             Đăng xuất
@@ -90,19 +97,6 @@ class HomeHeader extends Component {
                                     </div>
                                 )}
                             </div>
-                            {/* <div className="btn-group">
-                                <button type="button" className="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Action
-                                </button>
-                                <div className="dropdown-menu">
-                                    <a className="dropdown-item" href="#">Action</a>
-                                    <a className="dropdown-item" href="#">Another action</a>
-                                    <a className="dropdown-item" href="#">Something else here</a>
-                                    <div className="dropdown-divider"></div>
-                                    <a className="dropdown-item" href="#">Separated link</a>
-                                </div>
-                            </div> */}
-
                         </div>
                     </div>
                 </div>
@@ -122,6 +116,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        navigate: (path) => dispatch(push(path)),
         processLogout: () => dispatch(actions.processLogout()),
     };
 };

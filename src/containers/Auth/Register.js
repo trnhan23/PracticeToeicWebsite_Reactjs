@@ -4,8 +4,8 @@ import { push } from "connected-react-router";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import CustomScrollbars from '../../components/CustomScrollbars';
-import HomeHeader from '../HomePage/HomeHeader';
-import HomeFooter from '../HomePage/HomeFooter';
+import HomeHeader from '../User/HomePage/HomeHeader';
+import HomeFooter from '../User/HomePage/HomeFooter';
 import * as actions from "../../store/actions";
 import './Register.scss';
 import { ROLE, SIGNUP } from '../../utils';
@@ -259,8 +259,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigate: (path) => dispatch(push(path)),
-        // userLoginFail: () => dispatch(actions.adminLoginFail()),
-        // userLoginSuccess: (userInfo) => dispatch(actions.userLoginSuccess(userInfo))
     };
 };
 

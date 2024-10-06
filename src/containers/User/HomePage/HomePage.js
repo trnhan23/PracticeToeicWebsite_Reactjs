@@ -4,7 +4,7 @@ import HomeHeader from './HomeHeader';
 import HomeCenter from './HomeCenter';
 import HomeFooter from './HomeFooter';
 import HomeTest from './HomeTest';
-import CustomScrollbars from '../../components/CustomScrollbars';
+import CustomScrollbars from '../../../components/CustomScrollbars';
 
 class HomePage extends Component {
 

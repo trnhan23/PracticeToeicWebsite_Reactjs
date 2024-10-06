@@ -1,7 +1,7 @@
 .home-footer-container {
     display: flex;
     border-top: 2px solid #aaaaaa;
-    background: url('../../assets/footer.png') center center no-repeat;
+    background: url('../../../assets/footer.png') center center no-repeat;
     //height: 170px;
 
     .home-footer-logo {
@@ -12,7 +12,7 @@
         // cursor: pointer;
 
         width: 15%;
-        background: url('../../assets/logo.png') center center no-repeat;
+        background: url('../../../assets/logo.png') center center no-repeat;
         background-size: cover;
         height: 170px;
         margin-top: 12px;

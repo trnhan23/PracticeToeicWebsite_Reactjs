@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './UserManage.scss';
-import { getAllUsers } from '../../services/userService';
+import { getAllUsers } from '../../services/userService.js';
 
-import { emitter } from "../../utils/emitter";
+import { emitter } from "../../utils/emitter.js";
 import { formatDateTime } from "../../validation/FormatDateTime.js"
 class UserManage extends Component {
 

@@ -16,13 +16,12 @@
             width: 15%;
 
             .header-logo {
-                background: url('../../assets/logo.png') center center no-repeat;
+                background: url('../../../assets/logo.png') center center no-repeat;
                 margin-top: 5px;
                 background-size: 70%;
                 height: 100%;
                 width: 100%;
                 cursor: pointer;
-
             }
         }
 
@@ -35,21 +34,53 @@
             gap: 35px;
             padding-right: 10px;
 
+            // .child-content {
+            //     cursor: pointer;
+            //     color: #707070;
+            //     font-size: 15px;
+            //     opacity: 50%;
+
+            //     &.active {
+            //         opacity: 100%;
+            //         font-weight: bold;
+            //         color: #3550A4;
+            //         &:hover {
+            //             opacity: 1;
+            //         }
+            //     }
+
+            //     &:hover {
+            //         color: #2d499c;
+            //         opacity: 80%;
+            //     }
+            // }
+
             .child-content {
                 cursor: pointer;
-                color: #707070;
                 font-size: 15px;
-                opacity: 50%;
-
-                &.active {
+            
+                a {
+                    color: #707070;
+                    opacity: 50%;
+                    text-decoration: none;
+            
+                    &:hover {
+                        color: #2d499c;
+                        opacity: 80%;
+                    }
+                }
+            
+                &.active a {
                     opacity: 100%;
                     font-weight: bold;
-                }
-
-                &:hover {
-                    opacity: 80%;
+                    color: #3550A4;
+                    
+                    &:hover {
+                        opacity: 1;
+                    }
                 }
             }
+            
         }
 
         // .right-content {

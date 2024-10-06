@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from 'react-router-dom';
-import UserManage from '../containers/System/UserManage';
-import UserRedux from '../containers/System/UserRedux';
-import TestManage from '../containers/System/TestManage';
-import VocabularyManage from '../containers/System/VocabularyManage';
-import BlogManage from '../containers/System/BlogManage';
+import UserManage from '../containers/Admin/UserManage';
+import UserRedux from '../containers/Admin/UserRedux';
+import TestManage from '../containers/Admin/TestManage';
+import VocabularyManage from '../containers/Admin/VocabularyManage';
+import BlogManage from '../containers/Admin/BlogManage';
 import Header from '../containers/Header/Header';
 class System extends Component {
     render() {
