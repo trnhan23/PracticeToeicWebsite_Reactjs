@@ -12,6 +12,7 @@ import System from '../routes/System';
 import { CustomToastCloseButton } from '../components/CustomToast';
 import HomePage from './User/HomePage/HomePage.js';
 import Register from './Auth/Register.js';
+import TraTu from './User/TraTu/TraTu.js';
 
 class App extends Component {
 
@@ -42,6 +43,7 @@ class App extends Component {
                             <Switch>
                                 {/* <Route path={path.HOME} exact component={(Home)} /> */}
                                 <Route path={path.HOMEPAGE} exact component={(HomePage)} />
+                                <Route path={path.SEARCHWORD} component={(TraTu)} />
                                 <Route path={path.REGISTER} component={(Register)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />

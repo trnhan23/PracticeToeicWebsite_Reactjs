@@ -1,7 +1,7 @@
 export const path = {
     HOME: '/',
     HOMEPAGE: '/home',
-    SEARCHWORD: 'search-word',
+    SEARCHWORD: '/search-word',
     LOGIN: '/login',
     REGISTER: '/register',
     LOG_OUT: '/logout',

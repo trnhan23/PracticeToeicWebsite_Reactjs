@@ -13,7 +13,6 @@ class HomePage extends Component {
 
         return (
             <div>
-                {/* <HomeHeader></HomeHeader> */}
                 <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
                     <HomeHeader></HomeHeader>
                     <HomeCenter></HomeCenter>
