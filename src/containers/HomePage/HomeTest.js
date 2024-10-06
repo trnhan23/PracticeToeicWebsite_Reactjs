@@ -24,11 +24,11 @@ class HomeTest extends Component {
                             <div className="toeic-test-card" key={test.id}>
                                 <div className='card-name'>{test.name}</div>
                                 <div className="test-details">
-                                    <span><i class="far fa-clock"></i> {test.time}</span>
-                                    <span><i class="far fa-user"></i> {test.code}</span>
+                                    <span><i className="far fa-clock"></i> {test.time}</span>
+                                    <span><i className="far fa-user"></i> {test.code}</span>
                                 </div>
                                 <div className="test-info">
-                                    <span><i class="far fa-comments"></i> {test.views}</span>
+                                    <span><i className="far fa-comments"></i> {test.views}</span>
                                     <span><br/>7 phần thi | {test.questions} câu hỏi</span>
                                 </div>
                                 <button className="details-button">Chi tiết</button>

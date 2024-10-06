@@ -16,19 +16,19 @@ class HomeCenter extends Component {
                             <button>Luyện thi ngay!</button>
                         </div>
                     </div>
-                    <div class="services">
-                        <div class="service">
-                            <i class="fa-solid fa-sliders"></i>
+                    <div className="services">
+                        <div className="service">
+                            <i className="fa-solid fa-sliders"></i>
                             <h3>Ngữ pháp</h3>
                             <p>Các bài học ngữ pháp từ cơ bản đến nâng cao để giúp bạn làm bài TOEIC tốt hơn.</p>
                         </div>
-                        <div class="service">
-                            <i class="fa-solid fa-pencil"></i>
+                        <div className="service">
+                            <i className="fa-solid fa-pencil"></i>
                             <h3>Luyện thi</h3>
                             <p>Cung cấp đề thi thử giúp bạn kiểm tra trình độ và chuẩn bị cho kỳ thi.</p>
                         </div>
-                        <div class="service">
-                            <i class="fa-solid fa-tree"></i>
+                        <div className="service">
+                            <i className="fa-solid fa-tree"></i>
                             <h3>Từ vựng</h3>
                             <p>Học từ vựng một cách hiệu quả qua các flashcards thông minh.</p>
                         </div>
@@ -47,19 +47,19 @@ class HomeCenter extends Component {
                     <div className='home-center-contentnext'>
                         <div className='content1' >Tính năng</div>
                         <div className='content2'>Hãy nâng cao trình độ của bạn qua những tính năng của chúng tôi</div>
-                        <div class="content3">
-                            <div class="content3s">
-                                <i class="fa-solid fa-sliders"></i>
+                        <div className="content3">
+                            <div className="content3s">
+                                <i className="fa-solid fa-sliders"></i>
                                 <h3>Học từ vựng</h3>
                                 <p>Học từ vựng thông dụng và chuyên sâu theo chủ đề</p>
                             </div>
-                            <div class="content3s">
-                                <i class="fa-solid fa-pencil"></i>
+                            <div className="content3s">
+                                <i className="fa-solid fa-pencil"></i>
                                 <h3>Tra từ vựng</h3>
                                 <p>Tra từ vựng trực tiếp trên website</p>
                             </div>
-                            <div class="content3s">
-                                <i class="fa-solid fa-tree"></i>
+                            <div className="content3s">
+                                <i className="fa-solid fa-tree"></i>
                                 <h3>Luyện thi</h3>
                                 <p>Luyện thi trực tiếp có lời giải và đáp án cụ thể</p>
                             </div>

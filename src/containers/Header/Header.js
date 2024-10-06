@@ -4,13 +4,33 @@ import { connect } from 'react-redux';
 import * as actions from "../../store/actions";
 import Navigator from '../../components/Navigator';
 import { adminMenu } from './menuApp';
+import { ROLE } from '../../utils/constant';
+import _ from 'lodash';
 import './Header.scss';
 
 class Header extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            checkRoleAdmin: false
+        }
+    }
+
+
+    componentDidMount() {
+        // const { userInfor } = this.props;
+        // if(userInfor && !_.isEmpty(userInfor)){
+        //     let role = userInfor.roleId;
+        //     if(role === ROLE.Admin){
+        //         this.setState({
+        //             checkRoleAdmin: true
+        //         })
+        //     }
+        // }
+    }
 
     render() {
         const { processLogout, userInfor } = this.props;
-
         return (
             <div className="header-container">
                 {/* thanh navigator */}
@@ -27,7 +47,6 @@ class Header extends Component {
                         <i className="fas fa-sign-out-alt"></i>
                     </div>
                 </div>
-
             </div>
         );
     }

@@ -52,24 +52,65 @@
             }
         }
 
+        // .right-content {
+        //     width: 10%;
+        //     display: flex;
+        //     align-content: center;
+        //     justify-content: center;
+        //     align-items: center;
+
+        //     .btn-right-content {
+        //         border-radius: 50px;
+        //         background: #35509A;
+        //         padding: 10px 15px;
+        //         color: white;
+        //         cursor: pointer;
+        //         border: none;
+        //         outline: none;
+        //         white-space: nowrap;
+        //     }
+        // }
         .right-content {
             width: 10%;
             display: flex;
-            align-content: center;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
 
-            .btn-right-content {
-                border-radius: 50px;
-                background: #35509A;
-                padding: 10px 15px;
-                color: white;
-                cursor: pointer;
-                border: none;
-                outline: none;
-                white-space: nowrap;
+            .user-menu {
+                position: relative;
+
+                .btn-right-content {
+                    border-radius: 50px;
+                    background: #35509A;
+                    padding: 10px 15px;
+                    color: white;
+                    cursor: pointer;
+                    border: none;
+                    outline: none;
+                    white-space: nowrap;
+                }
+
+                .dropdown-menu {
+                    position: absolute;
+                    top: 100%;
+                    right: 0;
+                    background-color: white;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                    width: 200px;
+                    z-index: 1000;
+
+                    .dropdown-item {
+                        padding: 10px;
+                        cursor: pointer;
+                        color: #333;
+                        &:hover {
+                            background-color: #f5f5f5;
+                        }
+                    }
+                }
             }
         }
-
     }
 }

@@ -4,7 +4,7 @@ import './UserManage.scss';
 import { getAllUsers } from '../../services/userService';
 
 import { emitter } from "../../utils/emitter";
-import {formatDateTime} from "../../validation/FormatDateTime.js"
+import { formatDateTime } from "../../validation/FormatDateTime.js"
 class UserManage extends Component {
 
     constructor(props) {
@@ -57,10 +57,10 @@ class UserManage extends Component {
                             {
                                 arrUsers && arrUsers.map((item, index) => {
                                     return (
-                                        <tr  key={index}>
+                                        <tr key={index}>
                                             <td>{item.email}</td>
                                             <td>{item.fullName}</td>
-                                            <td>{item.gender = 1 ? 'Nam' : 'Nữ'}</td>
+                                            <td>{item.gender === 1 ? 'Nam' : 'Nữ'}</td>
                                             <td>{item.avatar}</td>
                                             <td>{item.bio}</td>
                                             <td>{formatDateTime(item.registrationDate)}</td>
