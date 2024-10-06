@@ -13,7 +13,7 @@ import { createNewUserService } from '../../services/userService';
 import { validateAlphabetic, validateEmail } from '../../validation/Validated'
 import ToastUtil from '../../utils/ToastUtil';
 import _ from 'lodash';
-
+import { path } from '../../utils';
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -237,6 +237,12 @@ class Register extends Component {
                                             className='btn-sign-up'
                                             onClick={() => { this.handleRegisterUser() }}>
                                             Sign Up</button>
+                                    </div>
+                                    <div className='col-12' >
+                                        <div className='login-account'>
+                                            <span>Have an account? </span>
+                                            <span><a href={path.LOGIN}>Login here</a></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

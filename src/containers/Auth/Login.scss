@@ -18,14 +18,15 @@
 
         .login-content {
             padding: 15px;
+            display: flex;
+            justify-content: center;
 
             .logo-login {
                 margin-left: 25px;
                 background: url('../../assets/logo.png') center center no-repeat;
-                background-size: contain;
+                background-size: cover;
                 height: 150px;
-                width: 500px;
-                padding-left: 10px;
+                width: 300px;
             }
 
             .text-login {
@@ -37,6 +38,23 @@
 
             .login-input {
                 margin: 7px 0px;
+
+                input {
+                    flex: 1;
+                    padding: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    font-size: 1.1rem;
+                    margin-right: 15px;
+                    transition: border-color 0.3s;
+                    font-size: 14px;
+
+                    &:focus {
+                        border-color: #007BFF;
+                        outline: none;
+                        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                    }
+                }
 
                 .custom-input-password {
                     position: relative;
@@ -70,8 +88,12 @@
 
                 .forgot-password,
                 .register {
-                    font-size: 12px;
+                    font-size: 13px;
                     color: rgb(107, 103, 103);
+
+                    a {
+                        text-decoration: none;
+                    }
                 }
             }
 

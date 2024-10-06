@@ -10,7 +10,7 @@ import HomeHeader from '../User/HomePage/HomeHeader';
 import HomeFooter from '../User/HomePage/HomeFooter';
 import './Login.scss';
 import { handleLoginApi } from '../../services/userService';
-
+import { path } from '../../utils';
 
 
 class Login extends Component {
@@ -107,11 +107,11 @@ class Login extends Component {
                                 <div className='col-12' ><button className='btn-login' onClick={() => { this.handleLogin() }}>Login</button></div>
 
                                 <div className='col-12 forgot-register'>
-                                    <span className='forgot-password'>Forgot your password?</span>
-                                    <span className='register'>Register here </span>
+                                    <span className='forgot-password'><a href='#'>Forgot your password?</a></span>
+                                    <span className='register'><a href={path.REGISTER}>Register here</a></span>
                                 </div>
                                 <div className='col-12 text-center mt-3'>
-                                    <span className='text-other-login'> Or Login with:</span>
+                                    <span className='text-other-login'> Or Sign Up Using</span>
                                 </div>
                                 <div className='col-12 social-login'>
                                     <i className="fa-brands fa-google-plus-g google"></i>

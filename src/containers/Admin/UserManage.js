@@ -60,7 +60,7 @@ class UserManage extends Component {
                                         <tr key={index}>
                                             <td>{item.email}</td>
                                             <td>{item.fullName}</td>
-                                            <td>{item.gender === 1 ? 'Nam' : 'Nữ'}</td>
+                                            <td>{item.gender === true ? 'Nam' : 'Nữ'}</td>
                                             <td>{item.avatar}</td>
                                             <td>{item.bio}</td>
                                             <td>{formatDateTime(item.registrationDate)}</td>
