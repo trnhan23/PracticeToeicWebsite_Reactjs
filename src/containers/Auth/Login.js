@@ -10,6 +10,7 @@ import HomeHeader from '../User/HomePage/HomeHeader';
 import HomeFooter from '../User/HomePage/HomeFooter';
 import './Login.scss';
 import { handleLoginApi } from '../../services/userService';
+import { validateEmail } from '../../validation/Validated';
 import { path } from '../../utils';
 
 
@@ -20,33 +21,55 @@ class Login extends Component {
             email: '',
             password: '',
             isShowPassword: false,
+            isErrorEmail: false,
+            isErrorPassword: false,
             errMessage: ''
         }
     }
     handleOnChangeEmail = (event) => {
-        this.setState({
-            email: event.target.value
-        })
+        this.setState({ email: event.target.value });
     }
+
+    checkEmail = () => {
+        let email = this.state.email;
+        if (validateEmail(email) || email === '') {
+            this.setState({
+                isErrorEmail: false,
+                errMessage: ''
+            });
+        } else {
+            this.setState({
+                isErrorEmail: true,
+                errMessage: `Invalid email`
+            });
+        }
+    }
+
     handleOnChangePassword = (event) => {
         this.setState({
             password: event.target.value
         })
     }
     handleLogin = async () => {
-        this.setState({ errMessage: '' });
+        this.setState({
+            errMessage: '',
+            isErrorEmail: false,
+            isErrorPassword: false,
+        });
 
         try {
             let data = await handleLoginApi(this.state.email, this.state.password);
 
             if (data && data.errCode !== 0) {
                 this.setState({
-                    errMessage: data.message
+                    errMessage: data.message,
+                    isErrorEmail: true,
+                    isErrorPassword: true,
                 });
             }
             if (data && data.errCode === 0) {
-                let x = this.props.userLoginSuccess(data.user);
-                this.props.navigate('/home');
+                this.props.userLoginSuccess(data.user);
+                this.props.navigate(path.HOMEPAGE);
             }
         } catch (error) {
             if (error.response) {
@@ -81,8 +104,9 @@ class Login extends Component {
                                     <label>Email</label>
                                     <input value={this.state.email}
                                         onChange={(event) => this.handleOnChangeEmail(event)}
+                                        onBlur={() => { this.checkEmail() }}
                                         type='email'
-                                        className='form-control'
+                                        className={`form-control ${this.state.isErrorEmail ? 'error' : ''}`}
                                         placeholder='Enter your email'>
                                     </input>
                                 </div>
@@ -90,7 +114,7 @@ class Login extends Component {
 
                                     <label>Password</label>
                                     <div className='custom-input-password' >
-                                        <input className='form-control'
+                                        <input className={`form-control ${this.state.isErrorPassword ? 'error' : ''}`}
                                             onChange={(event) => { this.handleOnChangePassword(event) }}
                                             type={this.state.isShowPassword ? 'text' : 'password'}
                                             placeholder='Enter your password'>

@@ -6,7 +6,6 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import CustomScrollbars from '../../components/CustomScrollbars';
 import HomeHeader from '../User/HomePage/HomeHeader';
 import HomeFooter from '../User/HomePage/HomeFooter';
-import * as actions from "../../store/actions";
 import './Register.scss';
 import { ROLE, SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
@@ -38,43 +37,33 @@ class Register extends Component {
             });
         } else {
             this.setState({
-                errMessage: "Chỉ nhập kí tự chữ"
+                errMessage: `Fullname can only be entered in letters`
             });
         }
     }
 
     handleOnChangeEmail = (event) => {
-        const email = event.target.value;
-        this.setState({
-            email: email
-        });
+        this.setState({ email: event.target.value });
     }
 
     handleOnChangePassword = (event) => {
-        this.setState({
-            password: event.target.value
-        })
+        this.setState({ password: event.target.value });
     }
 
     handleOnChangeConfirmPassword = (event) => {
-        this.setState({
-            confirmPassword: event.target.value
-        })
+        this.setState({ confirmPassword: event.target.value });
     }
 
     hanldeShowHidePassword = (data) => {
         if (data === SIGNUP.PW) {
-            this.setState({
-                isShowPassword: !this.state.isShowPassword
-            })
+            this.setState({ isShowPassword: !this.state.isShowPassword });
         }
         else {
-            this.setState({
-                isShowConfirmPassword: !this.state.isShowConfirmPassword
-            })
+            this.setState({ isShowConfirmPassword: !this.state.isShowConfirmPassword });
         }
     }
 
+    // sửa cái check null này lại => sử dụng lodash
     checkNull = () => {
         let fullName = this.state.fullName;
         let email = this.state.email;
@@ -88,13 +77,9 @@ class Register extends Component {
     checkEmail = () => {
         let email = this.state.email;
         if (validateEmail(email) || email === '') {
-            this.setState({
-                errMessage: ''
-            });
+            this.setState({ errMessage: '' });
         } else {
-            this.setState({
-                errMessage: "Email không hợp lệ"
-            });
+            this.setState({ errMessage: `Invalid email` });
         }
     }
 
@@ -104,7 +89,7 @@ class Register extends Component {
             //kiểm tra các trường rỗng
             if (!this.checkNull()) {
                 this.setState({
-                    errMessage: "Nhập đầy đủ thông tin"
+                    errMessage: `Enter complete information`
                 });
                 return;
             }
@@ -112,7 +97,7 @@ class Register extends Component {
             //kiểm tra pass với confirmpass có giống nhau không
             if (this.state.password !== this.state.confirmPassword) {
                 this.setState({
-                    errMessage: "Mật khẩu không trùng khớp"
+                    errMessage: `Passwords do not match`
                 });
                 return;
             }
@@ -133,7 +118,7 @@ class Register extends Component {
                 });
             }
             if (data && data.errCode === 0) {
-                this.props.navigate('/login');
+                this.props.navigate(path.LOGIN);
             }
         } catch (error) {
             if (error.response) {
@@ -175,7 +160,7 @@ class Register extends Component {
 
                                         <label>Full Name</label>
                                         <input
-                                            className='form-control'
+                                            className={`form-control ${this.state.errMessage ? 'error' : ''}`}
                                             placeholder='Enter your full name'
                                             value={this.state.fullName}
                                             onChange={(event) => this.handleOnChangeFullname(event)}
@@ -186,7 +171,7 @@ class Register extends Component {
                                     <div className='col-12 form-group sign-up-input' >
                                         <label>Email</label>
                                         <input
-                                            className='form-control'
+                                            className={`form-control ${this.state.errMessage ? 'error' : ''}`}
                                             placeholder='Enter your email'
                                             value={this.state.email}
                                             onChange={(event) => this.handleOnChangeEmail(event)}
@@ -199,7 +184,7 @@ class Register extends Component {
                                         <label>Password</label>
                                         <div className='custom-input-password'>
                                             <input
-                                                className='form-control'
+                                                className={`form-control ${this.state.errMessage ? 'error' : ''}`}
                                                 placeholder='Enter your password'
                                                 value={this.state.password}
                                                 onChange={(event) => this.handleOnChangePassword(event)}
@@ -216,7 +201,7 @@ class Register extends Component {
                                         <label>Confirm Password</label>
                                         <div className='custom-confirm-password'>
                                             <input
-                                                className='form-control'
+                                                className={`form-control ${this.state.errMessage ? 'error' : ''}`}
                                                 placeholder='Enter your confirm password'
                                                 value={this.state.confirmPassword}
                                                 onChange={(event) => this.handleOnChangeConfirmPassword(event)}

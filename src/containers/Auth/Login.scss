@@ -46,13 +46,18 @@
                     border-radius: 5px;
                     font-size: 1.1rem;
                     margin-right: 15px;
-                    transition: border-color 0.3s;
+                    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                     font-size: 14px;
-
+            
                     &:focus {
                         border-color: #007BFF;
                         outline: none;
                         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                    }
+            
+                    &.error {
+                        border-color: red;
+                        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
                     }
                 }
 
