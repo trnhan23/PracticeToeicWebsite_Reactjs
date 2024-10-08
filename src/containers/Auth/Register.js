@@ -9,7 +9,7 @@ import HomeFooter from '../User/HomePage/HomeFooter';
 import './Register.scss';
 import { ROLE, SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
-import { validateAlphabetic, validateEmail } from '../../validation/Validated'
+import { validateAlphabetic, validateEmail, validatePassword } from '../../validation/Validated'
 import ToastUtil from '../../utils/ToastUtil';
 import _ from 'lodash';
 import { path } from '../../utils';
@@ -19,39 +19,46 @@ class Register extends Component {
         this.state = {
             isShowPassword: false,
             isShowConfirmPassword: false,
-            fullName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            errMessage: '',
+            formData: {
+                fullName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+            },
+            formErrors: {},
         }
     }
 
-    handleOnChangeFullname = (event) => {
-        const value = event.target.value;
+    handleInputChange = (event, field) => {
+        const { formData, formErrors } = this.state;
 
-        if (validateAlphabetic(value)) {
-            this.setState({
-                errMessage: '',
-                fullName: value
-            });
+        let input = event.target.value;
+        formData[field] = input;
+
+        // Cập nhật lỗi nếu có
+        if (input !== '') {
+            formErrors[field] = this.validateField(field, formData[field]);
         } else {
-            this.setState({
-                errMessage: `Fullname can only be entered in letters`
-            });
+            formErrors[field] = '';
         }
+        this.setState({ formData, formErrors });
     }
 
-    handleOnChangeEmail = (event) => {
-        this.setState({ email: event.target.value });
-    }
-
-    handleOnChangePassword = (event) => {
-        this.setState({ password: event.target.value });
-    }
-
-    handleOnChangeConfirmPassword = (event) => {
-        this.setState({ confirmPassword: event.target.value });
+    validateField = (field, value) => {
+        switch (field) {
+            case 'fullName':
+                return validateAlphabetic(value) ? '' : 'Fullname can only contain letters';
+            case 'email':
+                return validateEmail(value) ? '' : 'Invalid email';
+            case 'password': {
+                const errorMessage = validatePassword(value);
+                return errorMessage ? errorMessage : '';
+            }
+            case 'confirmPassword':
+                return value === this.state.formData.password ? '' : 'Passwords do not match';
+            default:
+                return '';
+        }
     }
 
     hanldeShowHidePassword = (data) => {
@@ -63,66 +70,35 @@ class Register extends Component {
         }
     }
 
-    // sửa cái check null này lại => sử dụng lodash
-    checkNull = () => {
-        let fullName = this.state.fullName;
-        let email = this.state.email;
-        let password = this.state.password;
-        let confPass = this.confirmPassword;
-        if (fullName === '' || email === '' || password === '' || confPass === '')
-            return false;
-        return true;
-    }
-
-    checkEmail = () => {
-        let email = this.state.email;
-        if (validateEmail(email) || email === '') {
-            this.setState({ errMessage: '' });
-        } else {
-            this.setState({ errMessage: `Invalid email` });
-        }
-    }
-
     handleRegisterUser = async () => {
-        this.setState({ errMessage: '' });
-        try {
-            //kiểm tra các trường rỗng
-            if (!this.checkNull()) {
-                this.setState({
-                    errMessage: `Enter complete information`
-                });
-                return;
-            }
+        const { formData, formErrors } = this.state;
 
-            //kiểm tra pass với confirmpass có giống nhau không
-            if (this.state.password !== this.state.confirmPassword) {
-                this.setState({
-                    errMessage: `Passwords do not match`
-                });
-                return;
-            }
+        // Check toàn bộ form có lỗi hay không
+        const hasErrors = Object.values(formErrors).some(error => error !== '') ||
+            Object.values(formData).some(value => value === '');
+
+        if (hasErrors) {
+            this.setState({ errMessage: 'Please fill all fields correctly' });
+            return;
+        }
+        try {
 
             let data = await createNewUserService({
-                fullName: this.state.fullName,
-                email: this.state.email,
-                password: this.state.password,
+                fullName: formData.fullName,
+                email: formData.email,
+                password: formData.password,
                 roleId: ROLE.User
             });
-            if (data && data.errCode !== 0) {
-                this.setState({
-                    errMessage: data.errMessage
-                });
-                ToastUtil.error("Registration Failed", data.errMessage);
-                this.setState({
-                    errMessage: data.errMessage
-                });
-            }
+
             if (data && data.errCode === 0) {
                 this.props.navigate(path.LOGIN);
+            } else {
+                this.setState({
+                    errMessage: data.errMessage
+                });
             }
         } catch (error) {
             if (error.response) {
-
                 const errMessage = error.response.data.message;
                 this.setState({ errMessage });
             }
@@ -131,6 +107,7 @@ class Register extends Component {
     }
 
     render() {
+        const { formData, formErrors } = this.state;
         return (
             <Fragment>
                 <HomeHeader></HomeHeader>
@@ -156,64 +133,73 @@ class Register extends Component {
 
                                 <div className='sign-up'>
                                     <div className='col-12 text-sign-up'>SIGN UP</div>
-                                    <div className='col-12 form-group sign-up-input' >
 
+                                    <div className='col-12 form-group sign-up-input' >
                                         <label>Full Name</label>
                                         <input
-                                            className={`form-control ${this.state.errMessage ? 'error' : ''}`}
+                                            className={`form-control ${formErrors.fullName ? 'error' : ''}`}
                                             placeholder='Enter your full name'
-                                            value={this.state.fullName}
-                                            onChange={(event) => this.handleOnChangeFullname(event)}
+                                            value={formData.fullName}
+                                            onChange={(event) => this.handleInputChange(event, 'fullName')}
                                             type='text'
-                                        >
-                                        </input>
+                                        />
                                     </div>
+                                    <div className='col-12' style={{ color: 'red' }}>
+                                        {formErrors.fullName}
+                                    </div>
+
                                     <div className='col-12 form-group sign-up-input' >
                                         <label>Email</label>
                                         <input
-                                            className={`form-control ${this.state.errMessage ? 'error' : ''}`}
+                                            className={`form-control ${formErrors.email ? 'error' : ''}`}
                                             placeholder='Enter your email'
-                                            value={this.state.email}
-                                            onChange={(event) => this.handleOnChangeEmail(event)}
-                                            onBlur={() => { this.checkEmail() }}
+                                            value={formData.email}
+                                            onChange={(event) => this.handleInputChange(event, 'email')}
                                             type='email'
-                                        >
-                                        </input>
+                                        />
                                     </div>
+                                    <div className='col-12' style={{ color: 'red' }}>
+                                        {formErrors.email}
+                                    </div>
+
                                     <div className='col-12 form-group sign-up-input' >
                                         <label>Password</label>
                                         <div className='custom-input-password'>
                                             <input
-                                                className={`form-control ${this.state.errMessage ? 'error' : ''}`}
+                                                className={`form-control ${formErrors.password ? 'error' : ''}`}
                                                 placeholder='Enter your password'
-                                                value={this.state.password}
-                                                onChange={(event) => this.handleOnChangePassword(event)}
+                                                value={formData.password}
+                                                onChange={(event) => this.handleInputChange(event, 'password')}
                                                 type={this.state.isShowPassword ? "text" : 'password'}
-                                            >
-                                            </input>
+                                            />
                                             <span onClick={() => { this.hanldeShowHidePassword(SIGNUP.PW) }}>
                                                 <i className={this.state.isShowPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}></i>
                                             </span>
                                         </div>
-
                                     </div>
+                                    <div className='col-12' style={{ color: 'red' }}>
+                                        {formErrors.password}
+                                    </div>
+
                                     <div className='col-12 form-group sign-up-input' >
                                         <label>Confirm Password</label>
                                         <div className='custom-confirm-password'>
                                             <input
-                                                className={`form-control ${this.state.errMessage ? 'error' : ''}`}
+                                                className={`form-control ${formErrors.confirmPassword ? 'error' : ''}`}
                                                 placeholder='Enter your confirm password'
-                                                value={this.state.confirmPassword}
-                                                onChange={(event) => this.handleOnChangeConfirmPassword(event)}
+                                                value={formData.confirmPassword}
+                                                onChange={(event) => this.handleInputChange(event, 'confirmPassword')}
                                                 type={this.state.isShowConfirmPassword ? "text" : 'password'}
-                                            >
-                                            </input>
+                                            />
                                             <span onClick={() => { this.hanldeShowHidePassword(SIGNUP.CP) }}>
                                                 <i className={this.state.isShowConfirmPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}></i>
                                             </span>
                                         </div>
-
                                     </div>
+                                    <div className='col-12' style={{ color: 'red' }}>
+                                        {formErrors.confirmPassword}
+                                    </div>
+
                                     <div className='col-12' style={{ color: 'red' }}>
                                         {this.state.errMessage}
                                     </div>
