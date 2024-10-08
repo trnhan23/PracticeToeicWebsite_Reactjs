@@ -5,7 +5,7 @@ import HomeFooter from '../HomePage/HomeFooter';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import * as actions from "../../../store/actions";
 import { push } from "connected-react-router";
-import { getSearchVocabularyApi } from '../../../services/vocabularyService';
+import { getSearchVocabularyApi, getAudioVocabularyApi } from '../../../services/vocabularyService';
 import './TraTu.scss'
 class TraTu extends Component {
     constructor(props) {
@@ -15,13 +15,15 @@ class TraTu extends Component {
             result: null,
             error: '',
             lang: 'en',
-            searchType: 'dictionary'
+            searchType: 'dictionary',
+            audioUS: '',
+            audioUK: ''
         };
     }
 
     handleInputChange = (event) => {
-        this.setState({ 
-            word: event.target.value 
+        this.setState({
+            word: event.target.value
         });
     };
 
@@ -58,22 +60,41 @@ class TraTu extends Component {
 
         try {
             let response = {};
-            if (searchType === 'dictionary') {
-                response = await getSearchVocabularyApi(word, lang);
-                // response = axios.get(`https://api.tracau.vn/WBBcwnwQpV89/s/${word}/${lang}`);
-            } else if (searchType === 'grammar') {
-                // response = axios.get(`https://api.tracau.vn/WBBcwnwQpV89/s/${word}/${lang}`);
-                response = await getSearchVocabularyApi(word, lang);
-            }
-            this.setState({ result: response, error: '' });
-            console.log("check res: ",this.state.result)
+            let dataAudio = {};
+            // lấy nội dung của từ
+            response = await getSearchVocabularyApi(word, lang);
+
+            // if (searchType === 'dictionary') {
+            //     response = await getSearchVocabularyApi(word, lang);
+            // } else if (searchType === 'grammar') {
+            //     response = await getSearchVocabularyApi(word, lang);
+            // }
+
+            // lấy file âm thanh của từ
+            dataAudio = await getAudioVocabularyApi(word);
+            this.setState({ 
+                result: response,
+                audioUS: dataAudio.audioUS,
+                audioUK: dataAudio.audioUK,
+                error: '' 
+            });
+            console.log("check res: ", this.state.result)
         } catch (error) {
-            this.setState({ error: 'Word not found or API error' });
+            this.setState({ error: 'Word not found! Plz enter another word!' });
+        }
+    };
+
+    playAudio = (audioUrl) => {
+        if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } else {
+            console.log("Audio URL not available");
         }
     };
 
     render() {
-        const { word, result, error, searchType } = this.state;
+        const { word, result, error, searchType, audioUS, audioUK } = this.state;
 
         return (
             <React.Fragment>
@@ -89,18 +110,34 @@ class TraTu extends Component {
                                 <input
                                     type='text'
                                     value={word}
-                                    onChange={(event) => {this.handleInputChange(event)}}
+                                    onChange={(event) => { this.handleInputChange(event) }}
                                     placeholder='Enter a word'
                                 />
-                                <button onClick={() => {this.handleSearch()}}>Tra từ</button>
+                                <button onClick={() => { this.handleSearch() }}>Tra từ</button>
                             </div>
-                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
+                            {error && <div className='search-vocabulary-input-error'>😊{error}😊</div>}
 
                             <div className='search-vocabulary-content'>
                                 {result && result.tratu && result.tratu.length > 0 && searchType === 'dictionary' && (
                                     <div className='vocabulary-result'>
                                         <div className='vocabulary-header'>
                                             <h3>Kết quả cho "{word}"</h3>
+                                        </div>
+
+                                        <div className='audio-controls'>
+                                            { }
+                                            {audioUS && (
+                                                <a onClick={() => this.playAudio(audioUS)} className="us" title="Phát âm (US)">
+                                                    <i className="fas fa-volume-up"> US</i>
+                                                </a>
+                                            )}
+                                            { }
+                                            {audioUK && (
+                                                <a onClick={() => this.playAudio(audioUK)} className="uk" title="Phát âm (UK)">
+                                                    <i className="fas fa-volume-up"> UK</i>
+                                                </a>
+                                            )}
                                         </div>
 
                                         <div className='vocabulary-definition'>

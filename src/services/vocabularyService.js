@@ -9,8 +9,18 @@ const getSearchVocabularyApi = async (word, language) => {
     })
 };
 
+const getAudioVocabularyApi = async (word) => {
+    return await axios.get('/api/audio-vocabulary', {
+        params: {
+            word: word
+        }
+    })
+};
+
 export {
     getSearchVocabularyApi,
+    getAudioVocabularyApi,
+
 }
 
 
