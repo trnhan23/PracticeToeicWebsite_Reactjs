@@ -1,1 +1,15 @@
 @import "../styles/common.scss";
+
+.custom-toast {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+}
+
+.custom-body {
+    font-size: 16px;
+}
+
+.custom-progress {
+    background-color: #ffcc00;
+}

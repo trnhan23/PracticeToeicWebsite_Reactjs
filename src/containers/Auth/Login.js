@@ -12,6 +12,7 @@ import './Login.scss';
 import { handleLoginApi } from '../../services/userService';
 import { validateEmail } from '../../validation/Validated';
 import { path } from '../../utils';
+import { toast } from 'react-toastify';
 
 
 class Login extends Component {
@@ -68,6 +69,7 @@ class Login extends Component {
                 });
             }
             if (data && data.errCode === 0) {
+                toast.success("Login success");
                 this.props.userLoginSuccess(data.user);
                 this.props.navigate(path.HOMEPAGE);
             }

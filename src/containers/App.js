@@ -6,13 +6,12 @@ import { history } from '../redux'
 import { ToastContainer } from 'react-toastify';
 import { userIsAuthenticated, userIsNotAuthenticated } from '../hoc/authentication';
 import { path } from '../utils'
-import Home from '../routes/Home';
 import Login from './Auth/Login.js';
 import System from '../routes/System';
-import { CustomToastCloseButton } from '../components/CustomToast';
 import HomePage from './User/HomePage/HomePage.js';
 import Register from './Auth/Register.js';
 import TraTu from './User/TraTu/TraTu.js';
+import { toast, Zoom } from 'react-toastify';
 
 class App extends Component {
 
@@ -50,12 +49,30 @@ class App extends Component {
                             </Switch>
                         </span>
 
-                        <ToastContainer
+                        {/* <ToastContainer
                             className="toast-container" toastClassName="toast-item" bodyClassName="toast-item-body"
                             autoClose={false} hideProgressBar={true} pauseOnHover={false}
                             pauseOnFocusLoss={true} closeOnClick={false} draggable={false}
                             closeButton={<CustomToastCloseButton />}
+                        /> */}
+                        <ToastContainer
+                            position="bottom-right"
+                            autoClose={5000}
+                            className='custom-toast'
+                            bodyClassName='custom-body'
+                            progressClassName='custom-progress'
+                            icon="🚀"
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="light"
+                            transition={Zoom}
                         />
+
                     </div>
                 </Router>
             </Fragment>
