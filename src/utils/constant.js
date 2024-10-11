@@ -1,7 +1,8 @@
 export const path = {
     HOME: '/',
     HOMEPAGE: '/home',
-    SEARCHWORD: '/search-word',
+    SEARCH_WORD: '/search-word',
+    TOEIC_EXAM: '/toeic-exam',
     LOGIN: '/login',
     REGISTER: '/register',
     LOG_OUT: '/logout',

@@ -53,11 +53,11 @@ class HomeHeader extends Component {
                             <div className={`child-content ${currentPath === path.HOMEPAGE ? 'active' : ''}`}>
                                 <div><a href={path.HOMEPAGE}><b>Trang chủ</b></a></div>
                             </div>
-                            <div className={`child-content ${currentPath === path.SEARCHWORD ? 'active' : ''}`}>
-                                <div><a href={path.SEARCHWORD}><b>Tra từ</b></a></div>
+                            <div className={`child-content ${currentPath === path.SEARCH_WORD ? 'active' : ''}`}>
+                                <div><a href={path.SEARCH_WORD}><b>Tra từ</b></a></div>
                             </div>
-                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
-                                <div><a href="#"><b>Đề thi TOEIC</b></a></div>
+                            <div className={`child-content ${currentPath === path.TOEIC_EXAM ? 'active' : ''}`}>
+                                <div><a href={path.TOEIC_EXAM}><b>Đề thi TOEIC</b></a></div>
                             </div>
                             <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
                                 <div><a href="#"><b>Flashcards</b></a></div>
@@ -100,7 +100,6 @@ class HomeHeader extends Component {
                         </div>
                     </div>
                 </div>
-
             </React.Fragment>
         );
     }

@@ -6,8 +6,8 @@ import CustomScrollbars from '../../../components/CustomScrollbars';
 import * as actions from "../../../store/actions";
 import { push } from "connected-react-router";
 import { getSearchVocabularyApi, getAudioVocabularyApi } from '../../../services/vocabularyService';
-import './TraTu.scss'
-class TraTu extends Component {
+import './SearchVocabulary.scss'
+class SearchVocabulary extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -64,19 +64,13 @@ class TraTu extends Component {
             // lấy nội dung của từ
             response = await getSearchVocabularyApi(word, lang);
 
-            // if (searchType === 'dictionary') {
-            //     response = await getSearchVocabularyApi(word, lang);
-            // } else if (searchType === 'grammar') {
-            //     response = await getSearchVocabularyApi(word, lang);
-            // }
-
             // lấy file âm thanh của từ
             dataAudio = await getAudioVocabularyApi(word);
-            this.setState({ 
+            this.setState({
                 result: response,
                 audioUS: dataAudio.audioUS,
                 audioUK: dataAudio.audioUK,
-                error: '' 
+                error: ''
             });
             console.log("check res: ", this.state.result)
         } catch (error) {
@@ -115,7 +109,6 @@ class TraTu extends Component {
                                 />
                                 <button onClick={() => { this.handleSearch() }}>Tra từ</button>
                             </div>
-                            {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
                             {error && <div className='search-vocabulary-input-error'>😊{error}😊</div>}
 
                             <div className='search-vocabulary-content'>
@@ -126,13 +119,11 @@ class TraTu extends Component {
                                         </div>
 
                                         <div className='audio-controls'>
-                                            { }
                                             {audioUS && (
                                                 <a onClick={() => this.playAudio(audioUS)} className="us" title="Phát âm (US)">
                                                     <i className="fas fa-volume-up"> US</i>
                                                 </a>
                                             )}
-                                            { }
                                             {audioUK && (
                                                 <a onClick={() => this.playAudio(audioUK)} className="uk" title="Phát âm (UK)">
                                                     <i className="fas fa-volume-up"> UK</i>
@@ -148,6 +139,7 @@ class TraTu extends Component {
                             </div>
                         </div>
                     </div>
+                    <HomeFooter />
                 </CustomScrollbars>
             </React.Fragment>
         );
@@ -168,4 +160,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TraTu);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchVocabulary);
