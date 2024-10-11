@@ -6,11 +6,15 @@ class CategoryExamTitle extends Component {
         const { categories } = this.props;
         return (
             <div className="category-exam-container">
-                {categories.map((category) => (
-                    <button key={category.id} className="category-exam-button">
-                        {category.title}
-                    </button>
-                ))}
+                {categories && categories.length > 0 ? (
+                    categories.map((category) => (
+                        <button key={category.id} className="category-exam-button">
+                            {category.titleCategoryExams}
+                        </button>
+                    ))
+                ) : (
+                    <div>No categories available</div> // Thông báo nếu không có danh mục
+                )}
             </div>
         );
     }

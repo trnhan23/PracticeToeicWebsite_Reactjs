@@ -7,44 +7,127 @@ import { push } from "connected-react-router";
 import './ToeicExam.scss';
 import CategoryExamTitle from '../../../components/Category/CategoryExamTitle';
 import CategoryExam from '../../../components/Category/CategoryExam';
+import { getAllCategoryExams } from '../../../services/categoryExamService';
 class ToeicExam extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
+            categoryExamTitles: {},
+            categoryExams: {},
+            exams: {},
+            loading: true,
+            errMessage: ''
         };
     }
-    render() {
-        const categories = [
-            { id: 1, title: '2024' },
-            { id: 2, title: '2023' },
-            { id: 3, title: '2022' },
-            { id: 4, title: '2021' },
-            { id: 5, title: '2020' },
-            { id: 6, title: '2019' },
-            { id: 7, title: '2018' },
-            { id: 8, title: 'New Economy' },
-            { id: 9, title: 'ETS (old format)' }
-        ];
 
-        const exams = [
-            { id: 1, name: 'Toeic Test 1', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 2, name: 'Toeic Test 2', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 3, name: 'Toeic Test 3', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 4, name: 'Toeic Test 4', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 5, name: 'Toeic Test 5', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 6, name: 'Toeic Test 6', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 7, name: 'Toeic Test 7', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 8, name: 'Toeic Test 8', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 9, name: 'Toeic Test 1', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 10, name: 'Toeic Test 2', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 11, name: 'Toeic Test 3', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 12, name: 'Toeic Test 4', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 13, name: 'Toeic Test 5', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 14, name: 'Toeic Test 6', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 15, name: 'Toeic Test 7', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 16, name: 'Toeic Test 8', time: '120 phút', code: '555555', views: 784, questions: 200 },
-        ];
+    componentDidMount = () => {
+        this.handleCategoryExam();
+    }
+
+    handleCategoryTitle = (data) => {
+        const uniqueIdTitles = new Set();
+        const cateExamTitles = [];
+
+        data.forEach((exam) => {
+            if (!uniqueIdTitles.has(exam.id)) {
+                uniqueIdTitles.add(exam.id);
+                cateExamTitles.push({
+                    id: exam.id,
+                    titleCategoryExams: exam.titleCategoryExam
+                });
+            }
+        });
+
+        this.setState({
+            loading: false,
+            categoryExamTitles: cateExamTitles
+        });
+
+        console.log("Title exam: ", cateExamTitles)
+    }
+
+    handleCateExam = (data) => {
+        const cateExams = [];
+    
+        data.forEach((exam) => {
+            if (exam.categoryExamData && exam.categoryExamData.id) {
+                cateExams.push({
+                    id: exam.categoryExamData.id,
+                    titleExam: exam.categoryExamData.titleExam,
+                    stateExam: exam.categoryExamData.stateExam,
+                    countUserTest: exam.categoryExamData.countUserTest
+                });
+            }
+        });
+    
+        this.setState({
+            loading: false,
+            categoryExams: cateExams
+        });
+    
+        console.log("Exams: ", cateExams);
+    };
+    
+
+    handleCategoryExam = async () => {
+        try {
+            const res = await getAllCategoryExams('ALL');
+            if (res.errCode === 0) {
+                
+                // lấy title
+                this.handleCategoryTitle(res.cateExams);
+
+                // lấy exams
+                this.handleCateExam(res.cateExams);
+            } else {
+                console.error('Error fetching exams:', res);
+                this.setState({
+                    loading: false,
+                    errMessage: res.errMessage
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching exams:', error);
+            this.setState({
+                loading: false,
+                errMessage: 'Failed to fetch exams.'
+            });
+        }
+    }
+
+    render() {
+        const { categoryExamTitles, loading, errMessage, categoryExams } = this.state;
+
+        // Thêm một loader hoặc thông báo khi đang tải
+        if (loading) {
+            return <div>Loading...</div>;
+        }
+
+        // Thông báo lỗi nếu có
+        if (errMessage) {
+            return <div>Error: {errMessage}</div>;
+        }
+
+        // const exams = [
+        //     { id: 1, titleExam: 'Toeic Test 1', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 2, titleExam: 'Toeic Test 2', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 3, titleExam: 'Toeic Test 3', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 4, titleExam: 'Toeic Test 4', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 5, titleExam: 'Toeic Test 5', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 6, titleExam: 'Toeic Test 6', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 7, titleExam: 'Toeic Test 7', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 8, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 9, titleExam: 'Toeic Test 1', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 10, titleExam: 'Toeic Test 2', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 11, titleExam: 'Toeic Test 3', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 12, titleExam: 'Toeic Test 4', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 13, titleExam: 'Toeic Test 5', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 14, titleExam: 'Toeic Test 6', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 15, titleExam: 'Toeic Test 7', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 16, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        //     { id: 17, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
+        // ];
 
         return (
             <React.Fragment>
@@ -55,7 +138,7 @@ class ToeicExam extends Component {
                             <div className='toeic-exam-title'>Thư viện đề thi Toeic</div>
 
                             <div className='toeic-category-exam-title'>
-                                <CategoryExamTitle categories={categories} />
+                                <CategoryExamTitle categories={categoryExamTitles} />
                             </div>
 
                             <div className='toeic-exam-search'>
@@ -68,7 +151,7 @@ class ToeicExam extends Component {
                             </div>
 
                             <div className='toeic-exam'>
-                                <CategoryExam exams={exams}/>
+                                <CategoryExam exams={categoryExams} />
                             </div>
 
                         </div>
