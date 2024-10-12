@@ -10,8 +10,7 @@ import './Register.scss';
 import { ROLE, SIGNUP } from '../../utils';
 import { createNewUserService } from '../../services/userService';
 import { validateAlphabetic, validateEmail, validatePassword } from '../../validation/Validated'
-import ToastUtil from '../../utils/ToastUtil';
-import _ from 'lodash';
+
 import { path } from '../../utils';
 class Register extends Component {
     constructor(props) {

@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from "../../store/actions";
 import Navigator from '../../components/Navigator';
 import { adminMenu } from './menuApp';
-import { ROLE } from '../../utils/constant';
-import _ from 'lodash';
+
 import './Header.scss';
 
 class Header extends Component {

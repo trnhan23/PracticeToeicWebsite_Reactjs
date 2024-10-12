@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import CustomScrollbars from '../../../components/CustomScrollbars';
-import * as actions from "../../../store/actions";
 import { push } from "connected-react-router";
 import { getSearchVocabularyApi, getAudioVocabularyApi } from '../../../services/vocabularyService';
 import './SearchVocabulary.scss'

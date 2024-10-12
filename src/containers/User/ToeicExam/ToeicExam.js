@@ -49,7 +49,7 @@ class ToeicExam extends Component {
 
     handleCateExam = (data) => {
         const cateExams = [];
-    
+
         data.forEach((exam) => {
             if (exam.categoryExamData && exam.categoryExamData.id) {
                 cateExams.push({
@@ -60,21 +60,21 @@ class ToeicExam extends Component {
                 });
             }
         });
-    
+
         this.setState({
             loading: false,
             categoryExams: cateExams
         });
-    
+
         console.log("Exams: ", cateExams);
     };
-    
+
 
     handleCategoryExam = async () => {
         try {
             const res = await getAllCategoryExams('ALL');
             if (res.errCode === 0) {
-                
+
                 // lấy title
                 this.handleCategoryTitle(res.cateExams);
 
@@ -98,36 +98,14 @@ class ToeicExam extends Component {
 
     render() {
         const { categoryExamTitles, loading, errMessage, categoryExams } = this.state;
-
         // Thêm một loader hoặc thông báo khi đang tải
         if (loading) {
             return <div>Loading...</div>;
         }
-
         // Thông báo lỗi nếu có
         if (errMessage) {
             return <div>Error: {errMessage}</div>;
         }
-
-        // const exams = [
-        //     { id: 1, titleExam: 'Toeic Test 1', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 2, titleExam: 'Toeic Test 2', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 3, titleExam: 'Toeic Test 3', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 4, titleExam: 'Toeic Test 4', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 5, titleExam: 'Toeic Test 5', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 6, titleExam: 'Toeic Test 6', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 7, titleExam: 'Toeic Test 7', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 8, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 9, titleExam: 'Toeic Test 1', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 10, titleExam: 'Toeic Test 2', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 11, titleExam: 'Toeic Test 3', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 12, titleExam: 'Toeic Test 4', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 13, titleExam: 'Toeic Test 5', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 14, titleExam: 'Toeic Test 6', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 15, titleExam: 'Toeic Test 7', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 16, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        //     { id: 17, titleExam: 'Toeic Test 8', time: '120 phút', countUserTest: '555555', views: 784, questions: 200 },
-        // ];
 
         return (
             <React.Fragment>

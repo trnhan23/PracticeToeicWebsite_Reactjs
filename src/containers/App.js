@@ -12,7 +12,7 @@ import HomePage from './User/HomePage/HomePage.js';
 import Register from './Auth/Register.js';
 import SearchVocabulary from './User/SearchVocabulary/SearchVocabulary.js';
 import ToeicExam from './User/ToeicExam/ToeicExam.js';
-import { toast, Zoom } from 'react-toastify';
+import { Zoom } from 'react-toastify';
 class App extends Component {
 
     handlePersistorState = () => {
