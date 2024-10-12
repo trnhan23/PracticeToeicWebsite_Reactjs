@@ -3,7 +3,12 @@ import './CategoryExamTitle.scss';
 
 class CategoryExamTitle extends Component {
 
+    // componentDidMount = () => {
+    //     this.handleCategoryClick(this.props.selectedTitleId);
+    // }
+
     handleCategoryClick = (id) => {
+        console.log("Check cateExamTitle ID: ", id);
         this.props.onSelectCategory(id);
     };
 

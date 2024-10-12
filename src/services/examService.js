@@ -1,9 +1,10 @@
 import axios from "../axios"
 
-const getAllExams = (inputId) => {
+const getAllExams = (examId, cateExamId) => {
     return axios.get('/api/get-all-exam', {
         params: {
-            id: inputId
+            examId: examId,
+            cateExamId: cateExamId
         }
     })
 }

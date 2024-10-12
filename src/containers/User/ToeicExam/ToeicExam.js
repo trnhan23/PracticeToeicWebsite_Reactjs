@@ -9,14 +9,15 @@ import CategoryExamTitle from '../../../components/Category/CategoryExamTitle';
 import CategoryExam from '../../../components/Category/CategoryExam';
 import Loading from '../../../components/Loading/Loading';
 import { getAllCategoryExams } from '../../../services/categoryExamService';
+import { getAllExams } from '../../../services/examService';
 class ToeicExam extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            categoryExamTitles: {},
-            categoryExams: {},
-            exams: {},
+            categoryExamTitles: [],
+            categoryExams: [],
+            exams: [],
             selectedTitleId: '',
             loading: true,
             errMessage: ''
@@ -27,72 +28,80 @@ class ToeicExam extends Component {
         this.handleCategoryExam();
     }
 
-    handleCategoryTitle = (data) => {
-        const uniqueIdTitles = new Set();
-        const cateExamTitles = [];
-
-        data.forEach((exam) => {
-            if (!uniqueIdTitles.has(exam.id)) {
-                uniqueIdTitles.add(exam.id);
-                cateExamTitles.push({
-                    id: exam.id,
-                    titleCategoryExams: exam.titleCategoryExam
-                });
-            }
-        });
-        // lấy id đầu tiên trong mảng Set
-        const firstId = [...uniqueIdTitles][0];
-
-        this.setState({
-            loading: false,
-            selectedTitleId: firstId,
-            categoryExamTitles: cateExamTitles
-        });
-
-        console.log("Title exam: ", cateExamTitles);
-        console.log("First id title: ", this.state.selectedTitleId);
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.selectedTitleId !== this.state.selectedTitleId) {
+            this.handleCateExam();
+        }
     }
 
-    handleCateExam = (data) => {
+    handleCategoryTitle = async () => {
+        const res = await getAllCategoryExams('ALL');
+        if (res.errCode === 0) {
+            const uniqueIdTitles = new Set();
+            const cateExamTitles = [];
+
+            res.cateExams.forEach((exam) => {
+                if (!uniqueIdTitles.has(exam.id)) {
+                    uniqueIdTitles.add(exam.id);
+                    cateExamTitles.push({
+                        id: exam.id,
+                        titleCategoryExams: exam.titleCategoryExam
+                    });
+                }
+            });
+
+            const firstId = [...uniqueIdTitles][0];
+
+            this.setState({
+                loading: false,
+                selectedTitleId: firstId,
+                categoryExamTitles: cateExamTitles
+            }, () => {
+                console.log("The first title exam id: ", this.state.selectedTitleId);
+            });
+
+        } else {
+            console.error('Error handleCategoryTitle:', res);
+            this.setState({
+                loading: false,
+                errMessage: res.errMessage
+            });
+        }
+    }
+
+    handleCateExam = async () => {
+        const res = await getAllExams('ALL', this.state.selectedTitleId);
         const cateExams = [];
+        if (res.errCode === 0) {
+            res.exams.forEach((exam) => {
+                if (exam && exam.id) {
+                    cateExams.push({
+                        id: exam.id,
+                        titleExam: exam.titleExam,
+                        stateExam: exam.stateExam,
+                        countUserTest: exam.countUserTest
+                    });
+                }
+            });
 
-        data.forEach((exam) => {
-            if (exam.categoryExamData && exam.categoryExamData.id) {
-                cateExams.push({
-                    id: exam.categoryExamData.id,
-                    titleExam: exam.categoryExamData.titleExam,
-                    stateExam: exam.categoryExamData.stateExam,
-                    countUserTest: exam.categoryExamData.countUserTest
-                });
-            }
-        });
-
-        this.setState({
-            loading: false,
-            categoryExams: cateExams
-        });
-
-        console.log("Exams: ", cateExams);
+            this.setState({
+                loading: false,
+                categoryExams: cateExams
+            });
+        } else {
+            console.error('Error handleCateExam:', res);
+            this.setState({
+                loading: false,
+                errMessage: res.errMessage
+            });
+        }
     };
 
 
     handleCategoryExam = async () => {
         try {
-            const res = await getAllCategoryExams('ALL');
-            if (res.errCode === 0) {
-
-                // lấy title
-                this.handleCategoryTitle(res.cateExams);
-
-                // lấy exams
-                this.handleCateExam(res.cateExams);
-            } else {
-                console.error('Error fetching exams:', res);
-                this.setState({
-                    loading: false,
-                    errMessage: res.errMessage
-                });
-            }
+            await this.handleCategoryTitle();
+            await this.handleCateExam();
         } catch (error) {
             console.error('Error fetching exams:', error);
             this.setState({
@@ -102,18 +111,15 @@ class ToeicExam extends Component {
         }
     }
 
-    // lấy giá trị id từ category title
     handleSelectCategoryTitle = (id) => {
         this.setState({ selectedTitleId: id });
     };
 
     render() {
         const { categoryExamTitles, loading, errMessage, categoryExams, selectedTitleId } = this.state;
-        // Thêm một loader hoặc thông báo khi đang tải
         if (loading) {
             return <div><Loading /></div>;
         }
-        // Thông báo lỗi nếu có
         if (errMessage) {
             return <div>Error: {errMessage}</div>;
         }
@@ -166,8 +172,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigate: (path) => dispatch(push(path)),
-        // processLogout: () => dispatch(actions.processLogout()),
     };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToeicExam);
+
