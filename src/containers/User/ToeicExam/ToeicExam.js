@@ -7,6 +7,7 @@ import { push } from "connected-react-router";
 import './ToeicExam.scss';
 import CategoryExamTitle from '../../../components/Category/CategoryExamTitle';
 import CategoryExam from '../../../components/Category/CategoryExam';
+import Loading from '../../../components/Loading/Loading';
 import { getAllCategoryExams } from '../../../services/categoryExamService';
 class ToeicExam extends Component {
 
@@ -100,7 +101,7 @@ class ToeicExam extends Component {
         const { categoryExamTitles, loading, errMessage, categoryExams } = this.state;
         // Thêm một loader hoặc thông báo khi đang tải
         if (loading) {
-            return <div>Loading...</div>;
+            return <div><Loading /></div>;
         }
         // Thông báo lỗi nếu có
         if (errMessage) {
