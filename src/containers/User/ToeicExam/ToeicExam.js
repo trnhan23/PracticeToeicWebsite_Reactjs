@@ -17,6 +17,7 @@ class ToeicExam extends Component {
             categoryExamTitles: {},
             categoryExams: {},
             exams: {},
+            selectedTitleId: '',
             loading: true,
             errMessage: ''
         };
@@ -39,13 +40,17 @@ class ToeicExam extends Component {
                 });
             }
         });
+        // lấy id đầu tiên trong mảng Set
+        const firstId = [...uniqueIdTitles][0];
 
         this.setState({
             loading: false,
+            selectedTitleId: firstId,
             categoryExamTitles: cateExamTitles
         });
 
-        console.log("Title exam: ", cateExamTitles)
+        console.log("Title exam: ", cateExamTitles);
+        console.log("First id title: ", this.state.selectedTitleId);
     }
 
     handleCateExam = (data) => {
@@ -97,8 +102,13 @@ class ToeicExam extends Component {
         }
     }
 
+    // lấy giá trị id từ category title
+    handleSelectCategoryTitle = (id) => {
+        this.setState({ selectedTitleId: id });
+    };
+
     render() {
-        const { categoryExamTitles, loading, errMessage, categoryExams } = this.state;
+        const { categoryExamTitles, loading, errMessage, categoryExams, selectedTitleId } = this.state;
         // Thêm một loader hoặc thông báo khi đang tải
         if (loading) {
             return <div><Loading /></div>;
@@ -117,7 +127,11 @@ class ToeicExam extends Component {
                             <div className='toeic-exam-title'>Thư viện đề thi Toeic</div>
 
                             <div className='toeic-category-exam-title'>
-                                <CategoryExamTitle categories={categoryExamTitles} />
+                                <CategoryExamTitle
+                                    categories={categoryExamTitles}
+                                    selectedTitleId={selectedTitleId}
+                                    onSelectCategory={this.handleSelectCategoryTitle}
+                                />
                             </div>
 
                             <div className='toeic-exam-search'>

@@ -33,7 +33,7 @@ class CategoryExam extends Component {
                                     </div>
                                 ))
                             ) : (
-                                <div>No categories available</div> // Thông báo nếu không có danh mục
+                                <div>Chưa có bài thi</div>
                             )}
 
                     </div>
