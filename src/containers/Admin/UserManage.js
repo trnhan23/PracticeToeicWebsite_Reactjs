@@ -11,7 +11,6 @@ class UserManage extends Component {
         this.state = {
             arrUsers: [],
             isOpenModalUser: false,
-            isOpenModalEditUser: false,
             userEdit: {}
         }
     }

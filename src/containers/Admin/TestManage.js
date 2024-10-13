@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import UploadFile from '../../components/UploadAndViewFile/UploadFile';
+import CustomScrollbars from '../../components/CustomScrollbars';
 class TestManage extends Component {
 
     constructor(props) {
@@ -14,14 +16,18 @@ class TestManage extends Component {
 
     render() {
         return (
-            <div className='user-redux-container'>
-                <div className='title'>
-                    TEST MANAGE
+            <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
+
+                <div className='user-redux-container'>
+                    <div className='title'>
+                        TEST MANAGE
+                    </div>
+                    <div className='user-redux-body'>
+                        {/* <div>Thêm bài thi mới</div> */}
+                        <UploadFile />
+                    </div>
                 </div>
-                <div className='user-redux-body'>
-                    <div>Thêm bài thi mới</div>
-                </div>
-            </div>
+            </CustomScrollbars>
         )
     }
 

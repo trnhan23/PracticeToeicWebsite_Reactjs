@@ -163,6 +163,8 @@ class ToeicExam extends Component {
 
         // hàm xử lý tìm kiếm exam
         const filteredExams = this.filterExams();
+
+        // loading dữ liệu
         if (loading) {
             return <div><Loading /></div>;
         }
