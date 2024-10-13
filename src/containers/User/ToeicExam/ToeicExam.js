@@ -8,6 +8,7 @@ import './ToeicExam.scss';
 import CategoryExamTitle from '../../../components/Category/CategoryExamTitle';
 import CategoryExam from '../../../components/Category/CategoryExam';
 import Loading from '../../../components/Loading/Loading';
+import Pagination from '../../../components/Pagination/Pagination';
 import { getAllCategoryExams } from '../../../services/categoryExamService';
 import { getAllExams } from '../../../services/examService';
 class ToeicExam extends Component {
@@ -20,6 +21,9 @@ class ToeicExam extends Component {
             exams: [],
             selectedTitleId: '',
             loading: true,
+            currentPage: 1,
+            totalPages: 0,
+            numberOfElementPerPAge: 8,
             errMessage: ''
         };
     }
@@ -69,33 +73,48 @@ class ToeicExam extends Component {
         }
     }
 
-    handleCateExam = async () => {
-        const res = await getAllExams('ALL', this.state.selectedTitleId);
-        const cateExams = [];
-        if (res.errCode === 0) {
-            res.exams.forEach((exam) => {
-                if (exam && exam.id) {
-                    cateExams.push({
-                        id: exam.id,
-                        titleExam: exam.titleExam,
-                        stateExam: exam.stateExam,
-                        countUserTest: exam.countUserTest
-                    });
-                }
-            });
+    handleCateExam = async (page = 1) => {
+        try {
+            const res = await getAllExams('ALL', this.state.selectedTitleId, page);
+            const cateExams = [];
+            if (res.errCode === 0) {
+                res.exams.exams.forEach((exam) => {
+                    if (exam && exam.id) {
+                        cateExams.push({
+                            id: exam.id,
+                            titleExam: exam.titleExam,
+                            stateExam: exam.stateExam,
+                            countUserTest: exam.countUserTest
+                        });
+                    }
+                });
 
+                this.setState({
+                    loading: false,
+                    categoryExams: cateExams,
+                    currentPage: page,
+                    totalPages: Math.ceil(res.exams.totalCount / this.state.numberOfElementPerPAge),
+                });
+            } else {
+                console.error('Error handleCateExam:', res);
+                this.setState({
+                    loading: false,
+                    errMessage: res.errMessage
+                });
+            }
+        } catch (error) {
+            console.error('Error handleCateExam:', error);
             this.setState({
                 loading: false,
-                categoryExams: cateExams
-            });
-        } else {
-            console.error('Error handleCateExam:', res);
-            this.setState({
-                loading: false,
-                errMessage: res.errMessage
+                errMessage: 'Failed to fetch exams.'
             });
         }
     };
+
+    // Hàm xử lý khi chuyển trang
+    handlePageChange = (newPage) => {
+        this.handleCateExam(newPage);
+    }
 
 
     handleCategoryExam = async () => {
@@ -116,7 +135,7 @@ class ToeicExam extends Component {
     };
 
     render() {
-        const { categoryExamTitles, loading, errMessage, categoryExams, selectedTitleId } = this.state;
+        const { categoryExamTitles, loading, errMessage, categoryExams, selectedTitleId, currentPage, totalPages } = this.state;
         if (loading) {
             return <div><Loading /></div>;
         }
@@ -153,6 +172,13 @@ class ToeicExam extends Component {
                                 <CategoryExam exams={categoryExams} />
                             </div>
 
+                            <div className='toeic-pagination'>
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={this.handlePageChange}
+                                />
+                            </div>
                         </div>
                     </div>
                     <HomeFooter />
