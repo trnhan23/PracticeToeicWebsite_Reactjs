@@ -20,6 +20,7 @@ class ToeicExam extends Component {
             categoryExams: [],
             exams: [],
             selectedTitleId: '',
+            searchExam: '',
             loading: true,
             currentPage: 1,
             totalPages: 0,
@@ -35,9 +36,27 @@ class ToeicExam extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevState.selectedTitleId !== this.state.selectedTitleId) {
             this.handleCateExam();
+            this.clearSearch();
         }
     }
 
+    handleOnChangeSearch = (event) => {
+        this.setState({ searchExam: event.target.value });
+    }
+
+    clearSearch = () => {
+        this.setState({ searchExam: '' });
+    }
+
+    // hàm tìm kiếm exam theo tên exam
+    filterExams = () => {
+        const { searchExam, categoryExams } = this.state;
+        return categoryExams.filter(exam =>
+            exam.titleExam.toLowerCase().includes(searchExam.toLowerCase())
+        );
+    }
+
+    // hàm lấy các danh sách category exam
     handleCategoryTitle = async () => {
         const res = await getAllCategoryExams('ALL');
         if (res.errCode === 0) {
@@ -73,6 +92,7 @@ class ToeicExam extends Component {
         }
     }
 
+    // hàm lấy các exam theo category_exam
     handleCateExam = async (page = 1) => {
         try {
             const res = await getAllExams('ALL', this.state.selectedTitleId, page);
@@ -94,6 +114,7 @@ class ToeicExam extends Component {
                     categoryExams: cateExams,
                     currentPage: page,
                     totalPages: Math.ceil(res.exams.totalCount / this.state.numberOfElementPerPAge),
+                    searchExam: '',
                 });
             } else {
                 console.error('Error handleCateExam:', res);
@@ -116,7 +137,7 @@ class ToeicExam extends Component {
         this.handleCateExam(newPage);
     }
 
-
+    // hàm lấy các exam theo id của category exam và lấy tất cả các category exam
     handleCategoryExam = async () => {
         try {
             await this.handleCategoryTitle();
@@ -130,12 +151,18 @@ class ToeicExam extends Component {
         }
     }
 
+    // hàm lấy id của category exam khi click vào
     handleSelectCategoryTitle = (id) => {
-        this.setState({ selectedTitleId: id });
+        this.setState({
+            selectedTitleId: id,
+        });
     };
 
     render() {
-        const { categoryExamTitles, loading, errMessage, categoryExams, selectedTitleId, currentPage, totalPages } = this.state;
+        const { categoryExamTitles, loading, errMessage, selectedTitleId, currentPage, totalPages, searchExam } = this.state;
+
+        // hàm xử lý tìm kiếm exam
+        const filteredExams = this.filterExams();
         if (loading) {
             return <div><Loading /></div>;
         }
@@ -164,12 +191,14 @@ class ToeicExam extends Component {
                                     className='toeic-exam-search-input'
                                     type='text'
                                     placeholder='Nhập từ khóa bạn muốn tìm kiếm'
+                                    value={this.state.searchExam}
+                                    onChange={(event) => { this.handleOnChangeSearch(event) }}
                                 />
                                 <button className='toeic-exam-search-button'>Tìm kiếm</button>
                             </div>
 
                             <div className='toeic-exam'>
-                                <CategoryExam exams={categoryExams} />
+                                <CategoryExam exams={filteredExams} />
                             </div>
 
                             <div className='toeic-pagination'>
