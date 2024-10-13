@@ -1,57 +1,66 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './HomeTest.scss'
-
+import CategoryExam from '../../../components/Category/CategoryExam';
+import { get8LatestExams } from '../../../services/examService';
 class HomeTest extends Component {
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            categoryExams: [],
+            loading: true,
+            errMessage: ''
+        };
+    }
+    componentDidMount = () => {
+        this.handleGet8LatestExams();
+    }
+
+    handleGet8LatestExams = async () => {
+        try {
+            const res = await get8LatestExams();
+            const cateExams = [];
+            if (res && res.errCode === 0) {
+                res.exams.forEach((exam) => {
+                    if (exam && exam.id) {
+                        cateExams.push({
+                            id: exam.id,
+                            titleExam: exam.titleExam,
+                            stateExam: exam.stateExam,
+                            countUserTest: exam.countUserTest
+                        });
+                    }
+                });
+                this.setState({
+                    loading: false,
+                    categoryExams: cateExams,
+                });
+            } else {
+                console.error('Error handleGet8LatestExams:', res);
+                this.setState({
+                    loading: false,
+                    errMessage: res.errMessage
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching exams:', error);
+            this.setState({
+                loading: false,
+                errMessage: 'Failed to fetch exams.'
+            });
+        }
+    }
+
     render() {
-        const tests = [
-            { id: 1, name: 'Toeic Test 1', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 2, name: 'Toeic Test 2', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 3, name: 'Toeic Test 3', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 4, name: 'Toeic Test 4', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 5, name: 'Toeic Test 5', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 6, name: 'Toeic Test 6', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 7, name: 'Toeic Test 7', time: '120 phút', code: '555555', views: 784, questions: 200 },
-            { id: 8, name: 'Toeic Test 8', time: '120 phút', code: '555555', views: 784, questions: 200 },
-        ];
+        const {categoryExams} = this.state;
         return (
             <React.Fragment>
                 <div className="home-test-container">
-                    <div className='title-test'>Đề thi mới nhất</div>
-                    <div className="toeic-test-grid">
-                        {tests.map(test => (
-                            <div className="toeic-test-card" key={test.id}>
-                                <div className='card-name'>{test.name}</div>
-                                <div className="test-details">
-                                    <span><i className="far fa-clock"></i> {test.time}</span>
-                                    <span><i className="far fa-user"></i> {test.code}</span>
-                                </div>
-                                <div className="test-info">
-                                    <span><i className="far fa-comments"></i> {test.views}</span>
-                                    <span><br/>7 phần thi | {test.questions} câu hỏi</span>
-                                </div>
-                                <button className="details-button">Chi tiết</button>
-                            </div>
-                        ))}
-                    </div>
+                    <CategoryExam exams={categoryExams} />
                 </div>
-
             </React.Fragment>
         );
     }
 
 }
 
-const mapStateToProps = state => {
-    return {
-        isLoggedIn: state.user.isLoggedIn
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeTest);
+export default HomeTest;

@@ -10,7 +10,12 @@ const getAllExams = (examId, cateExamId, page) => {
     })
 }
 
+const get8LatestExams = () => {
+    return axios.get('/api/get-latest-exam');
+}
+
 export {
     getAllExams,
+    get8LatestExams,
 
 }
