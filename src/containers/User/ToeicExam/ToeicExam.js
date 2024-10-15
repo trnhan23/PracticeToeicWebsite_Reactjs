@@ -95,15 +95,26 @@ class ToeicExam extends Component {
     // hàm lấy các exam theo category_exam
     handleCateExam = async (page = 1) => {
         try {
-            const res = await getAllExams('ALL', this.state.selectedTitleId, page);
+            this.setState({ loading: true });
+            const res = await getAllExams(this.state.selectedTitleId, this.props.userInfor.id, page);
             const cateExams = [];
+
             if (res.errCode === 0) {
                 res.exams.exams.forEach((exam) => {
                     if (exam && exam.id) {
+
+                        const userExam_ExamData = exam.userExam_ExamData;
+                        console.log("Kiểm tra: ", userExam_ExamData); // Lấy dữ liệu userExam_ExamData từ exam
+                        const statusExam = Array.isArray(userExam_ExamData) && userExam_ExamData.length > 0
+                        ? userExam_ExamData[0].statusExam // Lấy statusExam từ phần tử đầu tiên
+                        : false; // Gán false nếu không có dữ liệu
+
+                    console.log("Kiểm tra status: ", statusExam);
+
                         cateExams.push({
                             id: exam.id,
                             titleExam: exam.titleExam,
-                            stateExam: exam.stateExam,
+                            statusExam: statusExam,
                             countUserTest: exam.countUserTest
                         });
                     }
@@ -131,6 +142,7 @@ class ToeicExam extends Component {
             });
         }
     };
+
 
     // Hàm xử lý khi chuyển trang
     handlePageChange = (newPage) => {

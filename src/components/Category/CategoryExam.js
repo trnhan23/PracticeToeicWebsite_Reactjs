@@ -15,7 +15,7 @@ class CategoryExam extends Component {
                                 exams.map(exam => (
                                     <div className="toeic-test-card" key={exam.id}>
                                         <div className='card-name'>
-                                            {exam.stateExam ? (
+                                            {exam.statusExam ? (
                                                 <i className="fas fa-check-circle"></i>
                                             ) : ''}
                                             {exam.titleExam}
