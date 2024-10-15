@@ -1,5 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
+import {importFileQuestionAndAnswer} from '../../services/questionAndAnswerService';
+
 
 export default class UploadFile extends React.Component {
     constructor(props) {
@@ -7,6 +9,7 @@ export default class UploadFile extends React.Component {
         this.state = {
             data: [],
             cols: [],
+            message: '',
         };
     }
 
@@ -41,6 +44,31 @@ export default class UploadFile extends React.Component {
         XLSX.writeFile(wb, "sheetjs.xlsx");
     };
 
+    handleUploadToDatabase = async () => {
+        try {
+            const formattedData = this.state.data.map(row => ({
+                questionText: row[0] || null,
+                answerA: row[1] || null,
+                answerB: row[2] || null,
+                answerC: row[3] || null,
+                answerD: row[4] || null,
+                correctAnswer: row[5] || null
+            }));
+    
+            const response = await importFileQuestionAndAnswer(formattedData);
+    
+            if (response && response.errCode === 0) {
+                this.setState({ message: 'Upload successful!' });
+            } else {
+                this.setState({ message: 'Error: ' + (response.errMessage || 'Unknown error') });
+            }
+        } catch (error) {
+            console.error('Error uploading data:', error);
+            this.setState({ message: 'An error occurred while uploading.' });
+        }
+    };
+    
+
     render() {
         return (
             <DragDropFile handleFile={this.handleFile}>
@@ -58,6 +86,14 @@ export default class UploadFile extends React.Component {
                         >
                             Export
                         </button>
+                        <button
+                            disabled={!this.state.data.length}
+                            className="btn btn-primary"
+                            onClick={this.handleUploadToDatabase}
+                        >
+                            Upload to Database
+                        </button>
+                        {this.state.message && <p>{this.state.message}</p>}
                     </div>
                 </div>
                 <div className="row">
