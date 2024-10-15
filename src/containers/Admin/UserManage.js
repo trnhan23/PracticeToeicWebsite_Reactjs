@@ -46,7 +46,7 @@ class UserManage extends Component {
                                 <th>Email</th>
                                 <th>Họ tên</th>
                                 <th>Giới tính</th>
-                                <th>Ảnh đại diện</th>
+                                {/* <th>Ảnh đại diện</th> */}
                                 <th>Tiểu sử</th>
                                 <th>Ngày đăng kí</th>
                                 <th>Quyền</th>
@@ -59,7 +59,7 @@ class UserManage extends Component {
                                             <td>{item.email}</td>
                                             <td>{item.fullName}</td>
                                             <td>{item.gender === true ? 'Nam' : 'Nữ'}</td>
-                                            <td>{item.avatar}</td>
+                                            {/* <td>{item.avatar}</td> */}
                                             <td>{item.bio}</td>
                                             <td>{formatDateTime(item.registrationDate)}</td>
                                             <td>
