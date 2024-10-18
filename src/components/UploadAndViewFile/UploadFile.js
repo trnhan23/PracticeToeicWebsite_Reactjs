@@ -1,6 +1,7 @@
 import React from "react";
 import * as XLSX from "xlsx";
-import { importFileQuestionAndAnswer, importFileExam } from '../../services/questionAndAnswerService';
+import { importFileExam } from '../../services/questionAndAnswerService';
+import './UploadFile.scss';
 
 
 export default class UploadFile extends React.Component {
@@ -58,7 +59,7 @@ export default class UploadFile extends React.Component {
             const answerD = row[9];
             const correctAnswer = row[10];
 
-            if (type === 'Part 1' || type === 'Part 2') {
+            if (type === 'Part 1' || type === 'Part 2' || type === 'Part 5') {
                 acc.push({
                     audioFile: audioFile,
                     images: images,
@@ -133,11 +134,64 @@ export default class UploadFile extends React.Component {
         }, []);
     };
 
+    validatePart6And7 = (data) => {
+        return data.slice(1).reduce((acc, row) => {
+            const numberQu = row[0];
+            const type = row[1];
+            const audioFile = row[2] || null;
+            const images = row[3] || null;
+            const text = row[4];
+            const questionText = row[5];
+            const answerA = row[6];
+            const answerB = row[7];
+            const answerC = row[8];
+            const answerD = row[9];
+            const correctAnswer = row[10];
+
+            if (type === 'Part 6' || type === 'Part 7') {
+                if (text) {
+                    const newEntry = {
+                        audioFile: audioFile,
+                        images: images,
+                        text: text,
+                        questionType: type,
+                        examId: 'examId_placeholder',
+                        questions: [{
+                            numberQuestion: numberQu,
+                            questionText: questionText,
+                            answerA: answerA,
+                            answerB: answerB,
+                            answerC: answerC,
+                            answerD: answerD,
+                            correctAnswer: correctAnswer
+                        }]
+                    };
+                    acc.push(newEntry);
+                } else {
+                    if (acc.length > 0) {
+                        const lastEntry = acc[acc.length - 1];
+                        lastEntry.questions.push({
+                            numberQuestion: numberQu,
+                            questionText: questionText,
+                            answerA: answerA,
+                            answerB: answerB,
+                            answerC: answerC,
+                            answerD: answerD,
+                            correctAnswer: correctAnswer
+                        });
+                    }
+                }
+            }
+
+            return acc;
+        }, []);
+    }
+
     formatData = (data) => {
         const part1And2Data = this.validatePart1And2(data);
         const part3And4Data = this.validatePart3And4(data);
-
-        return [...part1And2Data, ...part3And4Data];
+        const part6And7Data = this.validatePart6And7(data);
+        return [...part1And2Data, ...part3And4Data, ...part6And7Data];
     };
 
 
@@ -164,39 +218,36 @@ export default class UploadFile extends React.Component {
 
     render() {
         return (
-            <DragDropFile handleFile={this.handleFile}>
-                <div className="row">
-                    <div className="col-xs-12">
+            <div className="upload-file">
+                <DragDropFile handleFile={this.handleFile}>
+                    <div className="file-input">
                         <DataInput handleFile={this.handleFile} />
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-12">
+                    <div className="button-group">
                         <button
                             disabled={!this.state.data.length}
-                            className="btn btn-success"
+                            className="btn-success"
                             onClick={this.exportFile}
                         >
                             Export
                         </button>
                         <button
                             disabled={!this.state.data.length}
-                            className="btn btn-primary"
+                            className="btn-primary"
                             onClick={this.handleUploadToDatabase}
                         >
                             Upload to Database
                         </button>
-                        {this.state.message && <p>{this.state.message}</p>}
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-12">
+                    {this.state.message && <p className="message">{this.state.message}</p>}
+                    <div className="table-responsive">
                         <OutTable data={this.state.data} cols={this.state.cols} />
                     </div>
-                </div>
-            </DragDropFile>
+                </DragDropFile>
+            </div>
         );
     }
+
 }
 
 /* Drag and Drop File Component */

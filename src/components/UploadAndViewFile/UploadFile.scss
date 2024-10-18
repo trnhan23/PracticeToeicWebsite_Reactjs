@@ -1,0 +1,118 @@
+// Main container styles
+.upload-file {
+    width: 100%;
+    margin: 20px auto; // Center align the component
+    padding: 20px;
+    background-color: #fff; // White background
+    border-radius: 10px; // Rounded corners
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); // Subtle shadow
+    font-family: 'Arial', sans-serif; // Modern font
+}
+
+// File input styles
+.file-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+    label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333; // Dark text
+        margin-bottom: 5px;
+    }
+
+    input[type='file'] {
+        padding: 10px;
+        border: 1px solid #007bff; // Blue border
+        border-radius: 5px; // Slightly rounded
+        transition: border-color 0.3s, box-shadow 0.3s; // Smooth transition
+
+        &:hover {
+            border-color: #0056b3; // Darker blue on hover
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); // Add shadow on hover
+        }
+
+        &:focus {
+            outline: none; // Remove default outline
+            border-color: #0056b3; // Darker blue on focus
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); // Add shadow on focus
+        }
+    }
+}
+
+// Button group styles
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px; // Rounded corners for buttons
+        font-weight: bold; // Bold text
+        cursor: pointer; // Pointer cursor on hover
+        transition: background-color 0.3s, transform 0.2s; // Transition for effects
+
+        &.btn-success {
+            background-color: #28a745; // Green background
+            color: white; // White text
+
+            &:hover {
+                background-color: #218838; // Darker green on hover
+                transform: translateY(-2px); // Lift effect on hover
+            }
+        }
+
+        &.btn-primary {
+            background-color: #007bff; // Blue background
+            color: white; // White text
+
+            &:hover {
+                background-color: #0069d9; // Darker blue on hover
+                transform: translateY(-2px); // Lift effect on hover
+            }
+        }
+
+        &:disabled {
+            background-color: #d6d6d6; // Grey background for disabled state
+            cursor: not-allowed; // Not-allowed cursor
+        }
+    }
+}
+
+// Message styles
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #dc3545; // Red color for error messages
+    text-align: center; // Center align messages
+}
+
+// Table styles
+.table-responsive {
+    margin-top: 20px;
+
+    table {
+        width: 100%;
+        border-collapse: collapse; // Remove gaps between cells
+
+        th,
+        td {
+            padding: 12px; // Padding for cells
+            border: 1px solid #ddd; // Light grey border
+            text-align: left; // Align text to the left
+            font-size: 14px; // Set font size
+        }
+
+        th {
+            background-color: #f2f2f2; // Light grey background for header
+            font-weight: bold; // Bold text for headers
+        }
+
+        tr:hover {
+            background-color: #f9f9f9; // Slightly darker background on row hover
+        }
+    }
+}
