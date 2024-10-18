@@ -1,6 +1,6 @@
 import React from "react";
 import * as XLSX from "xlsx";
-import {importFileQuestionAndAnswer} from '../../services/questionAndAnswerService';
+import { importFileQuestionAndAnswer, importFileExam } from '../../services/questionAndAnswerService';
 
 
 export default class UploadFile extends React.Component {
@@ -44,19 +44,112 @@ export default class UploadFile extends React.Component {
         XLSX.writeFile(wb, "sheetjs.xlsx");
     };
 
+    validatePart1And2 = (data) => {
+        return data.slice(1).reduce((acc, row) => {
+            const numberQu = row[0];
+            const type = row[1];
+            const audioFile = row[2] || null;
+            const images = row[3] || null;
+            const text = row[4] || null;
+            const questionText = row[5];
+            const answerA = row[6];
+            const answerB = row[7];
+            const answerC = row[8];
+            const answerD = row[9];
+            const correctAnswer = row[10];
+
+            if (type === 'Part 1' || type === 'Part 2') {
+                acc.push({
+                    audioFile: audioFile,
+                    images: images,
+                    text: text,
+                    questionType: type,
+                    examId: 'examId_placeholder',
+                    questions: [{
+                        numberQuestion: numberQu,
+                        questionText: questionText,
+                        answerA: answerA,
+                        answerB: answerB,
+                        answerC: answerC,
+                        answerD: answerD,
+                        correctAnswer: correctAnswer
+                    }]
+                });
+            }
+            return acc;
+        }, []);
+    }
+
+    validatePart3And4 = (data) => {
+        return data.slice(1).reduce((acc, row) => {
+            const numberQu = row[0];
+            const type = row[1];
+            const audioFile = row[2];
+            const images = row[3] || null;
+            const text = row[4] || null;
+            const questionText = row[5];
+            const answerA = row[6];
+            const answerB = row[7];
+            const answerC = row[8];
+            const answerD = row[9];
+            const correctAnswer = row[10];
+
+            if (type === 'Part 3' || type === 'Part 4') {
+                if (audioFile) {
+                    const newEntry = {
+                        audioFile: audioFile,
+                        images: images,
+                        text: text,
+                        questionType: type,
+                        examId: 'examId_placeholder',
+                        questions: [{
+                            numberQuestion: numberQu,
+                            questionText: questionText,
+                            answerA: answerA,
+                            answerB: answerB,
+                            answerC: answerC,
+                            answerD: answerD,
+                            correctAnswer: correctAnswer
+                        }]
+                    };
+                    acc.push(newEntry);
+                } else {
+                    if (acc.length > 0) {
+                        const lastEntry = acc[acc.length - 1];
+                        lastEntry.questions.push({
+                            numberQuestion: numberQu,
+                            questionText: questionText,
+                            answerA: answerA,
+                            answerB: answerB,
+                            answerC: answerC,
+                            answerD: answerD,
+                            correctAnswer: correctAnswer
+                        });
+                    }
+                }
+            }
+
+            return acc;
+        }, []);
+    };
+
+    formatData = (data) => {
+        const part1And2Data = this.validatePart1And2(data);
+        const part3And4Data = this.validatePart3And4(data);
+
+        return [...part1And2Data, ...part3And4Data];
+    };
+
+
     handleUploadToDatabase = async () => {
         try {
-            const formattedData = this.state.data.map(row => ({
-                questionText: row[0] || null,
-                answerA: row[1] || null,
-                answerB: row[2] || null,
-                answerC: row[3] || null,
-                answerD: row[4] || null,
-                correctAnswer: row[5] || null
-            }));
-    
-            const response = await importFileQuestionAndAnswer(formattedData);
-    
+            const formattedData = this.formatData(this.state.data);
+
+            console.log("Formatted Data:", formattedData);
+
+            // Send the formatted data to the backend API
+            const response = await importFileExam(formattedData);
+
             if (response && response.errCode === 0) {
                 this.setState({ message: 'Upload successful!' });
             } else {
@@ -67,7 +160,7 @@ export default class UploadFile extends React.Component {
             this.setState({ message: 'An error occurred while uploading.' });
         }
     };
-    
+
 
     render() {
         return (

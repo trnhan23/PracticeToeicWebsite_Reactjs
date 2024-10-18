@@ -46,10 +46,10 @@ class UserManage extends Component {
                                 <th>Email</th>
                                 <th>Họ tên</th>
                                 <th>Giới tính</th>
-                                {/* <th>Ảnh đại diện</th> */}
                                 <th>Tiểu sử</th>
                                 <th>Ngày đăng kí</th>
                                 <th>Quyền</th>
+                                <th>Tài khoản</th>
                                 <th>Hành động</th>
                             </tr>
                             {
@@ -59,12 +59,12 @@ class UserManage extends Component {
                                             <td>{item.email}</td>
                                             <td>{item.fullName}</td>
                                             <td>{item.gender === true ? 'Nam' : 'Nữ'}</td>
-                                            {/* <td>{item.avatar}</td> */}
                                             <td>{item.bio}</td>
                                             <td>{formatDateTime(item.registrationDate)}</td>
                                             <td>
                                                 {item.roleId === 'R1' ? 'Admin' : item.roleId === 'R2' ? 'User' : ''}
                                             </td>
+                                            <td>{item.status === true ? '✔️Active' : '❌Inactive'}</td>
                                             <td>
                                                 <button className='btn-edit'><i className="fas fa-pencil-alt"></i></button>
                                                 <button className='btn-delete'><i className="fas fa-trash"></i></button>
