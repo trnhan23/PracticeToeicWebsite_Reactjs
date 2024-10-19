@@ -14,8 +14,13 @@ const get8LatestExams = () => {
     return axios.get('/api/get-latest-exam');
 }
 
+const createExam = (data) => {
+    return axios.post('/api/create-exam', data);
+}
+
 export {
     getAllExams,
     get8LatestExams,
+    createExam,
 
 }

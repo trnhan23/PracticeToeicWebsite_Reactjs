@@ -1,0 +1,91 @@
+.user-redux-container {
+    padding: 0 20px;
+
+    .title {}
+
+    .exam-name-input {
+
+
+        .exam-dropdown {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+
+            margin: 20px 0;
+            padding: 5px 10px;
+
+            .dropdown-name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #333;
+                margin-right: 10px;
+            }
+
+            select {
+                width: fit-content;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background-color: #f9f9f9;
+                transition: border-color 0.3s ease;
+                cursor: pointer;
+
+                &:focus {
+                    outline: none;
+                    border-color: #007bff;
+                    background-color: #fff;
+                }
+
+                option {
+                    padding: 10px;
+                }
+            }
+        }
+
+        .exam-input {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', sans-serif;
+            margin: 20px 0;
+            padding: 5px 10px;
+
+            .name {
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: #333;
+                margin-right: 10px;
+            }
+
+            .input {
+                width: 25%;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background-color: #f9f9f9;
+                transition: border-color 0.3s ease;
+
+                &:focus {
+                    border-color: #007BFF;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                }
+            }
+        }
+
+    }
+
+    .user-redux-body {
+        margin: 20px 0;
+        padding: 5px 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        font-family: 'Arial', sans-serif;
+    }
+}

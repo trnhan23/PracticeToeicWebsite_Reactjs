@@ -1,8 +1,9 @@
 import React from "react";
 import * as XLSX from "xlsx";
 import { importFileExam } from '../../services/questionAndAnswerService';
+import { createExam } from '../../services/examService';
 import './UploadFile.scss';
-
+import { toast } from 'react-toastify';
 
 export default class UploadFile extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class UploadFile extends React.Component {
         this.state = {
             data: [],
             cols: [],
+            examId: '',
             message: '',
         };
     }
@@ -65,7 +67,7 @@ export default class UploadFile extends React.Component {
                     images: images,
                     text: text,
                     questionType: type,
-                    examId: 'examId_placeholder',
+                    examId: this.state.examId,
                     questions: [{
                         numberQuestion: numberQu,
                         questionText: questionText,
@@ -102,7 +104,7 @@ export default class UploadFile extends React.Component {
                         images: images,
                         text: text,
                         questionType: type,
-                        examId: 'examId_placeholder',
+                        examId: this.state.examId,
                         questions: [{
                             numberQuestion: numberQu,
                             questionText: questionText,
@@ -155,7 +157,7 @@ export default class UploadFile extends React.Component {
                         images: images,
                         text: text,
                         questionType: type,
-                        examId: 'examId_placeholder',
+                        examId: this.state.examId,
                         questions: [{
                             numberQuestion: numberQu,
                             questionText: questionText,
@@ -194,24 +196,57 @@ export default class UploadFile extends React.Component {
         return [...part1And2Data, ...part3And4Data, ...part6And7Data];
     };
 
+    handleCreateExam = async () => {
+
+        const data = {};
+        if (this.props.titleExam === '') {
+            toast.error("Tên đề thi vui lòng không để trống!");
+            return;
+        }
+
+        data.userId = this.props.userInfor.id;
+        data.categoryExamId = this.props.selectedExamId;
+        data.titleExam = this.props.titleExam;
+        data.countUserTest = 0;
+        data.countComment = 0;
+
+        const res = await createExam(data);
+        if (res && res.errCode === 0) {
+            this.setState({
+                examId: res.id
+            }, () => {
+                console.log("KT mã examId: ", this.state.examId);
+            })
+        } else {
+            toast.error("Error tạo exam: ", res.errMessage);
+        }
+    }
 
     handleUploadToDatabase = async () => {
         try {
-            const formattedData = this.formatData(this.state.data);
+            // xử lý create exams
+            await this.handleCreateExam();
 
+            const formattedData = this.formatData(this.state.data);
             console.log("Formatted Data:", formattedData);
 
             // Send the formatted data to the backend API
             const response = await importFileExam(formattedData);
 
             if (response && response.errCode === 0) {
-                this.setState({ message: 'Upload successful!' });
+                this.setState({ message: 'Upload file successful!' }, () => {
+                    toast.success(this.state.message);
+                });
             } else {
-                this.setState({ message: 'Error: ' + (response.errMessage || 'Unknown error') });
+                this.setState({ message: 'Error: ' + (response.errMessage || 'Unknown error') }, () => {
+                    toast.success(this.state.message);
+                });
             }
         } catch (error) {
             console.error('Error uploading data:', error);
-            this.setState({ message: 'An error occurred while uploading.' });
+            this.setState({ message: 'An error occurred while uploading.' }, () => {
+                toast.error(this.state.message);
+            });
         }
     };
 
@@ -239,7 +274,7 @@ export default class UploadFile extends React.Component {
                             Upload to Database
                         </button>
                     </div>
-                    {this.state.message && <p className="message">{this.state.message}</p>}
+                    {/* {this.state.message && <p className="message">{this.state.message}</p>} */}
                     <div className="table-responsive">
                         <OutTable data={this.state.data} cols={this.state.cols} />
                     </div>
@@ -292,7 +327,7 @@ class DataInput extends React.Component {
         return (
             <form className="form-inline">
                 <div className="form-group">
-                    <label htmlFor="file">Spreadsheet</label>
+                    <label htmlFor="file">Thêm file đề thi</label>
                     <input
                         type="file"
                         className="form-control"

@@ -104,12 +104,9 @@ class ToeicExam extends Component {
                     if (exam && exam.id) {
 
                         const userExam_ExamData = exam.userExam_ExamData;
-                        console.log("Kiểm tra: ", userExam_ExamData); // Lấy dữ liệu userExam_ExamData từ exam
                         const statusExam = Array.isArray(userExam_ExamData) && userExam_ExamData.length > 0
-                        ? userExam_ExamData[0].statusExam // Lấy statusExam từ phần tử đầu tiên
-                        : false; // Gán false nếu không có dữ liệu
-
-                    console.log("Kiểm tra status: ", statusExam);
+                        ? userExam_ExamData[0].statusExam
+                        : false;
 
                         cateExams.push({
                             id: exam.id,
