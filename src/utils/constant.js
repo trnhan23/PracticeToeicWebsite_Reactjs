@@ -4,6 +4,7 @@ export const path = {
     SEARCH_WORD: '/search-word',
     TOEIC_EXAM: '/toeic-exam',
     LOGIN: '/login',
+    TT_DETHI: '/thong-tin-de-thi',
     REGISTER: '/register',
     LOG_OUT: '/logout',
     SYSTEM: '/system'

@@ -1,0 +1,61 @@
+.test-info-container {
+    padding: 20px 20px 0 20px;
+}
+
+.test-title {
+    color: black;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.test-actions {
+    margin-bottom: 15px;
+
+    .test-action-button {
+        background-color: #f5eaea08;
+        width: 200px;
+        font-size: 19px;
+        color: black;
+        border: 1px solid;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 50px;
+        margin-right: 10px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        &.active {
+            background-color: #d5ecf3;
+            color: #1065ed;
+            border-radius: 50px;
+            border: none;
+            width: 200px;
+            font-size: 20px;
+        }
+
+        &:hover {
+            background-color: darkgray;
+            color: white;
+        }
+    }
+}
+
+.test-details,
+.test-participation {
+    color: gray; // Chữ màu xám
+    margin: 10px 0;
+
+    .test-time,
+    .test-participant-info {
+        display: flex;
+        font-size: 15px;
+        margin: auto;
+        align-items: baseline;
+        gap: 4px;
+        font-size: 17px;
+
+        p {
+            margin-right: 12px;
+        }
+    }
+}
