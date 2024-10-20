@@ -13,37 +13,43 @@ class TTDeThi extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedExam: [],
+
         };
     }
 
-
-
     render() {
+        const { exam } = this.props;
 
         return (
             <React.Fragment>
-                <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
-                    <HomeHeader />
-                    <div className='container'>
-                        <div className='content-top'>
-                            <div className='thong-tin-de-thi'>
-                                <ThongTinDeThi />
-                            </div>
+                {exam ? (
+                    <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
+                        <HomeHeader />
+                        <div className='container'>
+                            <div className='content-top'>
+                                <div className='thong-tin-de-thi'>
+                                    <ThongTinDeThi />
+                                </div>
 
-                            <div className='ket-qua-lam-bai'>
-                                <KetQuaLamBai />
-                            </div>
+                                <div className='ket-qua-lam-bai'>
+                                    <KetQuaLamBai />
+                                </div>
 
-                            <div className='phan-thi'>
-                                <PhanThi />
+                                <div className='phan-thi'>
+                                    <PhanThi />
+                                </div>
+                            </div>
+                            <div className='content-bottom'>
+                                <BinhLuan />
                             </div>
                         </div>
-                        <div className='content-bottom'>
-                            <BinhLuan />
-                        </div>
-                    </div>
-                    <HomeFooter />
-                </CustomScrollbars>
+                        <HomeFooter />
+                    </CustomScrollbars>
+                ) : (
+                    <div>Không có dữ liệu bài thi</div>
+                )}
+
             </React.Fragment>
         );
     }
@@ -53,6 +59,7 @@ const mapStateToProps = state => {
     return {
         isLoggedIn: state.user.isLoggedIn,
         userInfor: state.user.userInfor,
+        exam: state.user.selectedExam
     };
 };
 

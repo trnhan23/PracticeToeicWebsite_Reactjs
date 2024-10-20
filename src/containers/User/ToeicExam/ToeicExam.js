@@ -20,6 +20,7 @@ class ToeicExam extends Component {
             categoryExams: [],
             exams: [],
             selectedTitleId: '',
+            selectedExam: [],
             searchExam: '',
             loading: true,
             currentPage: 1,
@@ -105,14 +106,15 @@ class ToeicExam extends Component {
 
                         const userExam_ExamData = exam.userExam_ExamData;
                         const statusExam = Array.isArray(userExam_ExamData) && userExam_ExamData.length > 0
-                        ? userExam_ExamData[0].statusExam
-                        : false;
+                            ? userExam_ExamData[0].statusExam
+                            : false;
 
                         cateExams.push({
                             id: exam.id,
                             titleExam: exam.titleExam,
                             statusExam: statusExam,
-                            countUserTest: exam.countUserTest
+                            countUserTest: exam.countUserTest,
+                            countComment: exam.countComment
                         });
                     }
                 });
@@ -140,7 +142,6 @@ class ToeicExam extends Component {
         }
     };
 
-
     // Hàm xử lý khi chuyển trang
     handlePageChange = (newPage) => {
         this.handleCateExam(newPage);
@@ -167,8 +168,16 @@ class ToeicExam extends Component {
         });
     };
 
+    // hàm lấy đề thi (exam) từ category exam
+    handleSelectExam = (selectedExam) => {
+        selectedExam.userId = this.props.userInfor;
+        this.setState({
+            selectedExam: selectedExam
+        })
+    }
+
     render() {
-        const { categoryExamTitles, loading, errMessage, selectedTitleId, currentPage, totalPages, searchExam } = this.state;
+        const { categoryExamTitles, loading, errMessage, selectedTitleId, currentPage, totalPages } = this.state;
 
         // hàm xử lý tìm kiếm exam
         const filteredExams = this.filterExams();
@@ -209,7 +218,9 @@ class ToeicExam extends Component {
                             </div>
 
                             <div className='toeic-exam'>
-                                <CategoryExam exams={filteredExams} />
+                                <CategoryExam
+                                    exams={filteredExams}
+                                    onSelectExam={this.handleSelectExam} />
                             </div>
 
                             <div className='toeic-pagination'>

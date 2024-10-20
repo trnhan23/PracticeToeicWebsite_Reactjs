@@ -17,5 +17,8 @@ export const processLogout = () => ({
     type: actionTypes.PROCESS_LOGOUT,
 })
 
+export const selectExam = (exam) => ({
+    type: actionTypes.SELECTED_EXAM,
+    payload: exam
 
-
+});

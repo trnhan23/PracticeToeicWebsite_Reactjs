@@ -2,7 +2,8 @@ import actionTypes from "../actions/actionTypes";
 
 const initialState = {
     isLoggedIn: false,
-    userInfor: null
+    userInfor: null,
+    selectedExam: null
 }
 
 const appReducer = (state = initialState, action) => {
@@ -25,6 +26,11 @@ const appReducer = (state = initialState, action) => {
                 isLoggedIn: false,
                 userInfor: null
             }
+        case actionTypes.SELECTED_EXAM:
+            return {
+                ...state,
+                selectedExam: action.payload,
+            };
         default:
             return state;
     }

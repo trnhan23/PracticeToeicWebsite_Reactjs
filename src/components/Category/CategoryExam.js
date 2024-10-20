@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './CategoryExam.scss'
-
+import { path } from '../../utils';
+import { push } from "connected-react-router";
+import { selectExam } from '../../store/actions';
 class CategoryExam extends Component {
+
+    handleExam = (exam) => {
+        this.props.selectExam(exam);
+        this.props.navigate(path.TT_DETHI);
+    }
+
 
     render() {
         const { exams } = this.props;
@@ -26,10 +34,10 @@ class CategoryExam extends Component {
                                             <span><i className="far fa-user"></i> {exam.countUserTest}</span>
                                         </div>
                                         <div className="test-info">
-                                            <span><i className="far fa-comments"></i> 784</span>
+                                            <span><i className="far fa-comments"></i> {exam.countComment}</span>
                                             <span><br />7 phần thi | 120 câu hỏi</span>
                                         </div>
-                                        <button className="details-button">Chi tiết</button>
+                                        <button className="details-button" onClick={() => { this.handleExam(exam) }}>Chi tiết</button>
                                     </div>
                                 ))
                             ) : (
@@ -52,6 +60,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        navigate: (path) => dispatch(push(path)),
+        selectExam: (exam) => dispatch(selectExam(exam))
     };
 };
 
