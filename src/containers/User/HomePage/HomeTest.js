@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './HomeTest.scss'
 import CategoryExam from '../../../components/Category/CategoryExam';
 import { get8LatestExams } from '../../../services/examService';
+import { selectExam } from '../../../store/actions';
+import { connect } from 'react-redux';
+import { push } from "connected-react-router";
 class HomeTest extends Component {
     constructor(props) {
         super(props);
@@ -51,16 +54,23 @@ class HomeTest extends Component {
         }
     }
 
+    handleSelectExam = (selectedExam) => {
+        console.log("Click");
+        const updatedExam = { ...selectedExam, userId: this.props.userInfor };
+        this.props.selectExam(updatedExam);
+    }
+
     render() {
         const { categoryExams } = this.state;
         return (
             <React.Fragment>
-                <div className="home-test-container">
+                <div className="test-container">
                     <div className='home-test-title'>
                         Đề thi mới nhất
                     </div>
                     <div className='test'>
-                        <CategoryExam exams={categoryExams} />
+                        <CategoryExam exams={categoryExams}
+                            onSelectExam={this.handleSelectExam} />
 
                     </div>
                 </div>
@@ -69,5 +79,18 @@ class HomeTest extends Component {
     }
 
 }
+const mapStateToProps = state => {
+    return {
+        isLoggedIn: state.user.isLoggedIn,
+        userInfor: state.user.userInfor,
+    };
+};
 
-export default HomeTest;
+const mapDispatchToProps = dispatch => {
+    return {
+        navigate: (path) => dispatch(push(path)),
+        selectExam: (exam) => dispatch(selectExam(exam))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeTest);

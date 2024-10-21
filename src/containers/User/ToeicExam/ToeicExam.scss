@@ -66,6 +66,8 @@
             width: 100%;
             min-height: 50vh;
             max-height: fit-content;
+            display: flex;
+            justify-content: center;
         }
 
         .toeic-pagination {

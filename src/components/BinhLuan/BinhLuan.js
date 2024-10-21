@@ -1,83 +1,72 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './BinhLuan.scss';
-import { connect } from 'react-redux';
-import { push } from "connected-react-router";
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../Loading/Loading';
-class BinhLuan extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            exam: [],
+import { getComments, createComment } from '../../services/commentService';
 
-            // comments: [
-            //     {
-            //         id: 1,
-            //         fullName: 'hoainbzz.2004',
-            //         avatar: 'https://i.pravatar.cc/300?img=2',
-            //         cmtDate: 'July 06, 2024',
-            //         text: 'ai giải thích hộ mình câu 30 part 2 là sao z được không ạ',
-            //         replies: [
-            //             {
-            //                 id: 2,
-            //                 fullName: 'NguyenDng_71297',
-            //                 avatar: 'https://i.pravatar.cc/300?img=2',
-            //                 cmtDate: 'July 07, 2024',
-            //                 text: 'câu c chúng ta có cùng 1 cái máy tính trong 5 năm, ý là muốn dùng số tiền thừa đó để mua cái mới đó ạ',
-            //                 replies: [
-            //                     {
-            //                         id: 3,
-            //                         fullName: 'dienpguynenz',
-            //                         avatar: 'https://i.pravatar.cc/300?img=2',
-            //                         cmtDate: 'May 11, 2024',
-            //                         text: 'Mn cho mình hỏi aim 750 thì part 5 cần đúng khoảng bnh câu ạ? mình cảm ơn.',
-            //                         replies: [],
-            //                     },
-            //                 ],
-            //             },
-            //         ],
-            //     },
-            //     {
-            //         id: 4,
-            //         fullName: 'NguyenDng_71297',
-            //         avatar: 'https://i.pravatar.cc/300?img=2',
-            //         cmtDate: 'July 07, 2024',
-            //         text: 'câu c chúng ta có cùng 1 cái máy tính trong 5 năm, ý là muốn dùng số tiền thừa đó để mua cái mới đó ạ',
-            //         replies: [],
-            //     },
-            // ],
-            comments: [],
-            loading: true,
-            newComment: '',
-            replyText: '',
-            replyingTo: null,
-            replyingToReply: null,
-        };
-    }
+const BinhLuan = () => {
+    const dispatch = useDispatch();
+    const userInfor = useSelector(state => state.user.userInfor);
+    const exam = useSelector(state => state.user.selectedExam);
 
-    componentDidMount = async () => {
-        this.setState({
-            loading: false
-        })
-        this.handleSaveComment();
+    const [comments, setComments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [newComment, setNewComment] = useState('');
+    const [replyText, setReplyText] = useState('');
+    const [replyingTo, setReplyingTo] = useState(null);
+    const [replyingToReply, setReplyingToReply] = useState(null);
+
+    useEffect(() => {
+        setLoading(false);
+        handleGetComments();
+    }, []);
+
+    const handleGetComments = async () => {
+        try {
+            const res = await getComments(exam.id, userInfor.id);
+            const normalizedComments = normalizeComments(res);
+            setComments(normalizedComments);
+        } catch (error) {
+            console.error("Error fetching comments: ", error);
+        }
     };
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.comments !== this.state.comments) {
-            // Có thể thực hiện hành động nào đó khi state comments thay đổi
-            console.log('Comments have been updated:', this.state.comments);
-        }
-
-        if (prevProps.normalizedComments !== this.props.normalizedComments) {
-            this.setState({
-                comments: this.props.normalizedComments
+    const normalizeComments = (commentsData) => {
+        const commentsMap = {};
+        commentsData.forEach(comment => {
+            const { id, userId, contentComment, cmtDate, parentCmtId, comment_UserData } = comment;
+            const formattedDate = new Date(cmtDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
             });
-        }
-    }
 
-    handleAddComment = () => {
-        if (this.state.newComment.trim() === '') return;
+            const normalizedComment = {
+                id: id,
+                fullName: comment_UserData.fullName,
+                avatar: comment_UserData.avatar,
+                cmtDate: formattedDate,
+                text: contentComment,
+                replies: [],
+            };
+
+            commentsMap[id] = normalizedComment;
+
+            if (parentCmtId) {
+                if (!commentsMap[parentCmtId]) {
+                    commentsMap[parentCmtId] = { replies: [] };
+                }
+                commentsMap[parentCmtId].replies.push(normalizedComment);
+            }
+        });
+        return Object.values(commentsMap).filter(comment => !comment.parentCmtId);
+    };
+
+    const handleAddComment = () => {
+        if (newComment.trim() === '') return;
+
         const newCommentData = {
-            id: this.state.comments.length + 1,
+            id: comments.length + 1,
             fullName: 'Người dùng mới',
             avatar: 'https://via.placeholder.com/40',
             cmtDate: new Date().toLocaleDateString('en-US', {
@@ -85,17 +74,17 @@ class BinhLuan extends Component {
                 day: 'numeric',
                 year: 'numeric',
             }),
-            text: this.state.newComment.trim(),
+            text: newComment.trim(),
             replies: [],
         };
-        this.setState(prevState => ({
-            comments: [newCommentData, ...prevState.comments],
-            newComment: '',
-        }));
+
+        setComments([newCommentData, ...comments]);
+        setNewComment('');
     };
 
-    handleAddReply = (parentId) => {
-        if (this.state.replyText.trim() === '') return;
+    const handleAddReply = (parentId) => {
+        if (replyText.trim() === '') return;
+
         const newReply = {
             id: Math.random(),
             fullName: 'Người dùng mới',
@@ -105,24 +94,26 @@ class BinhLuan extends Component {
                 day: 'numeric',
                 year: 'numeric',
             }),
-            text: this.state.replyText.trim(),
+            text: replyText.trim(),
             replies: [],
         };
 
-        this.setState(prevState => ({
-            comments: prevState.comments.map(comment =>
+        setComments(prevComments =>
+            prevComments.map(comment =>
                 comment.id === parentId
                     ? { ...comment, replies: [...comment.replies, newReply] }
                     : comment
-            ),
-            replyText: '',
-            replyingTo: null,
-            replyingToReply: null,
-        }));
+            )
+        );
+
+        setReplyText('');
+        setReplyingTo(null);
+        setReplyingToReply(null);
     };
 
-    handleAddReplyToReply = (parentId) => {
-        if (this.state.replyText.trim() === '') return;
+    const handleAddReplyToReply = (parentId) => {
+        if (replyText.trim() === '') return;
+
         const newReply = {
             id: Math.random(),
             fullName: 'Người dùng mới',
@@ -132,7 +123,7 @@ class BinhLuan extends Component {
                 day: 'numeric',
                 year: 'numeric',
             }),
-            text: this.state.replyText.trim(),
+            text: replyText.trim(),
             replies: [],
         };
 
@@ -147,20 +138,16 @@ class BinhLuan extends Component {
             });
         };
 
-        this.setState(prevState => ({
-            comments: addReplyToComment(prevState.comments),
-            replyText: '',
-            replyingToReply: null,
-        }));
+        setComments(addReplyToComment(comments));
+        setReplyText('');
+        setReplyingToReply(null);
     };
 
-    handleDeleteComment = (commentId) => {
-        this.setState(prevState => ({
-            comments: prevState.comments.filter(comment => comment.id !== commentId)
-        }));
+    const handleDeleteComment = (commentId) => {
+        setComments(comments.filter(comment => comment.id !== commentId));
     };
 
-    handleDeleteReply = (commentId, replyId) => {
+    const handleDeleteReply = (commentId, replyId) => {
         const deleteReply = (comments) => {
             return comments.map(comment => {
                 if (comment.id === commentId) {
@@ -175,13 +162,11 @@ class BinhLuan extends Component {
             });
         };
 
-        this.setState(prevState => ({
-            comments: deleteReply(prevState.comments),
-        }));
+        setComments(deleteReply(comments));
     };
 
-    renderReplies = (replies, parentId) => {
-        replies.map(reply => (
+    const renderReplies = (replies, parentId) => {
+        return replies.map(reply => (
             <li key={reply.id} className="comment-item reply">
                 <div className="comment-header">
                     <img src={reply.avatar} alt={`${reply.fullName}'s avatar`} className="avatar" />
@@ -189,137 +174,79 @@ class BinhLuan extends Component {
                     <span className="cmtDate">, {reply.cmtDate}</span>
                 </div>
                 <p className="comment-text">{reply.text}</p>
-                <button
-                    className="reply-button"
-                    onClick={() => this.setState({ replyingToReply: reply.id })}
-                >
-                    Trả lời
-                </button>
-                <button
-                    className="delete-button"
-                    onClick={() => this.handleDeleteReply(parentId, reply.id)}
-                >
-                    Xóa
-                </button>
+                <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Trả lời</button>
+                <button className="delete-button" onClick={() => handleDeleteReply(parentId, reply.id)}>Xóa</button>
 
-                {this.state.replyingToReply === reply.id && (
+                {replyingToReply === reply.id && (
                     <div className="reply-input">
                         <input
                             type="text"
                             placeholder="Nhập câu trả lời ..."
-                            value={this.state.replyText}
-                            onChange={(e) => this.setState({ replyText: e.target.value })}
-                            onKeyDown={(e) =>
-                                e.key === 'Enter' && this.handleAddReplyToReply(reply.id)
-                            }
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleAddReplyToReply(reply.id)}
                         />
-                        <button onClick={() => this.handleAddReplyToReply(reply.id)}>
-                            Gửi
-                        </button>
+                        <button onClick={() => handleAddReplyToReply(reply.id)}>Gửi</button>
                     </div>
                 )}
 
                 {reply.replies.length > 0 && (
-                    <ul className="reply-list">{this.renderReplies(reply.replies, reply.id)}</ul>
+                    <ul className="reply-list">{renderReplies(reply.replies, reply.id)}</ul>
                 )}
             </li>
         ));
+    };
+
+    if (loading) {
+        return <div><Loading /></div>;
     }
 
-    handleSaveComment = () => {
-        const { normalizedComments } = this.props;
-        if (normalizedComments) {
-            this.setState({
-                comments: normalizedComments
-            }, () => {
-                console.log("KT handleSaveComment: ", this.state.comments);
-            });
-        } else {
-            console.warn("normalizedComments is undefined or null.");
-        }
-    }
-
-    render() {
-        const { loading } = this.state;
-        const { normalizedComments } = this.props;
-        if (loading) {
-            return <div><Loading /></div>;
-        }
-        return (
-            <div className="binh-luan-container">
-                <h3>Bình luận</h3>
-                <div className="comment-input">
-                    <input
-                        type="text"
-                        placeholder="Chia sẻ cảm nghĩ của bạn ..."
-                        value={this.state.newComment}
-                        onChange={(e) => this.setState({ newComment: e.target.value })}
-                        onKeyDown={(e) => e.key === 'Enter' && this.handleAddComment()}
-                    />
-                    <button onClick={this.handleAddComment}>Gửi</button>
-                </div>
-                <ul className="comment-list">
-                    {normalizedComments.map(comment => (
-                        <li key={comment.id} className="comment-item">
-                            <div className="comment-header">
-                                <img src={comment.avatar} alt={`${comment.fullName}'s avatar`} className="avatar" />
-                                <span className="fullName">{comment.fullName}</span>
-                                <span className="cmtDate">, {comment.cmtDate}</span>
-                            </div>
-                            <p className="comment-text">{comment.text}</p>
-                            <button
-                                className="reply-button"
-                                onClick={() => this.setState({ replyingTo: comment.id })}
-                            >
-                                Trả lời
-                            </button>
-                            <button
-                                className="delete-button"
-                                onClick={() => this.handleDeleteComment(comment.id)}
-                            >
-                                Xóa
-                            </button>
-
-                            {this.state.replyingTo === comment.id && (
-                                <div className="reply-input">
-                                    <input
-                                        type="text"
-                                        placeholder="Nhập câu trả lời ..."
-                                        value={this.state.replyText}
-                                        onChange={(e) => this.setState({ replyText: e.target.value })}
-                                        onKeyDown={(e) =>
-                                            e.key === 'Enter' && this.handleAddReply(comment.id)
-                                        }
-                                    />
-                                    <button onClick={() => this.handleAddReply(comment.id)}>
-                                        Gửi
-                                    </button>
-                                </div>
-                            )}
-
-                            {comment.replies.length > 0 && (
-                                <ul className="reply-list">{this.renderReplies(comment.replies, comment.id)}</ul>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+    return (
+        <div className="binh-luan-container">
+            <h3>Bình luận</h3>
+            <div className="comment-input">
+                <input
+                    type="text"
+                    placeholder="Chia sẻ cảm nghĩ của bạn ..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
+                />
+                <button onClick={handleAddComment}>Gửi</button>
             </div>
-        );
-    }
-}
+            <ul className="comment-list">
+                {comments.map(comment => (
+                    <li key={comment.id} className="comment-item">
+                        <div className="comment-header">
+                            <img src={comment.avatar} alt={`${comment.fullName}'s avatar`} className="avatar" />
+                            <span className="username">{comment.fullName}</span>
+                            <span className="date">, {comment.cmtDate}</span>
+                        </div>
+                        <p className="comment-text">{comment.text}</p>
+                        <button className="reply-button" onClick={() => setReplyingTo(comment.id)}>Trả lời</button>
+                        <button className="delete-button" onClick={() => handleDeleteComment(comment.id)}>Xóa</button>
 
-const mapStateToProps = state => {
-    return {
-        isLoggedIn: state.user.isLoggedIn,
-        userInfor: state.user.userInfor,
-        exam: state.user.selectedExam
-    };
+                        {replyingTo === comment.id && (
+                            <div className="reply-input">
+                                <input
+                                    type="text"
+                                    placeholder="Nhập câu trả lời ..."
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddReply(comment.id)}
+                                />
+                                <button onClick={() => handleAddReply(comment.id)}>Gửi</button>
+                            </div>
+                        )}
+
+                        {comment.replies.length > 0 && (
+                            <ul className="reply-list">{renderReplies(comment.replies, comment.id)}</ul>
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        navigate: (path) => dispatch(push(path)),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(BinhLuan);
+export default BinhLuan;

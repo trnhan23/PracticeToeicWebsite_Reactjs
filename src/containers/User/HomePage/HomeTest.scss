@@ -1,8 +1,14 @@
-.home-test-container {
+.test-container {
 
-    margin-top: 15px;
+    // margin-top: 15px;
+    text-align: center;
+    margin: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 
     .home-test-title {
+        flex-direction: column;
         margin-bottom: -40px;
         text-align: center;
         font-size: 30px;
@@ -11,8 +17,8 @@
     }
 
     .test {
-        text-align: center;
         display: flex;
         justify-content: center;
     }
+
 }
