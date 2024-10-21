@@ -6,8 +6,17 @@ class ThongTinDeThi extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeButton: 'info'
+            activeButton: 'info',
+            exam: [],
         };
+    }
+
+    componentDidMount = () => {
+        const { exam } = this.props;
+        this.setState({
+            exam: exam
+        })
+
     }
 
     handleButtonClick = (buttonType) => {
@@ -15,9 +24,7 @@ class ThongTinDeThi extends Component {
     }
 
     render() {
-        const { activeButton } = this.state;
-        const { exam } = this.props;
-        console.log("KT exam: ", exam);
+        const { activeButton, exam } = this.state;
 
         return (
             <div className="test-info-container">

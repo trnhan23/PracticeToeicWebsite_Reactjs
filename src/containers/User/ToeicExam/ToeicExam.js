@@ -11,6 +11,8 @@ import Loading from '../../../components/Loading/Loading';
 import Pagination from '../../../components/Pagination/Pagination';
 import { getAllCategoryExams } from '../../../services/categoryExamService';
 import { getAllExams } from '../../../services/examService';
+import { selectExam } from '../../../store/actions';
+
 class ToeicExam extends Component {
 
     constructor(props) {
@@ -80,8 +82,6 @@ class ToeicExam extends Component {
                 loading: false,
                 selectedTitleId: firstId,
                 categoryExamTitles: cateExamTitles
-            }, () => {
-                console.log("The first title exam id: ", this.state.selectedTitleId);
             });
 
         } else {
@@ -170,11 +170,11 @@ class ToeicExam extends Component {
 
     // hàm lấy đề thi (exam) từ category exam
     handleSelectExam = (selectedExam) => {
-        selectedExam.userId = this.props.userInfor;
-        this.setState({
-            selectedExam: selectedExam
-        })
+        console.log("Click");
+        const updatedExam = { ...selectedExam, userId: this.props.userInfor };
+        this.props.selectExam(updatedExam);
     }
+
 
     render() {
         const { categoryExamTitles, loading, errMessage, selectedTitleId, currentPage, totalPages } = this.state;
@@ -249,6 +249,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigate: (path) => dispatch(push(path)),
+        selectExam: (exam) => dispatch(selectExam(exam))
     };
 };
 

@@ -26,7 +26,8 @@ class HomeTest extends Component {
                             id: exam.id,
                             titleExam: exam.titleExam,
                             stateExam: exam.stateExam,
-                            countUserTest: exam.countUserTest
+                            countUserTest: exam.countUserTest,
+                            countComment: exam.countComment
                         });
                     }
                 });
@@ -51,11 +52,17 @@ class HomeTest extends Component {
     }
 
     render() {
-        const {categoryExams} = this.state;
+        const { categoryExams } = this.state;
         return (
             <React.Fragment>
                 <div className="home-test-container">
-                    <CategoryExam exams={categoryExams} />
+                    <div className='home-test-title'>
+                        Đề thi mới nhất
+                    </div>
+                    <div className='test'>
+                        <CategoryExam exams={categoryExams} />
+
+                    </div>
                 </div>
             </React.Fragment>
         );

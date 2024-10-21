@@ -8,7 +8,6 @@ class CategoryExamTitle extends Component {
     // }
 
     handleCategoryClick = (id) => {
-        console.log("Check cateExamTitle ID: ", id);
         this.props.onSelectCategory(id);
     };
 
