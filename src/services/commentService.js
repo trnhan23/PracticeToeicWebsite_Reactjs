@@ -14,8 +14,18 @@ const createComment = (data) => {
     return axios.post('/api/create-comment', data);
 }
 
+const deleteComment = (commentId, currentId) => {
+    return axios.delete('/api/delete-comment', {
+        data: {
+            commentId: commentId,
+            currentId: currentId
+        }
+    });
+}
+
 export {
     getComments,
     createComment,
+    deleteComment,
 
 }

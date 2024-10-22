@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './BinhLuan.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../Loading/Loading';
-import { getComments, createComment } from '../../services/commentService';
+import { getComments, createComment, deleteComment } from '../../services/commentService';
 
 const BinhLuan = () => {
     const dispatch = useDispatch();
@@ -33,10 +33,9 @@ const BinhLuan = () => {
     };
 
     const normalizeComments = (commentsData) => {
-        const commentsMap = {};  // Map to store all comments by their ID
-        const rootComments = []; // Array to store top-level (root) comments
+        const commentsMap = {};
+        const rootComments = [];
     
-        // Step 1: Create a map of all comments (both parent and child)
         commentsData.forEach(comment => {
             const formattedDate = comment.cmtDate
                 ? new Date(comment.cmtDate).toLocaleDateString('en-US', {
@@ -44,7 +43,7 @@ const BinhLuan = () => {
                     month: 'long',
                     day: 'numeric',
                 })
-                : 'Chưa có ngày'; // Handle missing date
+                : 'Chưa có ngày';
     
             commentsMap[comment.id] = {
                 id: comment.id,
@@ -52,17 +51,15 @@ const BinhLuan = () => {
                 avatar: comment.comment_UserData?.avatar || 'https://via.placeholder.com/40',
                 cmtDate: formattedDate,
                 text: comment.contentComment || 'Nội dung không có sẵn',
-                replies: [],  // Initialize with an empty replies array
+                userId: comment.userId,
+                replies: [],
             };
         });
     
-        // Step 2: Establish parent-child relationships
         commentsData.forEach(comment => {
             if (comment.parentCmtId === null) {
-                // Root comment (top-level)
                 rootComments.push(commentsMap[comment.id]);
             } else {
-                // Child comment, add it to the parent's replies
                 const parentComment = commentsMap[comment.parentCmtId];
                 if (parentComment) {
                     parentComment.replies.push(commentsMap[comment.id]);
@@ -70,21 +67,8 @@ const BinhLuan = () => {
             }
         });
     
-        // Step 3: Recursively flatten nested replies for all comments
-        const flattenReplies = (commentList) => {
-            commentList.forEach(comment => {
-                if (comment.replies.length > 0) {
-                    flattenReplies(comment.replies);  // Recursively check for more nested replies
-                }
-            });
-        };
-    
-        flattenReplies(rootComments);
-    
-        // Return the root comments array which contains all comments and replies in a structured format
         return rootComments;
     };
-    
 
     const handleAddComment = async () => {
         if (newComment.trim() === '') return;
@@ -92,13 +76,13 @@ const BinhLuan = () => {
         const commentData = {
             examId: exam.id,
             userId: userInfor.id,
-            parentCmtId: null,  // For new comments, parentCmtId is null
+            parentCmtId: null,
             contentComment: newComment.trim(),
         };
 
         try {
             await createComment(commentData);
-            await handleGetComments();  // Refresh comments after adding
+            await handleGetComments();
             setNewComment('');
         } catch (error) {
             console.error("Error adding comment: ", error);
@@ -111,13 +95,13 @@ const BinhLuan = () => {
         const replyData = {
             examId: exam.id,
             userId: userInfor.id,
-            parentCmtId: parentId,  // For replies, specify parent comment ID
+            parentCmtId: parentId,
             contentComment: replyText.trim(),
         };
 
         try {
             await createComment(replyData);
-            await handleGetComments();  // Refresh comments after adding
+            await handleGetComments();
             setReplyText('');
             setReplyingTo(null);
         } catch (error) {
@@ -131,17 +115,26 @@ const BinhLuan = () => {
         const replyData = {
             examId: exam.id,
             userId: userInfor.id,
-            parentCmtId: parentId,  // For replies, specify parent comment ID
+            parentCmtId: parentId,
             contentComment: replyText.trim(),
         };
 
         try {
             await createComment(replyData);
-            await handleGetComments();  // Refresh comments after adding
+            await handleGetComments();
             setReplyText('');
             setReplyingToReply(null);
         } catch (error) {
             console.error("Error adding reply to reply: ", error);
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await deleteComment(commentId, userInfor.id);
+            await handleGetComments(); // Refresh comments after deletion
+        } catch (error) {
+            console.error("Error deleting comment: ", error);
         }
     };
 
@@ -154,17 +147,21 @@ const BinhLuan = () => {
                     <span className="cmtDate">, {reply.cmtDate}</span>
                 </div>
                 <p className="comment-text">{reply.text}</p>
-                <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Reply</button>
+                <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Trả lời</button>
+                {userInfor.id === reply.userId && (
+                            <button className="delete-button" onClick={() => handleDeleteComment(reply.id)}>Xoá</button>
+                        )}
+
                 {replyingToReply === reply.id && (
                     <div className="reply-input">
                         <input
                             type="text"
-                            placeholder="Enter reply ..."
+                            placeholder="Phản hồi ..."
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddReplyToReply(reply.id)}
                         />
-                        <button onClick={() => handleAddReplyToReply(reply.id)}>Send</button>
+                        <button onClick={() => handleAddReplyToReply(reply.id)}>Gửi</button>
                     </div>
                 )}
 
@@ -202,12 +199,15 @@ const BinhLuan = () => {
                         </div>
                         <p className="comment-text">{comment.text}</p>
                         <button className="reply-button" onClick={() => setReplyingTo(comment.id)}>Trả lời</button>
+                        {userInfor.id === comment.userId && (
+                            <button className="delete-button" onClick={() => handleDeleteComment(comment.id)}>Xoá</button>
+                        )}
 
                         {replyingTo === comment.id && (
                             <div className="reply-input">
                                 <input
                                     type="text"
-                                    placeholder="Enter reply ..."
+                                    placeholder="Phản hồi ..."
                                     value={replyText}
                                     onChange={(e) => setReplyText(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddReply(comment.id)}
