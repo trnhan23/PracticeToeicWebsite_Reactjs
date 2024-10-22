@@ -17,7 +17,6 @@ const BinhLuan = () => {
     const [replyingToReply, setReplyingToReply] = useState(null);
 
     useEffect(() => {
-        setLoading(false);
         handleGetComments();
     }, []);
 
@@ -28,141 +27,122 @@ const BinhLuan = () => {
             setComments(normalizedComments);
         } catch (error) {
             console.error("Error fetching comments: ", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const normalizeComments = (commentsData) => {
-        const commentsMap = {};
+        const commentsMap = {};  // Map to store all comments by their ID
+        const rootComments = []; // Array to store top-level (root) comments
+    
+        // Step 1: Create a map of all comments (both parent and child)
         commentsData.forEach(comment => {
-            const { id, userId, contentComment, cmtDate, parentCmtId, comment_UserData } = comment;
-            const formattedDate = new Date(cmtDate).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            });
-
-            const normalizedComment = {
-                id: id,
-                fullName: comment_UserData.fullName,
-                avatar: comment_UserData.avatar,
+            const formattedDate = comment.cmtDate
+                ? new Date(comment.cmtDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                })
+                : 'Chưa có ngày'; // Handle missing date
+    
+            commentsMap[comment.id] = {
+                id: comment.id,
+                fullName: comment.comment_UserData?.fullName || 'Người dùng ẩn danh',
+                avatar: comment.comment_UserData?.avatar || 'https://via.placeholder.com/40',
                 cmtDate: formattedDate,
-                text: contentComment,
-                replies: [],
+                text: comment.contentComment || 'Nội dung không có sẵn',
+                replies: [],  // Initialize with an empty replies array
             };
-
-            commentsMap[id] = normalizedComment;
-
-            if (parentCmtId) {
-                if (!commentsMap[parentCmtId]) {
-                    commentsMap[parentCmtId] = { replies: [] };
+        });
+    
+        // Step 2: Establish parent-child relationships
+        commentsData.forEach(comment => {
+            if (comment.parentCmtId === null) {
+                // Root comment (top-level)
+                rootComments.push(commentsMap[comment.id]);
+            } else {
+                // Child comment, add it to the parent's replies
+                const parentComment = commentsMap[comment.parentCmtId];
+                if (parentComment) {
+                    parentComment.replies.push(commentsMap[comment.id]);
                 }
-                commentsMap[parentCmtId].replies.push(normalizedComment);
             }
         });
-        return Object.values(commentsMap).filter(comment => !comment.parentCmtId);
+    
+        // Step 3: Recursively flatten nested replies for all comments
+        const flattenReplies = (commentList) => {
+            commentList.forEach(comment => {
+                if (comment.replies.length > 0) {
+                    flattenReplies(comment.replies);  // Recursively check for more nested replies
+                }
+            });
+        };
+    
+        flattenReplies(rootComments);
+    
+        // Return the root comments array which contains all comments and replies in a structured format
+        return rootComments;
     };
+    
 
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (newComment.trim() === '') return;
 
-        const newCommentData = {
-            id: comments.length + 1,
-            fullName: 'Người dùng mới',
-            avatar: 'https://via.placeholder.com/40',
-            cmtDate: new Date().toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-            }),
-            text: newComment.trim(),
-            replies: [],
+        const commentData = {
+            examId: exam.id,
+            userId: userInfor.id,
+            parentCmtId: null,  // For new comments, parentCmtId is null
+            contentComment: newComment.trim(),
         };
 
-        setComments([newCommentData, ...comments]);
-        setNewComment('');
+        try {
+            await createComment(commentData);
+            await handleGetComments();  // Refresh comments after adding
+            setNewComment('');
+        } catch (error) {
+            console.error("Error adding comment: ", error);
+        }
     };
 
-    const handleAddReply = (parentId) => {
+    const handleAddReply = async (parentId) => {
         if (replyText.trim() === '') return;
 
-        const newReply = {
-            id: Math.random(),
-            fullName: 'Người dùng mới',
-            avatar: 'https://via.placeholder.com/40',
-            cmtDate: new Date().toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-            }),
-            text: replyText.trim(),
-            replies: [],
+        const replyData = {
+            examId: exam.id,
+            userId: userInfor.id,
+            parentCmtId: parentId,  // For replies, specify parent comment ID
+            contentComment: replyText.trim(),
         };
 
-        setComments(prevComments =>
-            prevComments.map(comment =>
-                comment.id === parentId
-                    ? { ...comment, replies: [...comment.replies, newReply] }
-                    : comment
-            )
-        );
-
-        setReplyText('');
-        setReplyingTo(null);
-        setReplyingToReply(null);
+        try {
+            await createComment(replyData);
+            await handleGetComments();  // Refresh comments after adding
+            setReplyText('');
+            setReplyingTo(null);
+        } catch (error) {
+            console.error("Error adding reply: ", error);
+        }
     };
 
-    const handleAddReplyToReply = (parentId) => {
+    const handleAddReplyToReply = async (parentId) => {
         if (replyText.trim() === '') return;
 
-        const newReply = {
-            id: Math.random(),
-            fullName: 'Người dùng mới',
-            avatar: 'https://via.placeholder.com/40',
-            cmtDate: new Date().toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-            }),
-            text: replyText.trim(),
-            replies: [],
+        const replyData = {
+            examId: exam.id,
+            userId: userInfor.id,
+            parentCmtId: parentId,  // For replies, specify parent comment ID
+            contentComment: replyText.trim(),
         };
 
-        const addReplyToComment = (comments) => {
-            return comments.map((comment) => {
-                if (comment.id === parentId) {
-                    return { ...comment, replies: [...comment.replies, newReply] };
-                } else if (comment.replies.length > 0) {
-                    return { ...comment, replies: addReplyToComment(comment.replies) };
-                }
-                return comment;
-            });
-        };
-
-        setComments(addReplyToComment(comments));
-        setReplyText('');
-        setReplyingToReply(null);
-    };
-
-    const handleDeleteComment = (commentId) => {
-        setComments(comments.filter(comment => comment.id !== commentId));
-    };
-
-    const handleDeleteReply = (commentId, replyId) => {
-        const deleteReply = (comments) => {
-            return comments.map(comment => {
-                if (comment.id === commentId) {
-                    return {
-                        ...comment,
-                        replies: comment.replies.filter(reply => reply.id !== replyId),
-                    };
-                } else if (comment.replies.length > 0) {
-                    return { ...comment, replies: deleteReply(comment.replies) };
-                }
-                return comment;
-            });
-        };
-
-        setComments(deleteReply(comments));
+        try {
+            await createComment(replyData);
+            await handleGetComments();  // Refresh comments after adding
+            setReplyText('');
+            setReplyingToReply(null);
+        } catch (error) {
+            console.error("Error adding reply to reply: ", error);
+        }
     };
 
     const renderReplies = (replies, parentId) => {
@@ -174,19 +154,17 @@ const BinhLuan = () => {
                     <span className="cmtDate">, {reply.cmtDate}</span>
                 </div>
                 <p className="comment-text">{reply.text}</p>
-                <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Trả lời</button>
-                <button className="delete-button" onClick={() => handleDeleteReply(parentId, reply.id)}>Xóa</button>
-
+                <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Reply</button>
                 {replyingToReply === reply.id && (
                     <div className="reply-input">
                         <input
                             type="text"
-                            placeholder="Nhập câu trả lời ..."
+                            placeholder="Enter reply ..."
                             value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddReplyToReply(reply.id)}
                         />
-                        <button onClick={() => handleAddReplyToReply(reply.id)}>Gửi</button>
+                        <button onClick={() => handleAddReplyToReply(reply.id)}>Send</button>
                     </div>
                 )}
 
@@ -224,13 +202,12 @@ const BinhLuan = () => {
                         </div>
                         <p className="comment-text">{comment.text}</p>
                         <button className="reply-button" onClick={() => setReplyingTo(comment.id)}>Trả lời</button>
-                        <button className="delete-button" onClick={() => handleDeleteComment(comment.id)}>Xóa</button>
 
                         {replyingTo === comment.id && (
                             <div className="reply-input">
                                 <input
                                     type="text"
-                                    placeholder="Nhập câu trả lời ..."
+                                    placeholder="Enter reply ..."
                                     value={replyText}
                                     onChange={(e) => setReplyText(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleAddReply(comment.id)}

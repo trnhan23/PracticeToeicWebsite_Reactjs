@@ -9,6 +9,7 @@ import CustomScrollbars from '../../../components/CustomScrollbars';
 import ThongTinDeThi from '../../../components/KetQua/ThongTinDeThi';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
+import Comment from '../../../components/BinhLuan/Comment';
 class TTDeThi extends Component {
     constructor(props) {
         super(props);
@@ -101,7 +102,8 @@ class TTDeThi extends Component {
                                 </div>
                             </div>
                             <div className='content-bottom'>
-                                <BinhLuan normalizedComments={normalizedComments} />
+                                <BinhLuan />
+                                {/* <Comment /> */}
                             </div>
                         </div>
                         <HomeFooter />
