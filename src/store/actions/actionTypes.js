@@ -14,6 +14,10 @@ const actionTypes = Object.freeze({
     //exam
     SELECTED_EXAM: 'SELECTED_EXAM',
 
+    // part
+
+    SELECTED_PARTS: 'SELECTED_PARTS'
+
 })
 
 export default actionTypes;

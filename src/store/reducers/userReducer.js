@@ -3,7 +3,8 @@ import actionTypes from "../actions/actionTypes";
 const initialState = {
     isLoggedIn: false,
     userInfor: null,
-    selectedExam: null
+    selectedExam: null,
+    selectedParts: null
 }
 
 const appReducer = (state = initialState, action) => {
@@ -30,6 +31,11 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 selectedExam: action.payload,
+            };
+        case actionTypes.SELECTED_PARTS:
+            return {
+                ...state,
+                selectedParts: action.payload,
             };
         default:
             return state;

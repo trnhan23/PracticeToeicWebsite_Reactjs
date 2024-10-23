@@ -5,6 +5,7 @@ export const path = {
     TOEIC_EXAM: '/toeic-exam',
     LOGIN: '/login',
     TT_DETHI: '/thong-tin-de-thi',
+    PRACTICE: '/practice-toeic',
     REGISTER: '/register',
     LOG_OUT: '/logout',
     SYSTEM: '/system'

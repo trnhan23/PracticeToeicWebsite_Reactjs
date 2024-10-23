@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import './PhanThi.scss';
+import { setSelectedParts } from '../../store/actions';
+import { path } from '../../utils';
+import { push } from "connected-react-router";
+import { connect } from 'react-redux';
 
-const PhanThi = () => {
+const PhanThi = ({setSelectedParts, navigate}) => {
     const [activeTab, setActiveTab] = useState('luyenTap');
-    const [selectedParts, setSelectedParts] = useState([]);
+    const [selectedParts, setSelectedPartsState] = useState([]);
     const [timeLimit, setTimeLimit] = useState('');
-
     const parts = [
-        { id: 'part1', label: 'Part 1 (6 câu hỏi)' },
-        { id: 'part2', label: 'Part 2 (25 câu hỏi)' },
-        { id: 'part3', label: 'Part 3 (39 câu hỏi)' },
-        { id: 'part4', label: 'Part 4 (30 câu hỏi)' },
-        { id: 'part5', label: 'Part 5 (30 câu hỏi)' },
-        { id: 'part6', label: 'Part 6 (16 câu hỏi)' },
-        { id: 'part7', label: 'Part 7 (54 câu hỏi)' },
+        { id: 'Part 1', label: 'Part 1 (6 câu hỏi)' },
+        { id: 'Part 2', label: 'Part 2 (25 câu hỏi)' },
+        { id: 'Part 3', label: 'Part 3 (39 câu hỏi)' },
+        { id: 'Part 4', label: 'Part 4 (30 câu hỏi)' },
+        { id: 'Part 5', label: 'Part 5 (30 câu hỏi)' },
+        { id: 'Part 6', label: 'Part 6 (16 câu hỏi)' },
+        { id: 'Part 7', label: 'Part 7 (54 câu hỏi)' },
     ];
 
     const handleTabChange = (tab) => {
@@ -22,7 +25,7 @@ const PhanThi = () => {
 
     const handlePartChange = (event) => {
         const { id, checked } = event.target;
-        setSelectedParts((prev) =>
+        setSelectedPartsState((prev) =>
             checked ? [...prev, id] : prev.filter((part) => part !== id)
         );
     };
@@ -30,6 +33,8 @@ const PhanThi = () => {
     const handleSubmit = () => {
         console.log('Phần thi đã chọn:', selectedParts);
         console.log('Giới hạn thời gian:', timeLimit);
+        setSelectedParts(selectedParts);
+        navigate(path.PRACTICE);
     };
 
     return (
@@ -90,4 +95,17 @@ const PhanThi = () => {
     );
 };
 
-export default PhanThi;
+const mapStateToProps = state => {
+    return {
+        isLoggedIn: state.user.isLoggedIn
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        navigate: (path) => dispatch(push(path)),
+        setSelectedParts: (exam) => dispatch(setSelectedParts(exam))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhanThi);

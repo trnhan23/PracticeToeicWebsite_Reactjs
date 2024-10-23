@@ -22,3 +22,8 @@ export const selectExam = (exam) => ({
     payload: exam
 
 });
+
+export const setSelectedParts = (parts) => ({
+    type: actionTypes.SELECTED_PARTS,
+    payload: parts
+});

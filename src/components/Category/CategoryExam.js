@@ -3,16 +3,10 @@ import { connect } from 'react-redux';
 import './CategoryExam.scss'
 import { path } from '../../utils';
 import { push } from "connected-react-router";
-import { selectExam } from '../../store/actions';
 class CategoryExam extends Component {
 
     handleExam = (exam) => {
-        console.log("KT category exam: ", exam);
-        // lưu trong redux
-        // this.props.selectExam(exam);
-        // chuyển qua toeic exam
         this.props.onSelectExam(exam);
-
         this.props.navigate(path.TT_DETHI);
     }
 

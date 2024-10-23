@@ -18,9 +18,16 @@ const createExam = (data) => {
     return axios.post('/api/create-exam', data);
 }
 
+const practiceExam = (examId, questionType) => {
+    return axios.get('/api/get-practice-exam', {
+        params: { examId, questionType }
+    })
+}
+
 export {
     getAllExams,
     get8LatestExams,
     createExam,
+    practiceExam,
 
 }
