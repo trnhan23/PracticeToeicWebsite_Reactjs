@@ -5,6 +5,8 @@ import CustomScrollbars from '../../../components/CustomScrollbars';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import './Practice.scss';
+import { practiceExam } from '../../../services/examService';
+
 class Practice extends Component {
     constructor(props) {
         super(props);
@@ -21,24 +23,46 @@ class Practice extends Component {
                 'Part 7': { questions: Array(54).fill('Question'), hasAudio: false, choices: 4 },
             },
             answers: {},
+            questionsData: []
         };
         this.timer = null;
     }
 
     componentDidMount() {
         this.startTimer();
+        this.handlePartChange(this.state.activePart);
+        console.log("Kiểm tra handlePartChange: ", this.state.activePart);
     }
-    
+
 
     componentDidUpdate(prevProps) {
-        if (prevProps.selectedParts !== this.props.selectedParts) {
-            const newPart = this.props.selectedParts[0] || 'Part 1';
-            this.setState({ activePart: newPart });
-        }
+        // if (prevProps.selectedParts !== this.props.selectedParts) {
+        //     const newPart = this.props.selectedParts[0] || 'Part 1';
+        //     this.setState({ activePart: newPart });
+        //     this.handlePartChange(this.state.activePart);
+        //     console.log("Kiểm tra handlePartChange: ", this.state.activePart);
+        // }
     }
 
     componentWillUnmount() {
         clearInterval(this.timer);
+    }
+
+    handleQuestionExam = async (examId, questionType) => {
+        try {
+            let res = await practiceExam(examId, questionType);
+            if (res.errCode === 0) {
+                this.setState({
+                    questionsData: res.exams.data,
+                }, () => {
+                    console.log("Kiểm tra questionData: ", this.state.questionsData);
+                });
+            } else {
+                console.log("Error: ", res);
+            }
+        } catch (e) {
+            console.log("Error: ", e);
+        }
     }
 
     startTimer = () => {
@@ -66,10 +90,14 @@ class Practice extends Component {
         alert('Bài thi đã được nộp!');
     };
 
-    handlePartChange = (part) => {
-        this.restoreAnswers(part);
-        this.setState({ activePart: part });
-    };
+    // handlePartChange = (part) => {
+    //     const { exam } = this.props;
+
+    //     this.restoreAnswers(part);
+    //     this.setState({ activePart: part });
+    //     console.log("kiểm tra: ", exam.id + " và " + part);
+    //     this.handleQuestionExam(exam.id, part);
+    // };
 
     handleAnswerChange = (part, questionIndex, answer) => {
         this.setState((prevState) => ({
@@ -87,7 +115,7 @@ class Practice extends Component {
         const { activePart, parts, answers } = this.state;
         const partData = parts[activePart];
         const answerChoices = ['A', 'B', 'C', 'D'].slice(0, partData.choices);
-
+        const { examsData } = this.state;
         return (
             <div className="questions-container">
                 {partData.questions.map((q, index) => (
@@ -134,15 +162,15 @@ class Practice extends Component {
     };
 
     renderQuestions = (startIndex) => {
-        const { activePart, parts, answers } = this.state;
+        const { activePart, parts, answers, questionsData } = this.state;
         const partData = parts[activePart];
         const answerChoices = ['A', 'B', 'C', 'D'].slice(0, partData.choices);
-    
+
         return (
             <div className="questions-container">
                 {partData.questions.map((q, index) => {
-                    const globalIndex = startIndex + index; // Tính số thứ tự câu hỏi
-    
+                    const globalIndex = startIndex + index;
+
                     return (
                         <div key={index} className="question-item">
                             <span>{`${globalIndex}`}</span>
@@ -155,9 +183,9 @@ class Practice extends Component {
                                             value={choice}
                                             checked={
                                                 answers[activePart] &&
-                                                answers[activePart][index] === choice
-                                                ? true
-                                                : false  // Thêm điều kiện kiểm tra để tránh undefined
+                                                    answers[activePart][index] === choice
+                                                    ? true
+                                                    : false
                                             }
                                             onChange={() =>
                                                 this.handleAnswerChange(activePart, index, choice)
@@ -174,15 +202,15 @@ class Practice extends Component {
             </div>
         );
     };
-    
+
 
     getStartIndex = (part) => {
         const { parts } = this.state;
-        let index = 1; // Câu đầu tiên bắt đầu từ 1
+        let index = 1;
 
         for (let key of Object.keys(parts)) {
-            if (key === part) break; // Khi tới Part hiện tại thì dừng lại
-            index += parts[key].questions.length; // Cộng số câu của các Part trước đó
+            if (key === part) break;
+            index += parts[key].questions.length;
         }
         return index;
     };
@@ -249,14 +277,15 @@ class Practice extends Component {
     };
 
     handlePartChange = (part) => {
+        const { exam } = this.props;
         this.setState((prevState) => {
-            // Kiểm tra nếu answers của part mới chưa có trong state, khởi tạo nó
+
             if (!prevState.answers[part]) {
                 return {
                     activePart: part,
                     answers: {
                         ...prevState.answers,
-                        [part]: {}, // Khởi tạo object rỗng cho part mới
+                        [part]: {},
                     },
                 };
             }
@@ -264,12 +293,14 @@ class Practice extends Component {
                 activePart: part,
             };
         });
-        this.restoreAnswers(part); // Khôi phục đáp án từ localStorage nếu có
+        this.restoreAnswers(part);
+        console.log("kiểm tra: ", exam.id + " và " + part);
+        this.handleQuestionExam(exam.id, part);
     };
-    
+
 
     render() {
-        const { selectedParts } = this.props;
+        const { selectedParts, exam } = this.props;
         const { activePart, remainingTime } = this.state;
 
         return (
@@ -278,7 +309,7 @@ class Practice extends Component {
                     <HomeHeader />
                     <div className="luyen-tap-layout">
                         <div className="header">
-                            <h3>Practice Set TOEIC 2020 Test 1</h3>
+                            <h3>{exam.titleExam}</h3>
                             <button className='out'>Thoát</button>
                         </div>
                         <div className="main-content">

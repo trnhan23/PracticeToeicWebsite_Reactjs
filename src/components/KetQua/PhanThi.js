@@ -5,7 +5,7 @@ import { path } from '../../utils';
 import { push } from "connected-react-router";
 import { connect } from 'react-redux';
 
-const PhanThi = ({setSelectedParts, navigate}) => {
+const PhanThi = ({ setSelectedParts, navigate }) => {
     const [activeTab, setActiveTab] = useState('luyenTap');
     const [selectedParts, setSelectedPartsState] = useState([]);
     const [timeLimit, setTimeLimit] = useState('');
@@ -31,9 +31,10 @@ const PhanThi = ({setSelectedParts, navigate}) => {
     };
 
     const handleSubmit = () => {
-        console.log('Phần thi đã chọn:', selectedParts);
         console.log('Giới hạn thời gian:', timeLimit);
-        setSelectedParts(selectedParts);
+        const parts = selectedParts && selectedParts.length > 0 ? selectedParts : ['Part 1', 'Part 2', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7'];
+        console.log('Phần thi đã chọn:', parts);
+        setSelectedParts(parts);
         navigate(path.PRACTICE);
     };
 
