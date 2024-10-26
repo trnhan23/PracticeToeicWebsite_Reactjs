@@ -31,18 +31,17 @@ class Practice extends Component {
     componentDidMount() {
         this.startTimer();
         this.handlePartChange(this.state.activePart);
-        console.log("Kiểm tra handlePartChange: ", this.state.activePart);
     }
 
 
-    componentDidUpdate(prevProps) {
-        // if (prevProps.selectedParts !== this.props.selectedParts) {
-        //     const newPart = this.props.selectedParts[0] || 'Part 1';
-        //     this.setState({ activePart: newPart });
-        //     this.handlePartChange(this.state.activePart);
-        //     console.log("Kiểm tra handlePartChange: ", this.state.activePart);
-        // }
+    componentDidUpdate(prevProps, prevState) {
+        const { answers } = this.state;
+    
+        if (prevState.answers !== answers) {
+            this.renderPartButtons();
+        }
     }
+    
 
     componentWillUnmount() {
         clearInterval(this.timer);
@@ -54,8 +53,6 @@ class Practice extends Component {
             if (res.errCode === 0) {
                 this.setState({
                     questionsData: res.exams.data,
-                }, () => {
-                    console.log("Kiểm tra questionData: ", this.state.questionsData);
                 });
             } else {
                 console.log("Error: ", res);
@@ -103,7 +100,7 @@ class Practice extends Component {
     };
 
     renderPartButtons = () => {
-        const { parts } = this.state;
+        const { parts, answers } = this.state;
         const { selectedParts } = this.props;
 
         const getStartIndex = (part) => {
@@ -126,10 +123,13 @@ class Practice extends Component {
                                 {data.questions.map((_, idx) => {
                                     const questionNumber = getStartIndex(part) + idx;
 
+                                    // Kiểm tra xem có đáp án cho câu hỏi này không
+                                    const hasAnswer = answers[part] && answers[part][questionNumber];
+
                                     return (
                                         <button
                                             key={idx}
-                                            className="question-button"
+                                            className={`question-button ${hasAnswer ? 'selected' : ''}`}
                                             onClick={() => this.handlePartChange(part)}
                                         >
                                             {questionNumber}
@@ -181,7 +181,6 @@ class Practice extends Component {
             };
         });
         this.restoreAnswers(part);
-        console.log("kiểm tra: ", exam.id + " và " + part);
         this.handleQuestionExam(exam.id, part);
     };
 
@@ -226,7 +225,6 @@ class Practice extends Component {
                 {questionsData
                     .filter(q => q.questionType === activePart)
                     .map((partData, index) => {
-                        const globalIndex = startIndex + index;
 
                         return (
                             <div key={partData.id} className="question-item">
@@ -296,7 +294,6 @@ class Practice extends Component {
                 {questionsData
                     .filter(q => q.questionType === activePart)
                     .map((partData, index) => {
-                        const globalIndex = startIndex + index;
 
                         return (
                             <div key={partData.id} className="question-item">
@@ -361,6 +358,20 @@ class Practice extends Component {
                     })}
             </div>
         );
+    };
+
+    handleAnswerChange = (part, questionIndex, answer) => {
+        this.setState((prevState) => ({
+            answers: {
+                ...prevState.answers,
+                [part]: {
+                    ...prevState.answers[part],
+                    [questionIndex]: answer,
+                },
+            },
+        }), () => {
+            console.log("Kiểm tra đáp án: ", this.state.answers);
+        });
     };
 
     renderPart125 = (startIndex) => {
@@ -463,7 +474,6 @@ class Practice extends Component {
 
                                 <div className="questions-view">
                                     {this.renderQuestions(this.getStartIndex(activePart))}
-                                    {/* {this.renderPart125(this.getStartIndex(activePart))} */}
                                 </div>
 
                             </div>
@@ -473,11 +483,6 @@ class Practice extends Component {
                                 <button className="submit-button" onClick={this.handleSubmit}>
                                     Nộp bài
                                 </button>
-                                <p className='p1' onClick={this.saveAnswers}>
-                                    Khôi phục/ lưu bài làm <i className="fa-solid fa-chevron-right"></i>
-                                </p>
-
-                                <p className='p2'> Chú ý:Bạn có thể click vào số thứ tự câu hỏi trong bài để đánh dấu review</p>
                                 {this.renderPartButtons()}
                             </div>
                         </div>

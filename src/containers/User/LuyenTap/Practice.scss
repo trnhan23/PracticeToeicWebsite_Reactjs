@@ -228,6 +228,21 @@ $font-family: 'Arial', sans-serif;
                                 color: $white-color;
                             }
                         }
+
+                        .question-button.selected {
+                            background-color: $primary-color;
+                            color: $white-color;
+                        }
+
+                        .question-button.true {
+                            background-color: green;
+                            color: $white-color;
+                        }
+
+                        .question-button.false {
+                            background-color: red;
+                            color: $white-color;
+                        }
                     }
                 }
             }
