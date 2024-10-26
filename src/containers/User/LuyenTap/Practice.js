@@ -23,6 +23,7 @@ class Practice extends Component {
                 'Part 7': { questions: Array(54).fill('Question'), hasAudio: false, choices: 4 },
             },
             answers: {},
+            currentAnswers: {},
             questionsData: []
         };
         this.timer = null;
@@ -36,12 +37,12 @@ class Practice extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { answers } = this.state;
-    
+
         if (prevState.answers !== answers) {
             this.renderPartButtons();
         }
     }
-    
+
 
     componentWillUnmount() {
         clearInterval(this.timer);
@@ -87,17 +88,17 @@ class Practice extends Component {
         alert('Bài thi đã được nộp!');
     };
 
-    handleAnswerChange = (part, questionIndex, answer) => {
-        this.setState((prevState) => ({
-            answers: {
-                ...prevState.answers,
-                [part]: {
-                    ...prevState.answers[part],
-                    [questionIndex]: answer,
-                },
-            },
-        }));
-    };
+    // handleAnswerChange = (part, questionIndex, answer) => {
+    //     this.setState((prevState) => ({
+    //         answers: {
+    //             ...prevState.answers,
+    //             [part]: {
+    //                 ...prevState.answers[part],
+    //                 [questionIndex]: answer,
+    //             },
+    //         },
+    //     }));
+    // };
 
     renderPartButtons = () => {
         const { parts, answers } = this.state;
@@ -116,19 +117,17 @@ class Practice extends Component {
             <div className="part-question-wrapper">
                 {Object.entries(parts)
                     .filter(([part]) => selectedParts.includes(part))
-                    .map(([part, data], index) => (
-                        <div key={index} className="part-section">
+                    .map(([part, data]) => (
+                        <div key={part} className="part-section">
                             <h5>{part}</h5>
                             <div className="question-grid">
                                 {data.questions.map((_, idx) => {
                                     const questionNumber = getStartIndex(part) + idx;
-
-                                    // Kiểm tra xem có đáp án cho câu hỏi này không
                                     const hasAnswer = answers[part] && answers[part][questionNumber];
 
                                     return (
                                         <button
-                                            key={idx}
+                                            key={questionNumber}
                                             className={`question-button ${hasAnswer ? 'selected' : ''}`}
                                             onClick={() => this.handlePartChange(part)}
                                         >
@@ -154,35 +153,54 @@ class Practice extends Component {
 
     // Hàm khôi phục đáp án từ localStorage
     restoreAnswers = (part) => {
-        const savedAnswers = JSON.parse(localStorage.getItem(`answers-${part}`)) || {};
-        this.setState((prevState) => ({
-            answers: {
-                ...prevState.answers,
-                [part]: savedAnswers,
-            },
-        }));
+        const answers = this.state.answers[part];
+        if (Object.keys(answers).length > 0) {
+            Object.entries(answers).forEach(([questionNumber, answer]) => {
+                const input = document.querySelector(`input[name="question-${part}-${questionNumber}"][value="${answer}"]`);
+                if (input) {
+                    input.checked = true;
+                }
+            });
+        }
     };
 
     handlePartChange = (part) => {
         const { exam } = this.props;
-        this.setState((prevState) => {
 
-            if (!prevState.answers[part]) {
-                return {
-                    activePart: part,
-                    answers: {
-                        ...prevState.answers,
-                        [part]: {},
-                    },
-                };
-            }
-            return {
-                activePart: part,
-            };
+        this.setState((prevState) => ({
+            activePart: part,
+            answers: {
+                ...prevState.answers,
+                [part]: prevState.answers[part] || {},
+            },
+        }), () => {
+            this.restoreAnswers(part);
+            this.handleQuestionExam(exam.id, part);
         });
-        this.restoreAnswers(part);
-        this.handleQuestionExam(exam.id, part);
     };
+
+
+    // handlePartChange = (part) => {
+    //     const { exam } = this.props;
+    //     this.setState((prevState) => {
+
+    //         if (!prevState.answers[part]) {
+    //             return {
+    //                 activePart: part,
+    //                 answers: {
+    //                     ...prevState.answers,
+    //                     [part]: {},
+    //                 },
+    //             };
+    //         }
+    //         return {
+    //             activePart: part,
+    //         };
+    //     });
+
+    //     this.restoreAnswers(part);
+    //     this.handleQuestionExam(exam.id, part);
+    // };
 
     renderAudioBar = (audioFile) => {
         return (
@@ -193,14 +211,14 @@ class Practice extends Component {
         );
     };
 
-    renderQuestions = (startIndex) => {
+    renderQuestions = () => {
         const { activePart } = this.state;
         if (["Part 1", "Part 2", "Part 5"].includes(activePart)) {
-            return this.renderPart125(startIndex);
+            return this.renderPart125();
         } else if (["Part 3", "Part 4"].includes(activePart)) {
-            return this.renderPart34(startIndex);
+            return this.renderPart34();
         } else if (["Part 6", "Part 7"].includes(activePart)) {
-            return this.renderPart67(startIndex);
+            return this.renderPart67();
         }
         return null;
     };
@@ -216,7 +234,7 @@ class Practice extends Component {
         return index;
     };
 
-    renderPart67 = (startIndex) => {
+    renderPart67 = () => {
         const { activePart, answers, questionsData } = this.state;
         if (!["Part 6", "Part 7"].includes(activePart)) return null;
 
@@ -254,20 +272,12 @@ class Practice extends Component {
                                                     <label key={choice} className="choice-label">
                                                         <input
                                                             type="radio"
-                                                            name={`question-${activePart}-${partData.id}-${qIndex}`}
+                                                            name={`question-${question.numberQuestion}`}
                                                             value={choice}
-                                                            checked={answers[activePart] && answers[activePart][partData.id] && answers[activePart][partData.id][qIndex] === choice}
-                                                            onChange={() => {
-                                                                const newAnswer = { ...answers };
-                                                                if (!newAnswer[activePart]) {
-                                                                    newAnswer[activePart] = {};
-                                                                }
-                                                                if (!newAnswer[activePart][partData.id]) {
-                                                                    newAnswer[activePart][partData.id] = {};
-                                                                }
-                                                                newAnswer[activePart][partData.id][qIndex] = choice;
-                                                                this.setState({ answers: newAnswer });
-                                                            }}
+                                                            checked={answers[activePart] && answers[activePart][question.numberQuestion] === choice}
+                                                            onChange={() =>
+                                                                this.handleAnswerChange(activePart, question.numberQuestion, choice)
+                                                            }
                                                             className="choice-input"
                                                         />
                                                         {choice}. {question[`answer${choice}`]}
@@ -285,10 +295,9 @@ class Practice extends Component {
         );
     }
 
-    renderPart34 = (startIndex) => {
+    renderPart34 = () => {
         const { activePart, answers, questionsData } = this.state;
         if (!["Part 3", "Part 4"].includes(activePart)) return null;
-
         return (
             <div className="questions-container">
                 {questionsData
@@ -313,7 +322,6 @@ class Practice extends Component {
 
                                 {partData.RLQA_ReadAndListenData.map((questionData, qIndex) => {
                                     const question = questionData.RLQA_QuestionAndAnswerData;
-
                                     return (
                                         <div key={question.id} className="question-item">
                                             <span>{`${question.numberQuestion}`}</span>
@@ -329,25 +337,18 @@ class Practice extends Component {
                                                     <label key={choice} className="choice-label">
                                                         <input
                                                             type="radio"
-                                                            name={`question-${activePart}-${partData.id}-${qIndex}`} // Đặt tên độc nhất cho mỗi câu hỏi
+                                                            name={`question-${question.numberQuestion}`}
                                                             value={choice}
-                                                            checked={answers[activePart] && answers[activePart][partData.id] && answers[activePart][partData.id][qIndex] === choice}
+                                                            checked={answers[activePart] && answers[activePart][question.numberQuestion] === choice}
                                                             onChange={() => {
-                                                                const newAnswer = { ...answers };
-                                                                if (!newAnswer[activePart]) {
-                                                                    newAnswer[activePart] = {};
-                                                                }
-                                                                if (!newAnswer[activePart][partData.id]) {
-                                                                    newAnswer[activePart][partData.id] = {};
-                                                                }
-                                                                newAnswer[activePart][partData.id][qIndex] = choice;
-                                                                this.setState({ answers: newAnswer });
+                                                                this.handleAnswerChange(activePart, question.numberQuestion, choice);
                                                             }}
                                                             className="choice-input"
                                                         />
                                                         {choice}. {question[`answer${choice}`]}
                                                         <br />
                                                     </label>
+
                                                 ))}
                                             </div>
                                         </div>
@@ -374,7 +375,7 @@ class Practice extends Component {
         });
     };
 
-    renderPart125 = (startIndex) => {
+    renderPart125 = () => {
         const { activePart, answers, questionsData } = this.state;
         if (!["Part 1", "Part 2", "Part 5"].includes(activePart)) return null;
 
@@ -383,7 +384,6 @@ class Practice extends Component {
                 {questionsData
                     .filter(q => q.questionType === activePart)
                     .map((partData, index) => {
-                        const globalIndex = startIndex + index;
 
                         return (
                             <div key={partData.id} className="question-item">
@@ -420,11 +420,11 @@ class Practice extends Component {
                                                     <label key={choice} className="choice-label">
                                                         <input
                                                             type="radio"
-                                                            name={`question-${partData.id}-${qIndex}`}
+                                                            name={`question-${question.numberQuestion}`}
                                                             value={choice}
-                                                            checked={answers[activePart] && answers[activePart][globalIndex] === choice}
+                                                            checked={answers[activePart] && answers[activePart][question.numberQuestion] === choice}
                                                             onChange={() =>
-                                                                this.handleAnswerChange(activePart, globalIndex, choice)
+                                                                this.handleAnswerChange(activePart, question.numberQuestion, choice)
                                                             }
                                                             className="choice-input"
                                                         />
@@ -473,7 +473,7 @@ class Practice extends Component {
                                 </div>
 
                                 <div className="questions-view">
-                                    {this.renderQuestions(this.getStartIndex(activePart))}
+                                    {this.renderQuestions()}
                                 </div>
 
                             </div>
