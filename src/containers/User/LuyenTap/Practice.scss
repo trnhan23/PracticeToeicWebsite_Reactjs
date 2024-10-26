@@ -99,6 +99,11 @@ $font-family: 'Arial', sans-serif;
                 .question-item {
                     margin-bottom: 15px;
 
+                    .text-container {
+                        padding-top: 30px;
+                        font-size: 18px;
+                    }
+
                     .question-image {
                         width: 100%;
                         max-width: 400px;
@@ -124,6 +129,7 @@ $font-family: 'Arial', sans-serif;
                     .answer-choices {
                         display: flex;
                         gap: 10px;
+                        flex-direction: column;
 
                         .choice-label {
                             display: flex;

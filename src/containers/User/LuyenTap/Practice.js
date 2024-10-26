@@ -90,15 +90,6 @@ class Practice extends Component {
         alert('Bài thi đã được nộp!');
     };
 
-    // handlePartChange = (part) => {
-    //     const { exam } = this.props;
-
-    //     this.restoreAnswers(part);
-    //     this.setState({ activePart: part });
-    //     console.log("kiểm tra: ", exam.id + " và " + part);
-    //     this.handleQuestionExam(exam.id, part);
-    // };
-
     handleAnswerChange = (part, questionIndex, answer) => {
         this.setState((prevState) => ({
             answers: {
@@ -109,110 +100,6 @@ class Practice extends Component {
                 },
             },
         }));
-    };
-
-    renderQuestions = () => {
-        const { activePart, parts, answers } = this.state;
-        const partData = parts[activePart];
-        const answerChoices = ['A', 'B', 'C', 'D'].slice(0, partData.choices);
-        const { examsData } = this.state;
-        return (
-            <div className="questions-container">
-                {partData.questions.map((q, index) => (
-                    <div key={index} className="question-item">
-                        <span>{`${index + 1}`}</span>
-                        <div className="answer-choices">
-                            {answerChoices.map((choice) => (
-                                <label key={choice} className="choice-label">
-                                    <input
-                                        type="radio"
-                                        name={`question-${index}`}
-                                        value={choice}
-                                        checked={
-                                            answers[activePart] &&
-                                            answers[activePart][index] === choice
-                                        }
-                                        onChange={() =>
-                                            this.handleAnswerChange(activePart, index, choice)
-                                        }
-                                        className="choice-input"
-                                    />
-                                    {choice}
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
-    renderAudioBar = () => {
-        const { activePart } = this.state;
-        const showAudioBar = ['Part 1', 'Part 2', 'Part 3', 'Part 4'].includes(activePart);
-
-        return (
-            showAudioBar && (
-                <audio controls className="audio-bar">
-                    <source src={`/audio/${activePart}.mp3`} type="audio/mp3" />
-                    Trình duyệt của bạn không hỗ trợ âm thanh.
-                </audio>
-            )
-        );
-    };
-
-    renderQuestions = (startIndex) => {
-        const { activePart, parts, answers, questionsData } = this.state;
-        const partData = parts[activePart];
-        const answerChoices = ['A', 'B', 'C', 'D'].slice(0, partData.choices);
-
-        return (
-            <div className="questions-container">
-                {partData.questions.map((q, index) => {
-                    const globalIndex = startIndex + index;
-
-                    return (
-                        <div key={index} className="question-item">
-                            <span>{`${globalIndex}`}</span>
-                            <div className="answer-choices">
-                                {answerChoices.map((choice) => (
-                                    <label key={choice} className="choice-label">
-                                        <input
-                                            type="radio"
-                                            name={`question-${globalIndex}`}
-                                            value={choice}
-                                            checked={
-                                                answers[activePart] &&
-                                                    answers[activePart][index] === choice
-                                                    ? true
-                                                    : false
-                                            }
-                                            onChange={() =>
-                                                this.handleAnswerChange(activePart, index, choice)
-                                            }
-                                            className="choice-input"
-                                        />
-                                        {choice}
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-
-
-    getStartIndex = (part) => {
-        const { parts } = this.state;
-        let index = 1;
-
-        for (let key of Object.keys(parts)) {
-            if (key === part) break;
-            index += parts[key].questions.length;
-        }
-        return index;
     };
 
     renderPartButtons = () => {
@@ -298,6 +185,252 @@ class Practice extends Component {
         this.handleQuestionExam(exam.id, part);
     };
 
+    renderAudioBar = (audioFile) => {
+        return (
+            <audio controls className="audio-bar">
+                <source src={audioFile} type="audio/mp3" />
+                Trình duyệt của bạn không hỗ trợ âm thanh.
+            </audio>
+        );
+    };
+
+    renderQuestions = (startIndex) => {
+        const { activePart } = this.state;
+        if (["Part 1", "Part 2", "Part 5"].includes(activePart)) {
+            return this.renderPart125(startIndex);
+        } else if (["Part 3", "Part 4"].includes(activePart)) {
+            return this.renderPart34(startIndex);
+        } else if (["Part 6", "Part 7"].includes(activePart)) {
+            return this.renderPart67(startIndex);
+        }
+        return null;
+    };
+
+    getStartIndex = (part) => {
+        const { parts } = this.state;
+        let index = 1;
+
+        for (let key of Object.keys(parts)) {
+            if (key === part) break;
+            index += parts[key].questions.length;
+        }
+        return index;
+    };
+
+    renderPart67 = (startIndex) => {
+        const { activePart, answers, questionsData } = this.state;
+        if (!["Part 6", "Part 7"].includes(activePart)) return null;
+
+        return (
+            <div className="questions-container">
+                {questionsData
+                    .filter(q => q.questionType === activePart)
+                    .map((partData, index) => {
+                        const globalIndex = startIndex + index;
+
+                        return (
+                            <div key={partData.id} className="question-item">
+
+                                {/* Text */}
+                                {partData.text && (
+                                    <div className="text-container">
+                                        {partData.text}
+                                    </div>
+                                )}
+
+                                {partData.RLQA_ReadAndListenData.map((questionData, qIndex) => {
+                                    const question = questionData.RLQA_QuestionAndAnswerData;
+
+                                    return (
+                                        <div key={question.id} className="question-item">
+                                            <span>{`${question.numberQuestion}`}</span>
+
+                                            <div className="answer-choices">
+                                                {/* Câu hỏi */}
+                                                <div className="question-text">
+                                                    {question.questionText}
+                                                </div>
+
+                                                {/* Đáp án */}
+                                                {['A', 'B', 'C', 'D'].map((choice) => (
+                                                    <label key={choice} className="choice-label">
+                                                        <input
+                                                            type="radio"
+                                                            name={`question-${activePart}-${partData.id}-${qIndex}`}
+                                                            value={choice}
+                                                            checked={answers[activePart] && answers[activePart][partData.id] && answers[activePart][partData.id][qIndex] === choice}
+                                                            onChange={() => {
+                                                                const newAnswer = { ...answers };
+                                                                if (!newAnswer[activePart]) {
+                                                                    newAnswer[activePart] = {};
+                                                                }
+                                                                if (!newAnswer[activePart][partData.id]) {
+                                                                    newAnswer[activePart][partData.id] = {};
+                                                                }
+                                                                newAnswer[activePart][partData.id][qIndex] = choice;
+                                                                this.setState({ answers: newAnswer });
+                                                            }}
+                                                            className="choice-input"
+                                                        />
+                                                        {choice}. {question[`answer${choice}`]}
+                                                        <br />
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+            </div>
+        );
+    }
+
+    renderPart34 = (startIndex) => {
+        const { activePart, answers, questionsData } = this.state;
+        if (!["Part 3", "Part 4"].includes(activePart)) return null;
+
+        return (
+            <div className="questions-container">
+                {questionsData
+                    .filter(q => q.questionType === activePart)
+                    .map((partData, index) => {
+                        const globalIndex = startIndex + index;
+
+                        return (
+                            <div key={partData.id} className="question-item">
+                                {/* Âm thanh */}
+                                {partData.audioFile && (
+                                    <audio controls className="audio-bar">
+                                        <source src={partData.audioFile} type="audio/mp3" />
+                                    </audio>
+                                )}
+
+                                {/* Hình ảnh */}
+                                {partData.images && (
+                                    <div className="image-container">
+                                        <img src={partData.images} alt="Part 3" className="question-image" />
+                                    </div>
+                                )}
+
+                                {partData.RLQA_ReadAndListenData.map((questionData, qIndex) => {
+                                    const question = questionData.RLQA_QuestionAndAnswerData;
+
+                                    return (
+                                        <div key={question.id} className="question-item">
+                                            <span>{`${question.numberQuestion}`}</span>
+
+                                            <div className="answer-choices">
+                                                {/* Câu hỏi */}
+                                                <div className="question-text">
+                                                    {question.questionText}
+                                                </div>
+
+                                                {/* Đáp án */}
+                                                {['A', 'B', 'C', 'D'].map((choice) => (
+                                                    <label key={choice} className="choice-label">
+                                                        <input
+                                                            type="radio"
+                                                            name={`question-${activePart}-${partData.id}-${qIndex}`} // Đặt tên độc nhất cho mỗi câu hỏi
+                                                            value={choice}
+                                                            checked={answers[activePart] && answers[activePart][partData.id] && answers[activePart][partData.id][qIndex] === choice}
+                                                            onChange={() => {
+                                                                const newAnswer = { ...answers };
+                                                                if (!newAnswer[activePart]) {
+                                                                    newAnswer[activePart] = {};
+                                                                }
+                                                                if (!newAnswer[activePart][partData.id]) {
+                                                                    newAnswer[activePart][partData.id] = {};
+                                                                }
+                                                                newAnswer[activePart][partData.id][qIndex] = choice;
+                                                                this.setState({ answers: newAnswer });
+                                                            }}
+                                                            className="choice-input"
+                                                        />
+                                                        {choice}. {question[`answer${choice}`]}
+                                                        <br />
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+            </div>
+        );
+    };
+
+    renderPart125 = (startIndex) => {
+        const { activePart, answers, questionsData } = this.state;
+        if (!["Part 1", "Part 2", "Part 5"].includes(activePart)) return null;
+
+        return (
+            <div className="questions-container">
+                {questionsData
+                    .filter(q => q.questionType === activePart)
+                    .map((partData, index) => {
+                        const globalIndex = startIndex + index;
+
+                        return (
+                            <div key={partData.id} className="question-item">
+                                {partData.RLQA_ReadAndListenData.map((questionData, qIndex) => {
+                                    const question = questionData.RLQA_QuestionAndAnswerData;
+
+                                    return (
+                                        <div key={question.id} className="question-item">
+                                            <span>{`${question.numberQuestion}`}</span>
+
+                                            {/* Thanh âm thanh */}
+                                            {partData.audioFile && (
+                                                <audio controls className="audio-bar">
+                                                    <source src={partData.audioFile} type="audio/mp3" />
+                                                    Trình duyệt của bạn không hỗ trợ âm thanh.
+                                                </audio>
+                                            )}
+
+                                            {/* Hiển thị hình ảnh nếu là Part 1 */}
+                                            {activePart === "Part 1" && partData.images && (
+                                                <div className="image-container">
+                                                    <img src={partData.images} alt="Part 1" className="question-image" />
+                                                </div>
+                                            )}
+
+                                            {/* Đáp án */}
+                                            <div className="answer-choices">
+                                                {(activePart === "Part 2" || activePart === "Part 5") && (
+                                                    <div className="question-text">
+                                                        {question.questionText}
+                                                    </div>
+                                                )}
+                                                {(activePart === "Part 1" ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C']).map((choice) => (
+                                                    <label key={choice} className="choice-label">
+                                                        <input
+                                                            type="radio"
+                                                            name={`question-${partData.id}-${qIndex}`}
+                                                            value={choice}
+                                                            checked={answers[activePart] && answers[activePart][globalIndex] === choice}
+                                                            onChange={() =>
+                                                                this.handleAnswerChange(activePart, globalIndex, choice)
+                                                            }
+                                                            className="choice-input"
+                                                        />
+                                                        {choice}. {question[`answer${choice}`]}
+                                                        <br />
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+            </div>
+        );
+    };
 
     render() {
         const { selectedParts, exam } = this.props;
@@ -327,9 +460,10 @@ class Practice extends Component {
                                             </button>
                                         ))}
                                 </div>
-                                {this.renderAudioBar()}
+
                                 <div className="questions-view">
                                     {this.renderQuestions(this.getStartIndex(activePart))}
+                                    {/* {this.renderPart125(this.getStartIndex(activePart))} */}
                                 </div>
 
                             </div>
