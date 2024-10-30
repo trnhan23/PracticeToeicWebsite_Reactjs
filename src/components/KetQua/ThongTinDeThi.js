@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import './ThongTinDeThi.scss';
 import { connect } from 'react-redux';
-
+import KetQuaLamBai from '../KetQua/KetQuaLamBai';
+import PhanThi from '../KetQua/PhanThi';
+import { Link } from 'react-router-dom';
 class ThongTinDeThi extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeButton: 'info',
             exam: [],
+            parts: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5", "Part 6", "Part 7"],
         };
     }
 
@@ -23,8 +26,58 @@ class ThongTinDeThi extends Component {
         this.setState({ activeButton: buttonType });
     }
 
+
+
     render() {
         const { activeButton, exam } = this.state;
+        const renderContent = () => {
+            if (activeButton === 'info') {
+                return (
+                    <>
+                        <div className="test-details">
+                            <span className="test-time">
+                                <i className="far fa-clock"></i>
+                                <p>Thời gian làm bài: 120 phút  |</p>
+                                <p>7 phần thi  |</p>
+                                <p>200 câu hỏi |</p>
+                                <p>{exam ? exam.countComment : "0"} bình luận</p>
+                            </span>
+                        </div>
+                        <div className="test-participation">
+                            <span className="test-participant-info">
+                                <i className="far fa-user"></i>
+                                {exam ? exam.countUserTest : "0"} người đã luyện tập đề thi này
+                            </span>
+                        </div>
+                        {(exam.statusExam === true ? (<div className='ket-qua-lam-bai'>
+                            <KetQuaLamBai />
+                        </div>) : '')}
+
+                        <div className='phan-thi'>
+                            <PhanThi />
+                        </div>
+                    </>
+                );
+            } else {
+                return (
+                    <div className='test-answer'>
+                        <div className='top-answer'>
+                            <Link to={`/hien-thi-dap-an/all`}>Xem đáp án đề thi</Link>
+                        </div>
+                        <div className='bottom-answer'>
+                            <div>Các phần thi:</div>
+                            <ul>
+                                {this.state.parts.map((part, index) => (
+                                    <li key={index}>
+                                        {part}: <Link to={`/hien-thi-dap-an/${part}`}>Đáp án</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                );
+            }
+        };
 
         return (
             <div className="test-info-container">
@@ -45,24 +98,10 @@ class ThongTinDeThi extends Component {
                         className={`test-action-button ${activeButton === 'transcript' ? 'active' : ''}`}
                         onClick={() => this.handleButtonClick('transcript')}
                     >
-                        Đáp án / Transcript
+                        Đáp án
                     </button>
                 </div>
-                <div className="test-details">
-                    <span className="test-time">
-                        <i className="far fa-clock"></i>
-                        <p>Thời gian làm bài: 120 phút  |</p>
-                        <p>7 phần thi  |</p>
-                        <p>200 câu hỏi |</p>
-                        <p>{exam ? exam.countComment : "0"} bình luận</p>
-                    </span>
-                </div>
-                <div className="test-participation">
-                    <span className="test-participant-info">
-                        <i className="far fa-user"></i>
-                        {exam ? exam.countUserTest : "0"} người đã luyện tập đề thi này
-                    </span>
-                </div>
+                {renderContent()}
             </div>
         );
     }

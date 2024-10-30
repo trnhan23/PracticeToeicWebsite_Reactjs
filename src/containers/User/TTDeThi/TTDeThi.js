@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
-import './TTDeThi.scss'
-import KetQuaLamBai from '../../../components/KetQua/KetQuaLamBai';
-import PhanThi from '../../../components/KetQua/PhanThi';
+import './TTDeThi.scss';
 import BinhLuan from '../../../components/BinhLuan/BinhLuan';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import ThongTinDeThi from '../../../components/KetQua/ThongTinDeThi';
@@ -36,13 +34,7 @@ class TTDeThi extends Component {
                                 <div className='thong-tin-de-thi'>
                                     <ThongTinDeThi />
                                 </div>
-                                {(exam.statusExam === true ? (<div className='ket-qua-lam-bai'>
-                                    <KetQuaLamBai />
-                                </div>) : '')}
-
-                                <div className='phan-thi'>
-                                    <PhanThi />
-                                </div>
+                                
                             </div>
                             <div className='content-bottom'>
                                 <BinhLuan />

@@ -35,7 +35,6 @@ class Practice extends Component {
         this.handlePartChange(this.state.activePart);
     }
 
-
     componentDidUpdate(prevProps, prevState) {
         const { answers } = this.state;
 
@@ -99,7 +98,6 @@ class Practice extends Component {
 
         return result;
     };
-
 
     // hàm chuẩn hoá dữ liệu khi lấy đáp án từ db
     formatCorrectAnswers = (data) => {
