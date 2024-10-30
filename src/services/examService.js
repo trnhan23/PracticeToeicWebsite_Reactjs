@@ -24,10 +24,17 @@ const practiceExam = (examId, questionType) => {
     })
 }
 
+const getAnswerExam = (examId) => {
+    return axios.get('/api/get-answer-exam', {
+        params: { examId }
+    })
+}
+
 export {
     getAllExams,
     get8LatestExams,
     createExam,
     practiceExam,
+    getAnswerExam,
 
 }

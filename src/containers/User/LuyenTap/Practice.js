@@ -5,7 +5,7 @@ import CustomScrollbars from '../../../components/CustomScrollbars';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import './Practice.scss';
-import { practiceExam } from '../../../services/examService';
+import { practiceExam, getAnswerExam } from '../../../services/examService';
 
 class Practice extends Component {
     constructor(props) {
@@ -23,8 +23,9 @@ class Practice extends Component {
                 'Part 7': { questions: Array(54).fill('Question'), hasAudio: false, choices: 4 },
             },
             answers: {},
-            currentAnswers: {},
-            questionsData: []
+            questionsData: [],
+            answerExam: {},
+            questionResults: {},
         };
         this.timer = null;
     }
@@ -83,25 +84,70 @@ class Practice extends Component {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
-    handleSubmit = () => {
-        clearInterval(this.timer);
-        alert('Bài thi đã được nộp!');
+    checkAnswers = (correctAnswers, userAnswers) => {
+        const result = [];
+
+        Object.entries(correctAnswers).forEach(([part, questions]) => {
+            Object.entries(questions).forEach(([questionNumber, correctAnswer]) => {
+                const userAnswer = userAnswers[part]?.[questionNumber] || undefined;
+                result.push({
+                    numberQuestion: parseInt(questionNumber, 10),
+                    isCorrect: userAnswer === correctAnswer
+                });
+            });
+        });
+
+        return result;
     };
 
-    // handleAnswerChange = (part, questionIndex, answer) => {
-    //     this.setState((prevState) => ({
-    //         answers: {
-    //             ...prevState.answers,
-    //             [part]: {
-    //                 ...prevState.answers[part],
-    //                 [questionIndex]: answer,
-    //             },
-    //         },
-    //     }));
-    // };
+
+    // hàm chuẩn hoá dữ liệu khi lấy đáp án từ db
+    formatCorrectAnswers = (data) => {
+        const formattedAnswers = {};
+
+        data.forEach(item => {
+            const part = item.questionType;
+
+            if (!formattedAnswers[part]) {
+                formattedAnswers[part] = {};
+            }
+
+            if (item.RLQA_ReadAndListenData && Array.isArray(item.RLQA_ReadAndListenData)) {
+                item.RLQA_ReadAndListenData.forEach(readAndListenData => {
+                    if (readAndListenData.RLQA_QuestionAndAnswerData && Array.isArray([readAndListenData.RLQA_QuestionAndAnswerData])) {
+                        const questionData = readAndListenData.RLQA_QuestionAndAnswerData;
+
+                        formattedAnswers[part][questionData.numberQuestion] = questionData.correctAnswer;
+                    }
+                });
+            }
+        });
+
+        return formattedAnswers;
+    };
+
+    handleSubmit = async () => {
+        const { exam } = this.props;
+        const { answers } = this.state;
+
+        clearInterval(this.timer);
+        let res = await getAnswerExam(exam.id);
+        const correctAnswers = this.formatCorrectAnswers(res.answers.data);
+        const resultAnswers = this.checkAnswers(correctAnswers, answers);
+
+        const questionResults = {};
+        resultAnswers.forEach(({ numberQuestion, isCorrect }) => {
+            questionResults[numberQuestion] = isCorrect ? 'true' : 'false';
+        });
+
+        this.setState({
+            answerExam: correctAnswers,
+            questionResults
+        });
+    };
 
     renderPartButtons = () => {
-        const { parts, answers } = this.state;
+        const { parts, answers, questionResults  } = this.state;
         const { selectedParts } = this.props;
 
         const getStartIndex = (part) => {
@@ -124,12 +170,15 @@ class Practice extends Component {
                                 {data.questions.map((_, idx) => {
                                     const questionNumber = getStartIndex(part) + idx;
                                     const hasAnswer = answers[part] && answers[part][questionNumber];
-
+                                    const resultClass = questionResults[questionNumber] || '';
                                     return (
                                         <button
                                             key={questionNumber}
-                                            className={`question-button ${hasAnswer ? 'selected' : ''}`}
-                                            onClick={() => this.handlePartChange(part)}
+                                            className={`question-button ${hasAnswer ? 'selected' : ''} ${resultClass}`}
+                                            onClick={() => {
+                                                console.log("Kiểm tra questionNumber: ", questionNumber)
+                                                this.handlePartChange(part)
+                                            }}
                                         >
                                             {questionNumber}
                                         </button>
@@ -142,16 +191,7 @@ class Practice extends Component {
         );
     };
 
-    // Hàm lưu đáp án đã chọn
-    saveAnswers = () => {
-        const { activePart, answers } = this.state;
-
-        // Lưu đáp án của Part hiện tại vào localStorage
-        localStorage.setItem(`answers-${activePart}`, JSON.stringify(answers[activePart] || {}));
-        alert(`Đã lưu bài làm của ${activePart}!`);
-    };
-
-    // Hàm khôi phục đáp án từ localStorage
+    // hàm khôi phục đáp án khi thay đổi part
     restoreAnswers = (part) => {
         const answers = this.state.answers[part];
         if (Object.keys(answers).length > 0) {
@@ -178,29 +218,6 @@ class Practice extends Component {
             this.handleQuestionExam(exam.id, part);
         });
     };
-
-
-    // handlePartChange = (part) => {
-    //     const { exam } = this.props;
-    //     this.setState((prevState) => {
-
-    //         if (!prevState.answers[part]) {
-    //             return {
-    //                 activePart: part,
-    //                 answers: {
-    //                     ...prevState.answers,
-    //                     [part]: {},
-    //                 },
-    //             };
-    //         }
-    //         return {
-    //             activePart: part,
-    //         };
-    //     });
-
-    //     this.restoreAnswers(part);
-    //     this.handleQuestionExam(exam.id, part);
-    // };
 
     renderAudioBar = (audioFile) => {
         return (
