@@ -4,7 +4,8 @@ const initialState = {
     isLoggedIn: false,
     userInfor: null,
     selectedExam: null,
-    selectedParts: null
+    selectedParts: null,
+    selectedTime: null,
 }
 
 const appReducer = (state = initialState, action) => {
@@ -36,6 +37,11 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 selectedParts: action.payload,
+            };
+        case actionTypes.SET_REMAINING_TIME:
+            return {
+                ...state,
+                selectedTime: action.payload * 60,
             };
         default:
             return state;

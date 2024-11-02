@@ -61,15 +61,17 @@
     font-size: 18px;
 }
 
-.time-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 50px;
-    font-size: 18px;
-    background: #f1efef;
-    color: #434242f2;
+.wrapper {
+    .time-select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 50px;
+        font-size: 18px;
+        background: #f1efef;
+        color: #434242f2;
+    }
 }
 
 /* Nút Luyện Tập */

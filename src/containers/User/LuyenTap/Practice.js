@@ -10,9 +10,10 @@ import { practiceExam, getAnswerExam } from '../../../services/examService';
 class Practice extends Component {
     constructor(props) {
         super(props);
+        console.log("sếtlect time: ", this.props.selectedTime);
         this.state = {
             activePart: (this.props.selectedParts && this.props.selectedParts[0]) || 'Part 1',
-            remainingTime: 120 * 60,
+            remainingTime: this.props.selectedTime ? this.props.selectedTime : 120 * 60,
             parts: {
                 'Part 1': { questions: Array(6).fill('Question'), hasAudio: true, choices: 4 },
                 'Part 2': { questions: Array(25).fill('Question'), hasAudio: true, choices: 3 },
@@ -31,6 +32,7 @@ class Practice extends Component {
     }
 
     componentDidMount() {
+
         this.startTimer();
         this.handlePartChange(this.state.activePart);
     }
@@ -145,7 +147,7 @@ class Practice extends Component {
     };
 
     renderPartButtons = () => {
-        const { parts, answers, questionResults  } = this.state;
+        const { parts, answers, questionResults } = this.state;
         const { selectedParts } = this.props;
 
         const getStartIndex = (part) => {
@@ -515,6 +517,8 @@ const mapStateToProps = state => {
         userInfor: state.user.userInfor,
         exam: state.user.selectedExam,
         selectedParts: state.user.selectedParts,
+        selectedTime: state.user.selectedTime,
+
     };
 };
 

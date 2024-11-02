@@ -15,8 +15,10 @@ const actionTypes = Object.freeze({
     SELECTED_EXAM: 'SELECTED_EXAM',
 
     // part
+    SELECTED_PARTS: 'SELECTED_PARTS',
 
-    SELECTED_PARTS: 'SELECTED_PARTS'
+    // time
+    SET_REMAINING_TIME: 'SET_REMAINING_TIME'
 
 })
 

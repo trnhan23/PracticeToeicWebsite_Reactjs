@@ -27,3 +27,8 @@ export const setSelectedParts = (parts) => ({
     type: actionTypes.SELECTED_PARTS,
     payload: parts
 });
+
+export const setSelectedTime = (time) => ({
+    type: actionTypes.SET_REMAINING_TIME,
+    payload: time
+})
