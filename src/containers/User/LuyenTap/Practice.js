@@ -6,13 +6,13 @@ import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import './Practice.scss';
 import { practiceExam, getAnswerExam } from '../../../services/examService';
-
+import { saveTestResult } from '../../../services/testService';
 class Practice extends Component {
     constructor(props) {
         super(props);
-        console.log("sếtlect time: ", this.props.selectedTime);
         this.state = {
             activePart: (this.props.selectedParts && this.props.selectedParts[0]) || 'Part 1',
+            startTime: this.props.selectedTime ? this.props.selectedTime : 120 * 60,
             remainingTime: this.props.selectedTime ? this.props.selectedTime : 120 * 60,
             parts: {
                 'Part 1': { questions: Array(6).fill('Question'), hasAudio: true, choices: 4 },
@@ -32,7 +32,6 @@ class Practice extends Component {
     }
 
     componentDidMount() {
-
         this.startTimer();
         this.handlePartChange(this.state.activePart);
     }
@@ -87,15 +86,23 @@ class Practice extends Component {
 
     checkAnswers = (correctAnswers, userAnswers) => {
         const result = [];
-
         Object.entries(correctAnswers).forEach(([part, questions]) => {
-            Object.entries(questions).forEach(([questionNumber, correctAnswer]) => {
-                const userAnswer = userAnswers[part]?.[questionNumber] || undefined;
-                result.push({
-                    numberQuestion: parseInt(questionNumber, 10),
-                    isCorrect: userAnswer === correctAnswer
+            if (this.props.selectedParts.includes(part)) {
+                Object.entries(questions).forEach(([questionNumber, correctAnswer]) => {
+                    const userAnswer = userAnswers[part]?.[questionNumber] || undefined;
+                    if (userAnswer !== undefined) {
+                        result.push({
+                            numberQuestion: parseInt(questionNumber, 10),
+                            isCorrect: userAnswer === correctAnswer
+                        });
+                    } else {
+                        result.push({
+                            numberQuestion: parseInt(questionNumber, 10),
+                            isCorrect: 'skip'
+                        });
+                    }
                 });
-            });
+            }
         });
 
         return result;
@@ -126,18 +133,74 @@ class Practice extends Component {
         return formattedAnswers;
     };
 
+    // hàm chuẩn hoá dữ liệu để lưu kết quả làm bài vào database
+    formatResultData(correctAnswers, userAnswers) {
+        const questions = [];
+
+        correctAnswers.answers.data.forEach((questionData) => {
+            const part = questionData.questionType;
+
+            if (this.props.selectedParts.includes(part)) {
+                const questionDetails = questionData.RLQA_ReadAndListenData[0].RLQA_QuestionAndAnswerData;
+
+                const questionArray = Array.isArray(questionDetails) ? questionDetails : [questionDetails];
+
+                questionArray.forEach((question) => {
+                    const questionId = question.id;
+                    const correctAnswer = question.correctAnswer;
+                    const numberQuestion = question.numberQuestion;
+
+                    const userAnswer = userAnswers[part]?.[numberQuestion];
+
+                    let stateAnswer;
+                    if (userAnswer === undefined) {
+                        stateAnswer = "SKIP";
+                    } else if (userAnswer === correctAnswer) {
+                        stateAnswer = "CORRECT";
+                    } else {
+                        stateAnswer = "INCORRECT";
+                    }
+
+                    questions.push({
+                        questionId: questionId.toString(),
+                        answer: userAnswer || null,
+                        stateAnswer: stateAnswer
+                    });
+                });
+            }
+        });
+
+        return { result: { questions } };
+    }
+
+    // hàm xử lý khi nộp bài
     handleSubmit = async () => {
         const { exam } = this.props;
         const { answers } = this.state;
 
         clearInterval(this.timer);
         let res = await getAnswerExam(exam.id);
+        let saveResult = await this.formatResultData(res, answers);
+        console.log("Kiểm tra lưu kết quả: ", saveResult);
+
+        let test = ({
+            examId: exam.id,
+            userId: this.props.userInfor.id,
+            testTime: this.state.startTime - this.state.remainingTime
+        })
+        let save = await saveTestResult({
+            test,
+            result: saveResult.result
+        });
+
+        console.log("KT save: ", save);
+
         const correctAnswers = this.formatCorrectAnswers(res.answers.data);
         const resultAnswers = this.checkAnswers(correctAnswers, answers);
 
         const questionResults = {};
         resultAnswers.forEach(({ numberQuestion, isCorrect }) => {
-            questionResults[numberQuestion] = isCorrect ? 'true' : 'false';
+            questionResults[numberQuestion] = isCorrect === true ? 'true' : 'false';
         });
 
         this.setState({
@@ -145,6 +208,16 @@ class Practice extends Component {
             questionResults
         });
     };
+
+    // hàm chuyển đổi thời gian
+    formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
 
     renderPartButtons = () => {
         const { parts, answers, questionResults } = this.state;

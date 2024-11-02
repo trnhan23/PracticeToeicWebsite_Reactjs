@@ -26,8 +26,6 @@ class ThongTinDeThi extends Component {
         this.setState({ activeButton: buttonType });
     }
 
-
-
     render() {
         const { activeButton, exam } = this.state;
         const renderContent = () => {
