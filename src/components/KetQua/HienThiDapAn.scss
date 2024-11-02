@@ -113,12 +113,28 @@ $font-family: 'Arial', sans-serif;
                     }
                 }
 
+                .question-item .answer-choices {
+                    display: flex;
+                    grid-gap: 10px;
+                    gap: 10px;
+                    font-size: 16px;
+                    flex-direction: column;
+
+                    
+                }
+
+                .question-item .question-item .answer-choices .transcipt {
+                    color: #35509A;
+                }
+
                 .question-answer {
                     color: #3cb46e;
                 }
             }
         }
     }
+
+    
 
     // Right Panel Section
     .right-panel {

@@ -13,13 +13,15 @@ class HienThiDapAn extends Component {
         this.state = {
             activePart: 'Part 1',
             parts: [],
-            answers: {}
+            answers: {},
+            questionsData: []
         };
     }
 
     async componentDidMount() {
         await this.fetchAnswers();
         const { part } = this.props.match.params;
+        const { exam } = this.props;
 
         if (part === 'all') {
             this.setState({
@@ -32,6 +34,10 @@ class HienThiDapAn extends Component {
                 activePart: part,
             });
         }
+
+        if (this.state.activePart === 'Part 1' || this.state.activePart === 'Part 2') {
+            this.handleQuestionExam(exam.id, this.state.activePart);
+        }
     }
 
     async componentDidUpdate(prevProps) {
@@ -42,6 +48,10 @@ class HienThiDapAn extends Component {
             await this.fetchAnswers();
             this.setState({
                 activePart: part,
+            }, () => {
+                if (this.state.activePart === 'Part 1' || this.state.activePart === 'Part 2') {
+                    this.handleQuestionExam(exam.id, this.state.activePart);
+                }
             });
         }
     }
@@ -102,8 +112,13 @@ class HienThiDapAn extends Component {
     }
 
     handlePartChange = (part) => {
+        const { exam } = this.props
         this.setState({
             activePart: part
+        }, () => {
+            if (this.state.activePart === 'Part 1' || this.state.activePart === 'Part 2') {
+                this.handleQuestionExam(exam.id, this.state.activePart);
+            }
         });
     };
 
@@ -111,9 +126,83 @@ class HienThiDapAn extends Component {
         const { activePart } = this.state;
         if (["Part 3", "Part 4", "Part 5", "Part 6", "Part 7"].includes(activePart)) {
             return this.renderPart34567();
+        } else if (["Part 1", "Part 2"].includes(activePart)) {
+            return this.renderPart12();
         }
         return null;
     };
+
+    renderPart12 = () => {
+        const { activePart, questionsData } = this.state;
+        console.log("Kiểm tra da: ", questionsData)
+        // Kiểm tra xem activePart có phải là một phần hợp lệ không
+        if (!["Part 1", "Part 2"].includes(activePart)) return null;
+
+        return (
+            <div className="questions-container">
+                {questionsData
+                    .filter(q => q.questionType === activePart)
+                    .map((partData, index) => {
+
+                        return (
+                            <div key={partData.id} className="question-item">
+                                {partData.RLQA_ReadAndListenData.map((questionData, qIndex) => {
+                                    const question = questionData.RLQA_QuestionAndAnswerData;
+
+                                    return (
+                                        <div key={question.id} className="question-item">
+                                            <span>{`${question.numberQuestion}`}</span>
+
+                                            {/* Hiển thị hình ảnh nếu là Part 1 */}
+                                            {activePart === "Part 1" && partData.images && (
+                                                <div className="image-container">
+                                                    <img src={partData.images} alt="Part 1" className="question-image" />
+                                                </div>
+                                            )}
+
+                                            {/* Đáp án */}
+                                            <div className="answer-choices">
+                                                <div className='transcript'>Transcript</div>
+
+                                                {(activePart === "Part 2") && (
+                                                    <div className="question-text">
+                                                        {question.questionText}
+                                                    </div>
+                                                )}
+                                                {(activePart === "Part 1" ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C']).map((choice) => (
+                                                    <label key={choice} className="choice-label">
+                                                        {choice}. {question[`answer${choice}`]}
+                                                        <br />
+                                                    </label>
+                                                ))}
+                                                <div className='answer'>Đáp án đúng: {question.correctAnswer}</div>
+
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+            </div>
+        );
+
+    }
+
+    handleQuestionExam = async (examId, questionType) => {
+        try {
+            let res = await practiceExam(examId, questionType);
+            if (res.errCode === 0) {
+                this.setState({
+                    questionsData: res.exams.data,
+                });
+            } else {
+                console.log("Error: ", res);
+            }
+        } catch (e) {
+            console.log("Error: ", e);
+        }
+    }
 
     renderPart34567 = () => {
         const { activePart, answers } = this.state;

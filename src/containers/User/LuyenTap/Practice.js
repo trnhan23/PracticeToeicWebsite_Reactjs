@@ -426,7 +426,7 @@ class Practice extends Component {
 
                                             {/* Đáp án */}
                                             <div className="answer-choices">
-                                                {(activePart === "Part 2" || activePart === "Part 5") && (
+                                                {(activePart === "Part 5") && (
                                                     <div className="question-text">
                                                         {question.questionText}
                                                     </div>
