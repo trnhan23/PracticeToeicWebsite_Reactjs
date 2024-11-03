@@ -1,27 +1,3 @@
-// import React from "react";
-// import SummarySection from "../../../components/ChiTietKetQua/SummarySection";
-// import './ResultContainer.scss';
-// const ResultContainer = () => {
-//   const summaryData = {
-//     totalQuestions: 200,
-//     correctAnswers: 24,
-//     incorrectAnswers: 16,
-//     skippedAnswers: 160,
-//     score: 130,
-//     completionTime: "18:12:18",
-//     listeningScore: "130/495",
-//     readingScore: "0/495",
-//   };
-
-//   return (
-//     <div className="result-container">
-//       <SummarySection data={summaryData} />
-//     </div>
-//   );
-// };
-
-// export default ResultContainer;
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
@@ -31,6 +7,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import SummarySection from "../../../components/ChiTietKetQua/SummarySection";
 import './ResultContainer.scss';
+import { useParams } from 'react-router-dom';
 class ResultContainer extends Component {
   constructor(props) {
     super(props);
@@ -42,18 +19,22 @@ class ResultContainer extends Component {
 
   }
 
-
   render() {
-    const summaryData = {
-      totalQuestions: 200,
-      correctAnswers: 24,
-      incorrectAnswers: 16,
-      skippedAnswers: 160,
-      score: 130,
-      completionTime: "18:12:18",
-      listeningScore: "130/495",
-      readingScore: "0/495",
-    };
+    const { match } = this.props;
+    const { testId } = match.params;
+    if (testId) {
+      localStorage.setItem('testId', testId);
+    }
+    // const summaryData = {
+    //   totalQuestions: 200,
+    //   correctAnswers: 24,
+    //   incorrectAnswers: 16,
+    //   skippedAnswers: 160,
+    //   score: 130,
+    //   completionTime: "18:12:18",
+    //   listeningScore: "130/495",
+    //   readingScore: "0/495",
+    // };
     return (
       <React.Fragment>
         <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
@@ -61,7 +42,8 @@ class ResultContainer extends Component {
           <div className='container'>
             <div className='content-top'>
               <div className='summary-section'>
-                <SummarySection data={summaryData} />
+                <SummarySection />
+                {/* <SummarySection data={summaryData} /> */}
               </div>
 
             </div>
