@@ -4,23 +4,37 @@ import { connect } from 'react-redux';
 import KetQuaLamBai from '../KetQua/KetQuaLamBai';
 import PhanThi from '../KetQua/PhanThi';
 import { Link } from 'react-router-dom';
+import { getExam } from '../../services/examService';
 class ThongTinDeThi extends Component {
     constructor(props) {
         super(props);
         this.state = {
             activeButton: 'info',
             exam: [],
+            examId: this.props.exam.id,
             parts: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5", "Part 6", "Part 7"],
         };
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
         const { exam } = this.props;
-        this.setState({
-            exam: exam
-        })
 
-    }
+        try {
+            const res = await getExam(this.state.examId);
+
+            if (res && res.exam) {
+                this.setState({
+                    exam: {
+                        ...exam,
+                        countUserTest: res.exam.countUserTest
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error("Failed to fetch exam data: ", error);
+        }
+    };
 
     handleButtonClick = (buttonType) => {
         this.setState({ activeButton: buttonType });

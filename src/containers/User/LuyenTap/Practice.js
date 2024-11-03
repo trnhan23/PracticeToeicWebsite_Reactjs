@@ -193,8 +193,6 @@ class Practice extends Component {
             result: saveResult.result
         });
 
-        console.log("KT save: ", save);
-
         const correctAnswers = this.formatCorrectAnswers(res.answers.data);
         const resultAnswers = this.checkAnswers(correctAnswers, answers);
 

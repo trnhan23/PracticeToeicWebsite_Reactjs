@@ -170,7 +170,6 @@ class ToeicExam extends Component {
 
     // hàm lấy đề thi (exam) từ category exam
     handleSelectExam = (selectedExam) => {
-        console.log("Click");
         const updatedExam = { ...selectedExam, userId: this.props.userInfor };
         this.props.selectExam(updatedExam);
     }

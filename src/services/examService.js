@@ -36,6 +36,12 @@ const getAnswerByPart = (examId, part) => {
     })
 }
 
+const getExam = (examId) => {
+    return axios.get('/api/get-exam', {
+        params: { examId }
+    })
+}
+
 export {
     getAllExams,
     get8LatestExams,
@@ -43,5 +49,6 @@ export {
     practiceExam,
     getAnswerExam,
     getAnswerByPart,
+    getExam,
 
 }

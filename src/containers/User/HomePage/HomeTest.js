@@ -55,7 +55,6 @@ class HomeTest extends Component {
     }
 
     handleSelectExam = (selectedExam) => {
-        console.log("Click");
         const updatedExam = { ...selectedExam, userId: this.props.userInfor };
         this.props.selectExam(updatedExam);
     }
