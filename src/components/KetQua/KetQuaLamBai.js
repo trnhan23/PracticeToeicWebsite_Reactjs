@@ -38,16 +38,25 @@ class KetQuaLamBai extends Component {
             const formattedTime = this.formatTime(test.testTime);
 
             const chiTiet = `/detail/${test.id}`;
-            const loaiBai = [...new Set(test.TestResult_TestData.map(data =>
-                data.TestResult_QuestionData.RLQA_QuestionAndAnswerData[0].RLQA_ReadAndListenData.questionType
-            ))];
+            const loaiBai = [
+                ...new Set(
+                    test.TestResult_TestData.map(data =>
+                        data.TestResult_QuestionData.RLQA_QuestionAndAnswerData[0].RLQA_ReadAndListenData.questionType
+                    )
+                )
+            ];
+            const sortedLoaiBai = loaiBai.sort((a, b) => {
+                const partA = parseInt(a.replace("Part ", ""), 10);
+                const partB = parseInt(b.replace("Part ", ""), 10);
+                return partA - partB;
+            });
 
             return {
                 ngayLam: formattedDate,
                 ketQua: resultString,
                 thoiGian: formattedTime,
                 chiTiet: chiTiet,
-                loaiBai: loaiBai,
+                loaiBai: sortedLoaiBai,
             };
         });
     };
