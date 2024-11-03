@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './SummarySection.scss';
 import { getDetailTestResult } from '../../services/testService';
+import { useHistory } from "react-router-dom";
 
 const SummarySection = () => {
     const [data, setData] = useState({
@@ -17,6 +18,7 @@ const SummarySection = () => {
         testTime: 0,
         parts: []
     });
+    const history = useHistory();
 
     const formatTime = (seconds) => {
         const hours = Math.floor(seconds / 3600);
@@ -59,13 +61,15 @@ const SummarySection = () => {
             <div className="content-top1">
                 <div className="title">Kết quả thi: Practice Set TOEIC 2020 Test 1</div>
                 <div className="tags">
-                    <span className="tag">Part 1</span>
+                    {data.parts.map((part, index) => (
+                        <span key={index} className="tag">{part}</span>
+                    ))}
                 </div>
             </div>
 
             <div className="answer-exam">
                 <div className="answer"><button>Xem chi tiết đáp án</button></div>
-                <div className="exam"><button>Quay về trang đề thi</button></div>
+                <div className="exam"><button onClick={() => history.goBack()}>Quay về trang đề thi</button></div>
             </div>
 
             <div className="result-metrics">
