@@ -1,0 +1,18 @@
+.container {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+
+    .content-top {
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        font-family: 'Arial', sans-serif;
+    }
+
+    .content-bottom {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        font-family: 'Arial', sans-serif;
+    }
+}

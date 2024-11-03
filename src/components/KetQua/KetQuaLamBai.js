@@ -87,7 +87,8 @@ class KetQuaLamBai extends Component {
             <td>{item.thoiGian}</td>
             <td>
                 <button className="btn-link" onClick={() => this.handleChiTiet(item.chiTiet)}>
-                    Xem chi tiết
+                    {/* {item.chiTiet} dạng /detail/{id của test} */}
+                    Xem chi tiết 
                 </button>
             </td>
         </tr>

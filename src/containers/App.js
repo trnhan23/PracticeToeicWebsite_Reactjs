@@ -16,6 +16,7 @@ import TTDeThi from './User/TTDeThi/TTDeThi.js';
 import { Zoom } from 'react-toastify';
 import Practice from './User/LuyenTap/Practice.js';
 import HienThiDapAn from '../components/KetQua/HienThiDapAn.js';
+import ResultContainer from './User/ChiTietKetQua/ResultContainer.js';
 class App extends Component {
 
     handlePersistorState = () => {
@@ -48,6 +49,7 @@ class App extends Component {
                                 <Route path={path.SEARCH_WORD} component={(SearchVocabulary)} />
                                 <Route path={path.TOEIC_EXAM} component={(ToeicExam)} />
                                 <Route path={path.PRACTICE} component={(Practice)} />
+                                <Route path={path.DETAIL} component={(ResultContainer)} />
                                 <Route path={path.TT_DETHI} component={(TTDeThi)} />
                                 <Route path={path.REGISTER} component={(Register)} />
                                 <Route path={path.HT_DAPAN} component={(HienThiDapAn)} />

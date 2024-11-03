@@ -516,7 +516,8 @@ class Practice extends Component {
                                                             }
                                                             className="choice-input"
                                                         />
-                                                        {choice}. {question[`answer${choice}`]}
+                                                        {choice}. {(activePart === "Part 1" || activePart === "Part 2")
+                                                            ? "" : question[`answer${choice}`]}
                                                         <br />
                                                     </label>
                                                 ))}

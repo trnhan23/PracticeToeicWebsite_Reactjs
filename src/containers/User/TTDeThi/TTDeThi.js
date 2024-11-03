@@ -15,14 +15,16 @@ class TTDeThi extends Component {
                 examId: '',
                 userId: '',
             }),
+            exam: this.props.exam,
         };
     }
     componentDidMount = async () => {
+
     }
 
 
     render() {
-        const { exam } = this.props;
+        const { exam } = this.state;
 
         return (
             <React.Fragment>

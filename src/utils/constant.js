@@ -6,6 +6,7 @@ export const path = {
     LOGIN: '/login',
     TT_DETHI: '/thong-tin-de-thi',
     HT_DAPAN: '/hien-thi-dap-an/:part',
+    DETAIL: '/detail/:testId',
     PRACTICE: '/practice-toeic',
     REGISTER: '/register',
     LOG_OUT: '/logout',
