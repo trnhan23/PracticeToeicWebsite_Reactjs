@@ -60,7 +60,7 @@ class HomeHeader extends Component {
                                 <div><a href={path.TOEIC_EXAM}><b>Đề thi TOEIC</b></a></div>
                             </div>
                             <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
-                                <div><a href="#"><b>Flashcards</b></a></div>
+                                <div><a href={path.FLASHCARD}><b>Flashcards</b></a></div>
                             </div>
                             <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
                                 <div><a href="#"><b>Blog</b></a></div>

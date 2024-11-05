@@ -17,6 +17,7 @@ import { Zoom } from 'react-toastify';
 import Practice from './User/LuyenTap/Practice.js';
 import HienThiDapAn from '../components/KetQua/HienThiDapAn.js';
 import ResultContainer from './User/ChiTietKetQua/ResultContainer.js';
+import Flashcard from './User/FlashCard/FlashCard.js';
 class App extends Component {
 
     handlePersistorState = () => {
@@ -53,6 +54,7 @@ class App extends Component {
                                 <Route path={path.TT_DETHI} component={(TTDeThi)} />
                                 <Route path={path.REGISTER} component={(Register)} />
                                 <Route path={path.HT_DAPAN} component={(HienThiDapAn)} />
+                                <Route path={path.FLASHCARD} component={(Flashcard)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>

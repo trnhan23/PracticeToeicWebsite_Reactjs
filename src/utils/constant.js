@@ -8,6 +8,7 @@ export const path = {
     HT_DAPAN: '/hien-thi-dap-an/:part',
     DETAIL: '/detail/:testId',
     PRACTICE: '/practice-toeic',
+    FLASHCARD: '/flashcard',
     REGISTER: '/register',
     LOG_OUT: '/logout',
     SYSTEM: '/system'
