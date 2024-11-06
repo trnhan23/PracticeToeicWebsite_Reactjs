@@ -6,6 +6,10 @@ const getAllFlashcards = (userId, page) => {
     });
 };
 
+const createFlashcard = (data) => {
+    return axios.post('/api/create-flashcard', data);
+};
+
 const saveWordToFlashcard = async (flashcardId, data) => {
     try {
         console.log('Sending data to API:', { flashcardId, data });
@@ -48,9 +52,7 @@ const deleteVocabFromFlashcard = async (data) => {
     }
 };
 
-const createFlashcard = (data) => {
-    return axios.post('/api/create-flashcard', data);
-};
+
 
 const editFlashcard = (flashcardId, updatedData) => {
     return axios.put('/api/edit-flashcard', {

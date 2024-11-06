@@ -32,7 +32,6 @@ class Flashcard extends Component {
     }
 
     componentDidUpdate = async (prevProps) => {
-        // Only refetch if user information changes
         if (prevProps.userInfor !== this.props.userInfor && this.props.userInfor?.id) {
             await this.fetchFlashcards();
         }
@@ -49,7 +48,6 @@ class Flashcard extends Component {
 
         try {
             const res = await getAllFlashcards(userInfor.id, page);
-            console.log("Check response:", res);
             if (Array.isArray(res.flashcards)) {
                 this.setState({
                     flashcards: res.flashcards,
@@ -66,42 +64,41 @@ class Flashcard extends Component {
         }
     };
 
+    handleInputChange = (event) => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+    };
 
-    // handleInputChange = (event) => {
-    //     const { name, value } = event.target;
-    //     this.setState({ [name]: value });
-    // };
+    handleCreateFlashcard = async () => {
+        const { userInfor } = this.props;
+        const { flashcardName, description } = this.state;
 
-    // handleCreateFlashcard = async () => {
-    //     const { userInfor } = this.props;
-    //     const { flashcardName, description } = this.state;
+        if (!flashcardName) {
+            alert("Please fill in all fields.");
+            return;
+        }
 
-    //     if (!flashcardName || !description) {
-    //         alert("Please fill in all fields.");
-    //         return;
-    //     }
-
-    //     try {
-    //         const res = await createFlashcard({
-    //             userId: userInfor.id,
-    //             flashcardName,
-    //             description
-    //         });
-    //         if (res && res.errCode === 0) {
-    //             this.setState({
-    //                 flashcardName: '',
-    //                 description: '',
-    //                 showModal: false,
-    //             });
-    //             this.fetchFlashcards();
-    //         } else {
-    //             alert('Failed to save flashcard.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error saving flashcard:', error);
-    //         alert('Failed to save flashcard.');
-    //     }
-    // };
+        try {
+            const res = await createFlashcard({
+                userId: userInfor.id,
+                flashcardName,
+                description
+            });
+            if (res && res.errCode === 0) {
+                this.setState({
+                    flashcardName: '',
+                    description: '',
+                    showModal: false,
+                });
+                this.fetchFlashcards();
+            } else {
+                alert('Failed to save flashcard.');
+            }
+        } catch (error) {
+            console.error('Error saving flashcard:', error);
+            alert('Failed to save flashcard.');
+        }
+    };
 
     // Hàm xử lý khi chuyển trang
     handlePageChange = (newPage) => {
@@ -109,7 +106,7 @@ class Flashcard extends Component {
     }
 
     renderFlashcards = () => {
-        const { flashcards, currentPage, totalPages } = this.state;
+        const { flashcards } = this.state;
 
         return (
             <React.Fragment>
@@ -141,13 +138,6 @@ class Flashcard extends Component {
                         )}
                     </div>
                 </div>
-                {/* <div className='toeic-pagination'>
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={this.handlePageChange}
-                    />
-                </div> */}
             </React.Fragment>
 
 
@@ -171,7 +161,7 @@ class Flashcard extends Component {
                                     <div className="create-list-button">
                                         <i className="fas fa-plus"></i>
                                         <div className='name'>
-                                            Tạo list từ
+                                            Tạo flashcard
                                         </div>
                                     </div>
                                 </div>
@@ -186,33 +176,6 @@ class Flashcard extends Component {
                                     )}
                                 </div>
                             </div>
-
-                            {showModal && (
-                                <div className="modal">
-                                    <div className="modal-content">
-                                        <p className="modal-title">My Flashcard</p>
-                                        <i className="fa-solid fa-x modal-close" onClick={() => this.setState({ showModal: false })}></i>
-                                        <label className="modal-input">
-                                            Flashcard Name:
-                                            <input
-                                                type="text"
-                                                name="flashcardName"
-                                                value={flashcardName}
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </label>
-                                        <label className="modal-description">
-                                            Description:
-                                            <textarea
-                                                name="description"
-                                                value={description}
-                                                onChange={this.handleInputChange}
-                                            ></textarea>
-                                        </label>
-                                        <button className="modal-save" onClick={this.handleCreateFlashcard}>Save</button>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                         <div className='pagination'>
                             <Pagination
@@ -221,7 +184,38 @@ class Flashcard extends Component {
                                 onPageChange={this.handlePageChange}
                             />
                         </div>
+
                     </div>
+                    {showModal && (
+                        <div className="modal">
+                            <div className="modal-content">
+                                <div className='modal-header'>
+                                    <div className="modal-title">Tạo Flashcard</div>
+                                    <div className='icon'>
+                                        <i className="fa-solid fa-x modal-close" onClick={() => this.setState({ showModal: false })}></i>
+                                    </div>
+                                </div>
+                                <label className="modal-input">
+                                    Tiêu đề*:
+                                    <input
+                                        type="text"
+                                        name="flashcardName"
+                                        value={flashcardName}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </label>
+                                <label className="modal-description">
+                                    Mô tả:
+                                    <textarea
+                                        name="description"
+                                        value={description}
+                                        onChange={this.handleInputChange}
+                                    ></textarea>
+                                </label>
+                                <button className="modal-save" onClick={this.handleCreateFlashcard}>Save</button>
+                            </div>
+                        </div>
+                    )}
                     <HomeFooter />
                 </CustomScrollbars>
             </React.Fragment>
