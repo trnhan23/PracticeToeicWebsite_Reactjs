@@ -1,8 +1,8 @@
 import axios from "../axios";
 
-const getAllFlashcards = (userId) => {
+const getAllFlashcards = (userId, page) => {
     return axios.get('/api/get-all-flashcard', {
-        params: { userId }
+        params: { userId, page }
     });
 };
 

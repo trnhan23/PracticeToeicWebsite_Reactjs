@@ -7,6 +7,7 @@ import HomeFooter from '../HomePage/HomeFooter';
 import { getAllFlashcards, createFlashcard } from '../../../services/flashcardService';
 import './FlashCard.scss';
 import Loading from '../../../components/Loading/Loading';
+import Pagination from '../../../components/Pagination/Pagination';
 
 class Flashcard extends Component {
     constructor(props) {
@@ -18,6 +19,9 @@ class Flashcard extends Component {
             flashcardName: '',
             description: '',
             showModal: false,
+            currentPage: 1,
+            totalPages: 0,
+            numberOfElementPerPAge: 8,
         };
     }
 
@@ -34,7 +38,7 @@ class Flashcard extends Component {
         }
     }
 
-    fetchFlashcards = async () => {
+    fetchFlashcards = async (page = 1) => {
         const { userInfor } = this.props;
 
         if (!userInfor || !userInfor.id) {
@@ -44,12 +48,14 @@ class Flashcard extends Component {
         }
 
         try {
-            const res = await getAllFlashcards(userInfor.id);
+            const res = await getAllFlashcards(userInfor.id, page);
             console.log("Check response:", res);
             if (Array.isArray(res.flashcards)) {
                 this.setState({
                     flashcards: res.flashcards,
                     loading: false,
+                    currentPage: page,
+                    totalPages: Math.ceil(res.totalCount / this.state.numberOfElementPerPAge),
                 });
             } else {
                 this.setState({ flashcards: [], loading: false });
@@ -97,43 +103,59 @@ class Flashcard extends Component {
     //     }
     // };
 
+    // Hàm xử lý khi chuyển trang
+    handlePageChange = (newPage) => {
+        this.fetchFlashcards(newPage);
+    }
+
     renderFlashcards = () => {
-        const { flashcards } = this.state;
+        const { flashcards, currentPage, totalPages } = this.state;
 
         return (
-            <div className="flashcard-container">
-                <div className='flashcard-title'>
-                    {flashcards.length > 0 ? (
-                        flashcards.map((flashcard) => (
-                            <div
-                                key={flashcard.id}
-                                className="flashcard-item"
-                                onClick={() => this.props.navigate(`/flashcard/${flashcard.id}`)}
-                            >
-                                <div className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</div>
-                                <p className="list-meta">
-                                    <i className="fa-regular fa-copy"></i>
-                                    <span>{flashcard.amount} từ | </span>
-                                    <span className="icon"><i className="far fa-user"></i></span>
-                                    <span> {flashcard.countVocabularyViewed}</span>
-                                </p>
-                                <p className="list-description">{flashcard.description || 'Không có mô tả'}</p>
-                                <div className="list-author">
-                                    <img src="https://i.pravatar.cc/300?img=2" alt="User Avatar" className="user-avatar" />
-                                    <span>{this.props.userInfor?.fullName || 'Anonymous'}</span>
+            <React.Fragment>
+                <div className="flashcard-container">
+                    <div className='flashcard-title'>
+                        {flashcards.length > 0 ? (
+                            flashcards.map((flashcard) => (
+                                <div
+                                    key={flashcard.id}
+                                    className="flashcard-item"
+                                    onClick={() => this.props.navigate(`/flashcard/${flashcard.id}`)}
+                                >
+                                    <div className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</div>
+                                    <p className="list-meta">
+                                        <i className="fa-regular fa-copy"></i>
+                                        <span>{flashcard.amount} từ | </span>
+                                        <span className="icon"><i className="far fa-user"></i></span>
+                                        <span> {flashcard.countVocabularyViewed}</span>
+                                    </p>
+                                    <p className="list-description">{flashcard.description || 'Không có mô tả'}</p>
+                                    <div className="list-author">
+                                        <img src="https://i.pravatar.cc/300?img=2" alt="User Avatar" className="user-avatar" />
+                                        <span>{this.props.userInfor?.fullName || 'Anonymous'}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p>Không có flashcard nào để hiển thị.</p>
-                    )}
+                            ))
+                        ) : (
+                            <p>Không có flashcard nào để hiển thị.</p>
+                        )}
+                    </div>
                 </div>
-            </div>
+                {/* <div className='toeic-pagination'>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={this.handlePageChange}
+                    />
+                </div> */}
+            </React.Fragment>
+
+
         );
     };
 
     render() {
-        const { loading, error, flashcardName, description, showModal } = this.state;
+        const { loading, error, flashcardName, description, showModal, currentPage, totalPages } = this.state;
 
         return (
             <React.Fragment>
@@ -191,6 +213,13 @@ class Flashcard extends Component {
                                     </div>
                                 </div>
                             )}
+                        </div>
+                        <div className='pagination'>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={this.handlePageChange}
+                            />
                         </div>
                     </div>
                     <HomeFooter />
