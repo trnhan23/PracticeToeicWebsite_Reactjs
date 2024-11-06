@@ -4,7 +4,7 @@ import { push } from "connected-react-router";
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
-import { getAllFlashcards, createFlashcard } from '../../../services/flashcardService';
+import { getAllFlashcardsPagination, createFlashcard } from '../../../services/flashcardService';
 import './FlashCard.scss';
 import Loading from '../../../components/Loading/Loading';
 import Pagination from '../../../components/Pagination/Pagination';
@@ -25,18 +25,21 @@ class Flashcard extends Component {
         };
     }
 
+    // hàm xử lý khi mới render component
     componentDidMount = async () => {
         if (this.props.userInfor?.id) {
             await this.fetchFlashcards();
         }
     }
 
+    // hàm xử lý khi state cập nhật
     componentDidUpdate = async (prevProps) => {
         if (prevProps.userInfor !== this.props.userInfor && this.props.userInfor?.id) {
             await this.fetchFlashcards();
         }
     }
 
+    // hàm gọi getAllFlashcard từ API
     fetchFlashcards = async (page = 1) => {
         const { userInfor } = this.props;
 
@@ -47,7 +50,7 @@ class Flashcard extends Component {
         }
 
         try {
-            const res = await getAllFlashcards(userInfor.id, page);
+            const res = await getAllFlashcardsPagination(userInfor.id, page);
             if (Array.isArray(res.flashcards)) {
                 this.setState({
                     flashcards: res.flashcards,
@@ -64,11 +67,13 @@ class Flashcard extends Component {
         }
     };
 
+    // hàm xử lý khi nhập flashcardName hoặc description
     handleInputChange = (event) => {
         const { name, value } = event.target;
         this.setState({ [name]: value });
     };
 
+    // hàm xử lý tạo flashcard
     handleCreateFlashcard = async () => {
         const { userInfor } = this.props;
         const { flashcardName, description } = this.state;
@@ -105,6 +110,7 @@ class Flashcard extends Component {
         this.fetchFlashcards(newPage);
     }
 
+    // hàm render flashcard
     renderFlashcards = () => {
         const { flashcards } = this.state;
 

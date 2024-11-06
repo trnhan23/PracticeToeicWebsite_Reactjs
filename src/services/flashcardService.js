@@ -1,8 +1,14 @@
 import axios from "../axios";
 
-const getAllFlashcards = (userId, page) => {
-    return axios.get('/api/get-all-flashcard', {
+const getAllFlashcardsPagination = (userId, page) => {
+    return axios.get('/api/get-all-flashcard-pagination', {
         params: { userId, page }
+    });
+};
+
+const getAllFlashcards = (userId) => {
+    return axios.get('/api/get-all-flashcard', {
+        params: { userId }
     });
 };
 
@@ -52,23 +58,22 @@ const deleteVocabFromFlashcard = async (data) => {
     }
 };
 
+// const editFlashcard = (flashcardId, updatedData) => {
+//     return axios.put('/api/edit-flashcard', {
+//         flashcardId: flashcardId,
+//         ...updatedData
+//     });
+// };
 
-
-const editFlashcard = (flashcardId, updatedData) => {
-    return axios.put('/api/edit-flashcard', {
-        flashcardId: flashcardId,
-        ...updatedData
-    });
-};
-
-const deleteFlashcard = (flashcardId) => {
-    return axios.delete('/api/delete-flashcard', {
-        data: { flashcardId: flashcardId }
-    });
-};
+// const deleteFlashcard = (flashcardId) => {
+//     return axios.delete('/api/delete-flashcard', {
+//         data: { flashcardId: flashcardId }
+//     });
+// };
 
 export {
     getAllFlashcards,
+    getAllFlashcardsPagination,
     createFlashcard,
     saveWordToFlashcard,
     saveVocabtoFlashcard,

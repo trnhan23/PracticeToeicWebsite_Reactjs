@@ -5,7 +5,9 @@ import HomeFooter from '../HomePage/HomeFooter';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import { push } from "connected-react-router";
 import { getSearchVocabularyApi, getAudioVocabularyApi } from '../../../services/vocabularyService';
+import { getAllFlashcards, saveVocabtoFlashcard, deleteVocabFromFlashcard } from '../../../services/flashcardService';
 import './SearchVocabulary.scss'
+
 class SearchVocabulary extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +18,10 @@ class SearchVocabulary extends Component {
             lang: 'en',
             searchType: 'dictionary',
             audioUS: '',
-            audioUK: ''
+            audioUK: '',
+            showModal: false,
+            flashcards: [],
+            savedWords: {}
         };
     }
 

@@ -59,7 +59,7 @@ class HomeHeader extends Component {
                             <div className={`child-content ${currentPath === path.TOEIC_EXAM ? 'active' : ''}`}>
                                 <div><a href={path.TOEIC_EXAM}><b>Đề thi TOEIC</b></a></div>
                             </div>
-                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                            <div className={`child-content ${currentPath === path.FLASHCARD || currentPath === path.FLASHCARD+"/" ? 'active' : ''}`}>
                                 <div><a href={path.FLASHCARD}><b>Flashcards</b></a></div>
                             </div>
                             <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
