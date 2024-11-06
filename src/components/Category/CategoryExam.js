@@ -10,7 +10,6 @@ class CategoryExam extends Component {
         this.props.navigate(path.TT_DETHI);
     }
 
-
     render() {
         const { exams } = this.props;
         return (

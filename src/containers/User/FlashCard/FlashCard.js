@@ -6,6 +6,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import { getAllFlashcards, createFlashcard } from '../../../services/flashcardService';
 import './FlashCard.scss';
+import Loading from '../../../components/Loading/Loading';
 
 class Flashcard extends Component {
     constructor(props) {
@@ -17,109 +18,104 @@ class Flashcard extends Component {
             flashcardName: '',
             description: '',
             showModal: false,
-            currentPage: 1,
-            itemsPerPage: 6,
         };
     }
 
-    componentDidMount() {
-        this.fetchFlashcards();
+    componentDidMount = async () => {
+        if (this.props.userInfor?.id) {
+            await this.fetchFlashcards();
+        }
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.userInfor !== this.props.userInfor) {
-            this.fetchFlashcards();
+    componentDidUpdate = async (prevProps) => {
+        // Only refetch if user information changes
+        if (prevProps.userInfor !== this.props.userInfor && this.props.userInfor?.id) {
+            await this.fetchFlashcards();
         }
     }
 
     fetchFlashcards = async () => {
         const { userInfor } = this.props;
+
         if (!userInfor || !userInfor.id) {
             console.error("User information is not available");
+            this.setState({ loading: false, error: 'User information is missing.' });
             return;
         }
 
         try {
             const res = await getAllFlashcards(userInfor.id);
-            // Kiểm tra dữ liệu trả về từ API có phải là mảng không
-            if (Array.isArray(res.flashcards.data)) {
+            console.log("Check response:", res);
+            if (Array.isArray(res.flashcards)) {
                 this.setState({
-                    flashcards: res.flashcards.data,
+                    flashcards: res.flashcards,
                     loading: false,
                 });
             } else {
-                console.error('Dữ liệu không phải là mảng:', res.flashcards.data);
                 this.setState({ flashcards: [], loading: false });
             }
         } catch (error) {
+            console.error("Error fetching flashcards:", error);
             this.setState({ loading: false, error: 'Failed to fetch flashcards.' });
         }
     };
 
 
-    handleInputChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
-    };
+    // handleInputChange = (event) => {
+    //     const { name, value } = event.target;
+    //     this.setState({ [name]: value });
+    // };
 
-    handleCreateFlashcard = async () => {
-        const { userInfor } = this.props;
-        const { flashcardName, description } = this.state;
+    // handleCreateFlashcard = async () => {
+    //     const { userInfor } = this.props;
+    //     const { flashcardName, description } = this.state;
 
-        if (!flashcardName || !description) {
-            alert("Please fill in all fields.");
-            return;
-        }
+    //     if (!flashcardName || !description) {
+    //         alert("Please fill in all fields.");
+    //         return;
+    //     }
 
-        try {
-            const res = await createFlashcard({
-                userId: userInfor.id,
-                flashcardName,
-                description
-            });
-            if (res && res.errCode === 0) {
-                this.setState({
-                    flashcardName: '',
-                    description: '',
-                    showModal: false,
-                });
-                this.fetchFlashcards();
-            } else {
-                alert('Failed to save flashcard.');
-            }
-        } catch (error) {
-            console.error('Error saving flashcard:', error);
-            alert('Failed to save flashcard.');
-        }
-    };
+    //     try {
+    //         const res = await createFlashcard({
+    //             userId: userInfor.id,
+    //             flashcardName,
+    //             description
+    //         });
+    //         if (res && res.errCode === 0) {
+    //             this.setState({
+    //                 flashcardName: '',
+    //                 description: '',
+    //                 showModal: false,
+    //             });
+    //             this.fetchFlashcards();
+    //         } else {
+    //             alert('Failed to save flashcard.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error saving flashcard:', error);
+    //         alert('Failed to save flashcard.');
+    //     }
+    // };
 
-    handlePageChange = (pageNumber) => {
-        this.setState({ currentPage: pageNumber });
-    };
     renderFlashcards = () => {
-        const { flashcards, currentPage, itemsPerPage } = this.state;
-
-        // Tính toán chỉ số bắt đầu và kết thúc cho flashcard
-        const indexOfLastFlashcard = currentPage * itemsPerPage;
-        const indexOfFirstFlashcard = indexOfLastFlashcard - itemsPerPage;
-        const currentFlashcards = Array.isArray(flashcards) ? flashcards.slice(indexOfFirstFlashcard, indexOfLastFlashcard) : [];
+        const { flashcards } = this.state;
 
         return (
             <div className="flashcard-container">
                 <div className='flashcard-title'>
-                    {currentFlashcards.length > 0 ? (
-                        currentFlashcards.map((flashcard) => (
+                    {flashcards.length > 0 ? (
+                        flashcards.map((flashcard) => (
                             <div
                                 key={flashcard.id}
                                 className="flashcard-item"
                                 onClick={() => this.props.navigate(`/flashcard/${flashcard.id}`)}
                             >
-                                <h3 className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</h3>
+                                <div className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</div>
                                 <p className="list-meta">
                                     <i className="fa-regular fa-copy"></i>
                                     <span>{flashcard.amount} từ | </span>
-                                    <span className="icon">👤</span>
-                                    <span>{flashcard.countVocabularyViewed}</span>
+                                    <span className="icon"><i className="far fa-user"></i></span>
+                                    <span> {flashcard.countVocabularyViewed}</span>
                                 </p>
                                 <p className="list-description">{flashcard.description || 'Không có mô tả'}</p>
                                 <div className="list-author">
@@ -132,21 +128,9 @@ class Flashcard extends Component {
                         <p>Không có flashcard nào để hiển thị.</p>
                     )}
                 </div>
-                <div className="pagination">
-                    {Array.from({ length: Math.ceil(flashcards.length / itemsPerPage) }, (_, index) => (
-                        <button
-                            key={index + 1}
-                            onClick={() => this.handlePageChange(index + 1)}
-                            className={index + 1 === currentPage ? 'active' : ''}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
-                </div>
             </div>
         );
     };
-
 
     render() {
         const { loading, error, flashcardName, description, showModal } = this.state;
@@ -157,17 +141,22 @@ class Flashcard extends Component {
                     <HomeHeader />
                     <div className="flashcard-layout">
                         <div className="header">
-                            <h3>My Flashcard</h3>
+                            <div className='title'>My Flashcard</div>
                         </div>
                         <div className="main-content">
                             <div className="create-list-container">
                                 <div className="create-list-card" onClick={() => this.setState({ showModal: true })}>
-                                    <div className="create-list-button">+ Create Flashcard</div>
+                                    <div className="create-list-button">
+                                        <i className="fas fa-plus"></i>
+                                        <div className='name'>
+                                            Tạo list từ
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="flashcards-display">
                                     {loading ? (
-                                        <h4>Loading...</h4>
+                                        <Loading />
                                     ) : error ? (
                                         <h4>{error}</h4>
                                     ) : (
@@ -209,18 +198,17 @@ class Flashcard extends Component {
             </React.Fragment>
         );
     }
+
 }
 
-const mapStateToProps = state => {
-    return {
-        userInfor: state.user.userInfor,
-    };
-};
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.user.isLoggedIn,
+    userInfor: state.user.userInfor,
+    exam: state.user.selectedExam,
+});
 
-const mapDispatchToProps = dispatch => {
-    return {
-        navigate: (path) => dispatch(push(path)),
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    navigate: (path) => dispatch(push(path)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Flashcard);

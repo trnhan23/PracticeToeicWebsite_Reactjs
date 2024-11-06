@@ -1,17 +1,9 @@
 import axios from "../axios";
 
-const getAllFlashcards = async (userId) => {
-    try {
-        const response = await axios.get('/api/get-all-flashcard', {
-            params: { userId }
-        });
-        console.log('API response data:', response.data);
-
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching flashcards:', error);
-        throw error;
-    }
+const getAllFlashcards = (userId) => {
+    return axios.get('/api/get-all-flashcard', {
+        params: { userId }
+    });
 };
 
 const saveWordToFlashcard = async (flashcardId, data) => {
@@ -31,6 +23,7 @@ const saveWordToFlashcard = async (flashcardId, data) => {
         throw error;
     }
 };
+
 const saveVocabtoFlashcard = async (data) => {
     try {
         console.log('Sending data to API:', { data });
@@ -42,6 +35,7 @@ const saveVocabtoFlashcard = async (data) => {
         throw error;
     }
 };
+
 const deleteVocabFromFlashcard = async (data) => {
     try {
         console.log('Sending data to API for deletion:', { data });
@@ -54,13 +48,6 @@ const deleteVocabFromFlashcard = async (data) => {
     }
 };
 
-
-
-
-
-
-
-
 const createFlashcard = (data) => {
     return axios.post('/api/create-flashcard', data);
 };
@@ -72,14 +59,18 @@ const editFlashcard = (flashcardId, updatedData) => {
     });
 };
 
-
 const deleteFlashcard = (flashcardId) => {
     return axios.delete('/api/delete-flashcard', {
         data: { flashcardId: flashcardId }
     });
 };
 
-
-export { getAllFlashcards, createFlashcard, saveWordToFlashcard, saveVocabtoFlashcard, deleteVocabFromFlashcard };
+export {
+    getAllFlashcards,
+    createFlashcard,
+    saveWordToFlashcard,
+    saveVocabtoFlashcard,
+    deleteVocabFromFlashcard
+};
 
 
