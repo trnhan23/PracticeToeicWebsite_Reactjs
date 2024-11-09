@@ -24,10 +24,21 @@ class HomeVocab extends Component {
         await this.fetchVocabInFlashcards();
     }
 
+    componentDidUpdate = async (prevProps, prevState) => {
+        if (prevState.words !== this.state.words && this.state.currentPage !== 1) {
+            await this.setState({ currentPage: 1 });
+            await this.fetchVocabInFlashcards(1);
+        }
+    };
+
+
 
     fetchVocabInFlashcards = async (page = 1) => {
         const { match } = this.props;
         const { flashcardId } = match.params;
+        if (flashcardId) {
+            localStorage.setItem('flashcardId', flashcardId);
+        }
         let res = await getVocabInFlashcardPagination(flashcardId, page);
         console.log("Kiểm tra res: ", res);
         this.setState({
@@ -41,7 +52,7 @@ class HomeVocab extends Component {
     }
 
     handlePracticeClick = () => {
-        this.setState({ showPractice: true });
+        this.setState({showPractice: true})
     };
 
     // Hàm xử lý khi chuyển trang
@@ -50,10 +61,11 @@ class HomeVocab extends Component {
     }
 
     render() {
-        if (this.state.showPractice) {
-            return <Practice />;
+        
+        const { flashcardName, amount, currentPage, totalPages, words } = this.state;
+        if(this.state.showPractice){
+            return <Practice/>;
         }
-        const { flashcardName, amount, currentPage, totalPages } = this.state;
         return (
 
             <React.Fragment>
@@ -61,7 +73,7 @@ class HomeVocab extends Component {
                 <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
                     <div className="home-vocab-container">
                         <h2>Flashcards: {flashcardName}</h2>
-                        <button className="practice-button" onClick={this.handlePracticeClick}>
+                        <button className="practice-button" onClick={() => { this.handlePracticeClick() }}>
                             Luyện tập flashcards
                         </button>
                         <div> <span className="pratice-count">List có {amount} từ</span></div>

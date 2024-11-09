@@ -64,6 +64,12 @@ const getVocabInFlashcardPagination = async (flashcardId, page) => {
     });
 }
 
+const getVocabInFlashcard = async (flashcardId) => {
+    return axios.get('/api/get-vocab-in-flashcard', {
+        params: { flashcardId }
+    });
+}
+
 // const editFlashcard = (flashcardId, updatedData) => {
 //     return axios.put('/api/edit-flashcard', {
 //         flashcardId: flashcardId,
@@ -85,6 +91,7 @@ export {
     saveVocabtoFlashcard,
     deleteVocabFromFlashcard,
     getVocabInFlashcardPagination,
+    getVocabInFlashcard,
 
 };
 

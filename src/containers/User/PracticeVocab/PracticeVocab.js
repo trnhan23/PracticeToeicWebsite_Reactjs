@@ -4,17 +4,23 @@ import HomeVocab from './HomeVocab';
 import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import CustomScrollbars from '../../../components/CustomScrollbars';
+import { withRouter } from 'react-router-dom';
+import { push } from "connected-react-router";
+import { connect } from 'react-redux';
+import { path } from '../../../utils';
+import { getVocabInFlashcard } from '../../../services/flashcardService';
 
 class PracticeVocab extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            flashcardId: '',
             showHomeVocab: false,
             isFlipped: false,
             currentWordIndex: 0,
             words: [
                 {
-                    text: 'transport',
+                    word: 'transport',
                     partOfSpeech: '(noun)',
                     pronunciation: '/trænspɔːrt/',
                     audioUK: '',
@@ -23,7 +29,7 @@ class PracticeVocab extends Component {
                     example: 'Public transport includes buses, trains, and subways.',
                 },
                 {
-                    text: 'communication',
+                    word: 'communication',
                     partOfSpeech: '(noun)',
                     pronunciation: '/kəˌmjuːnɪˈkeɪʃən/',
                     audioUK: '',
@@ -32,7 +38,7 @@ class PracticeVocab extends Component {
                     example: 'Effective communication is key in business.',
                 },
                 {
-                    text: 'collaborate',
+                    word: 'collaborate',
                     partOfSpeech: '(verb)',
                     pronunciation: '/kəˈlæbəreɪt/',
                     audioUK: '',
@@ -41,7 +47,7 @@ class PracticeVocab extends Component {
                     example: 'Teams need to collaborate effectively to succeed.',
                 },
                 {
-                    text: 'efficient',
+                    word: 'efficient',
                     partOfSpeech: '(adjective)',
                     pronunciation: '/ɪˈfɪʃənt/',
                     audioUK: '',
@@ -50,11 +56,36 @@ class PracticeVocab extends Component {
                     example: 'The new process is more efficient and cost-effective.',
                 }
             ]
+            //words: [],
         };
+    }
+
+    componentDidMount = async () => {
+        console.log("Kiểm tra word: ", this.state.words);
+        const flashcardId = localStorage.getItem('flashcardId');
+        this.setState({
+            flashcardId: flashcardId
+        }, async () => {
+            await this.fetchVocabInFlashcards();
+        })
+    }
+
+    fetchVocabInFlashcards = async () => {
+        let res = await getVocabInFlashcard(this.state.flashcardId);
+        console.log("Kiểm tra res: ", res);
+
+        this.setState({ words: res.flashcard })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // if (prevState.pokemons !== this.state.words) {
+        //     console.log('pokemons state has changed.')
+        // }
     }
 
     handleHomeVocabClick = () => {
         this.setState({ showHomeVocab: true });
+        this.props.navigate(path.FLASHCARD);
     };
 
     toggleFlip = () => {
@@ -72,8 +103,8 @@ class PracticeVocab extends Component {
         if (this.state.showHomeVocab) {
             return <HomeVocab />;
         }
-
         const currentWord = this.state.words[this.state.currentWordIndex];
+
 
         return (
             <React.Fragment>
@@ -89,7 +120,7 @@ class PracticeVocab extends Component {
 
                         <div className={`flashcard ${this.state.isFlipped ? 'flipped' : ''}`} onClick={this.toggleFlip}>
                             <div className="flashcard-front">
-                                <h3>{currentWord.text}</h3>
+                                <h3>{currentWord.word}</h3>
                                 <div className="audio-icons">
                                     <div className="us" title="Phát âm (US)">
                                         <i className="fas fa-volume-up"></i>
@@ -111,7 +142,7 @@ class PracticeVocab extends Component {
                                 </div>
                                 <div className='vocab_name'>
                                     Ví dụ:
-                                    <div className='noidung'>{currentWord.example}</div>
+                                    <div className='noidung'>{currentWord.exampleSentence}</div>
                                 </div>
                                 <i className="fa fa-repeat"></i>
                             </div>
@@ -123,7 +154,7 @@ class PracticeVocab extends Component {
                             <div className="stats" onClick={this.handleNextWord}>
                                 <i className="fa fa-forward"></i>
 
-                                <p>Đã biết, loại khỏi danh sách ôn tập</p>
+                                <p>Từ kế tiếp</p>
                             </div>
                         </div>
                     </div>
@@ -134,4 +165,17 @@ class PracticeVocab extends Component {
     }
 }
 
-export default PracticeVocab;
+const mapStateToProps = state => {
+    return {
+        isLoggedIn: state.user.isLoggedIn,
+        userInfor: state.user.userInfor,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        navigate: (path) => dispatch(push(path))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PracticeVocab);
