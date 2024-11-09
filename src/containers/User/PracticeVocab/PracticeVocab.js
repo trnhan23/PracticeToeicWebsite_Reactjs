@@ -55,8 +55,8 @@ class PracticeVocab extends Component {
                     definition: 'Achieving maximum productivity with minimum wasted effort or expense.',
                     example: 'The new process is more efficient and cost-effective.',
                 }
-            ]
-            //words: [],
+            ],
+            flashcardName: '',
         };
     }
 
@@ -71,7 +71,10 @@ class PracticeVocab extends Component {
 
     fetchVocabInFlashcards = async () => {
         let res = await getVocabInFlashcard(this.state.flashcardId);
-        this.setState({ words: res.flashcard })
+        this.setState({
+            words: res.flashcard.vocabularies,
+            flashcardName: res.flashcard.flashcardName,
+        })
     }
 
     handleHomeVocabClick = () => {
@@ -95,14 +98,14 @@ class PracticeVocab extends Component {
             return <HomeVocab />;
         }
         const currentWord = this.state.words[this.state.currentWordIndex];
-
+        const { flashcardName } = this.state;
 
         return (
             <React.Fragment>
                 <HomeHeader />
                 <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
                     <div className="practice-container">
-                        <h2>Luyện tập: Từ vựng tiếng Anh văn phòng</h2>
+                        <h2>Luyện tập: {flashcardName}</h2>
                         <div className='btn-exit'>
                             <button className="stop-list-button" onClick={this.handleHomeVocabClick}>
                                 <i className="fa-solid fa-xmark"></i>Dừng học list từ này
