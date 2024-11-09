@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './PracticeVocab.scss';
 import HomeVocab from './HomeVocab';
+import HomeHeader from '../HomePage/HomeHeader';
+import HomeFooter from '../HomePage/HomeFooter';
+import CustomScrollbars from '../../../components/CustomScrollbars';
 
 class PracticeVocab extends Component {
     constructor(props) {
@@ -73,56 +76,60 @@ class PracticeVocab extends Component {
         const currentWord = this.state.words[this.state.currentWordIndex];
 
         return (
-            <div className="practice-container">
-                <h2>Luyện tập: Từ vựng tiếng Anh văn phòng</h2>
-                <div className='btn-exit'>
-                    <button className="stop-list-button" onClick={this.handleHomeVocabClick}>
-                        <i className="fa-solid fa-xmark"></i>Dừng học list từ này
-                    </button>
-                </div>
+            <React.Fragment>
+                <HomeHeader />
+                <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
+                    <div className="practice-container">
+                        <h2>Luyện tập: Từ vựng tiếng Anh văn phòng</h2>
+                        <div className='btn-exit'>
+                            <button className="stop-list-button" onClick={this.handleHomeVocabClick}>
+                                <i className="fa-solid fa-xmark"></i>Dừng học list từ này
+                            </button>
+                        </div>
 
-                <div className={`flashcard ${this.state.isFlipped ? 'flipped' : ''}`} onClick={this.toggleFlip}>
-                    <div className="flashcard-front">
-                        <h3>{currentWord.text}</h3>
-                        <div className="audio-icons">
-                            <div className="us" title="Phát âm (US)">
-                                <i className="fas fa-volume-up"></i>
-                                <div className='name'> US</div>
+                        <div className={`flashcard ${this.state.isFlipped ? 'flipped' : ''}`} onClick={this.toggleFlip}>
+                            <div className="flashcard-front">
+                                <h3>{currentWord.text}</h3>
+                                <div className="audio-icons">
+                                    <div className="us" title="Phát âm (US)">
+                                        <i className="fas fa-volume-up"></i>
+                                        <div className='name'> US</div>
 
+                                    </div>
+                                    <div className="uk" title="Phát âm (UK)">
+                                        <i className="fas fa-volume-up"></i>
+                                        <div className='name'> UK</div>
+                                    </div>
+                                </div>
+                                <p className="part-of-speech">{currentWord.partOfSpeech} <span>{currentWord.pronunciation}</span></p>
+                                <i className="fa fa-repeat"></i>
                             </div>
-                            <div className="uk" title="Phát âm (UK)">
-                                <i className="fas fa-volume-up"></i>
-                                <div className='name'> UK</div>
+                            <div className="flashcard-back">
+                                <div className='vocab_name'>
+                                    Định nghĩa:
+                                    <div className='noidung'>{currentWord.definition}</div>
+                                </div>
+                                <div className='vocab_name'>
+                                    Ví dụ:
+                                    <div className='noidung'>{currentWord.example}</div>
+                                </div>
+                                <i className="fa fa-repeat"></i>
                             </div>
                         </div>
-                        <p className="part-of-speech">{currentWord.partOfSpeech} <span>{currentWord.pronunciation}</span></p>
-                        <i class="fa fa-repeat"></i>
-                    </div>
-                    <div className="flashcard-back">
-                        <div className='vocab_name'>
-                            Định nghĩa:
-                            <div className='noidung'>{currentWord.definition}</div>
+                        <div className="difficulty-buttons">
+                            <div className="easy"><i className="fa-regular fa-face-smile"></i><p>Dễ</p></div>
+                            <div className="medium"><i className="fa-regular fa-face-meh"></i><p>Trung bình</p></div>
+                            <div className="hard"><i className="fa-regular fa-face-sad-tear"></i><p>Khó</p></div>
+                            <div className="stats" onClick={this.handleNextWord}>
+                                <i className="fa fa-forward"></i>
+
+                                <p>Đã biết, loại khỏi danh sách ôn tập</p>
+                            </div>
                         </div>
-                        <div className='vocab_name'>
-                            Ví dụ:
-                            <div className='noidung'>{currentWord.example}</div>
-                        </div>
-                        <i class="fa fa-repeat"></i>
                     </div>
-
-                </div>
-
-                <div className="difficulty-buttons">
-                    <div className="easy"><i className="fa-regular fa-face-smile"></i><p>Dễ</p></div>
-                    <div className="medium"><i className="fa-regular fa-face-meh"></i><p>Trung bình</p></div>
-                    <div className="hard"><i className="fa-regular fa-face-sad-tear"></i><p>Khó</p></div>
-                    <div className="stats" onClick={this.handleNextWord}>
-                        <i class="fa fa-forward"></i>
-
-                        <p>Đã biết, loại khỏi danh sách ôn tập</p>
-                    </div>
-                </div>
-            </div>
+                    <HomeFooter />
+                </CustomScrollbars>
+            </React.Fragment>
         );
     }
 }
