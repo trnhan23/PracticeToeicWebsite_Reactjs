@@ -6,6 +6,8 @@ import HomeFooter from '../HomePage/HomeFooter';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import Pagination from '../../../components/Pagination/Pagination';
 import { getVocabInFlashcardPagination } from '../../../services/flashcardService';
+import { getAudioVocabularyApi } from '../../../services/vocabularyService';
+
 class HomeVocab extends Component {
     constructor(props) {
         super(props);
@@ -31,18 +33,41 @@ class HomeVocab extends Component {
             localStorage.setItem('flashcardId', flashcardId);
         }
         let res = await getVocabInFlashcardPagination(flashcardId, page);
+
+        const wordsWithAudio = await Promise.all(
+            res.flashcard.vocabularies.map(async (wordObj) => {
+                const dataAudio = await getAudioVocabularyApi(wordObj.word);
+                return {
+                    ...wordObj,
+                    audioUS: dataAudio.audioUS,
+                    audioUK: dataAudio.audioUK,
+                };
+            })
+        );
+
         this.setState({
             flashcardName: res.flashcard.flashcardName,
             amount: res.flashcard.amount,
-            words: res.flashcard.vocabularies,
-
+            words: wordsWithAudio,
             currentPage: page,
             totalPages: Math.ceil(res.totalCount / this.state.numberOfElementPerPAge),
+        }, async () => {
+            console.log("Kiểm tra audio: ", this.state.words)
+
         })
     }
 
+    playAudio = (audioUrl) => {
+        if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } else {
+            console.log("Audio URL not available");
+        }
+    };
+
     handlePracticeClick = () => {
-        this.setState({showPractice: true})
+        this.setState({ showPractice: true })
     };
 
     // Hàm xử lý khi chuyển trang
@@ -51,10 +76,10 @@ class HomeVocab extends Component {
     }
 
     render() {
-        
+
         const { flashcardName, amount, currentPage, totalPages, words } = this.state;
-        if(this.state.showPractice){
-            return <Practice/>;
+        if (this.state.showPractice) {
+            return <Practice />;
         }
         return (
 
@@ -76,15 +101,19 @@ class HomeVocab extends Component {
                                         <div className="word-info">
                                             <h3>{word.word} {word.partOfSpeech} <span className="pronunciation">{word.pronunciation}</span></h3>
                                             <div className="audio-icons">
-                                                <div className="us" title="Phát âm (US)">
-                                                    <i className="fas fa-volume-up"></i>
-                                                    <div className='name'> US</div>
 
-                                                </div>
-                                                <div className="uk" title="Phát âm (UK)">
-                                                    <i className="fas fa-volume-up"></i>
-                                                    <div className='name'> UK</div>
-                                                </div>
+                                                {word.audioUS && (
+                                                    <div className="us" title="Phát âm (US)" onClick={() => this.playAudio(word.audioUS)}>
+                                                        <i className="fas fa-volume-up"></i>
+                                                        <div className='name'> US</div>
+                                                    </div>
+                                                )}
+                                                {word.audioUK && (
+                                                    <div className="uk" title="Phát âm (UK)" onClick={() => this.playAudio(word.audioUK)}>
+                                                        <i className="fas fa-volume-up"></i>
+                                                        <div className='name'> UK</div>
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className='vocab-content'>
                                                 <div className='vocab_name'>
