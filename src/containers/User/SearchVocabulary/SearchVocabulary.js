@@ -108,12 +108,13 @@ class SearchVocabulary extends Component {
             }
 
             // Tìm phần tử chứa ví dụ (exampleSentence)
-            const exampleSentenceElement = doc.querySelectorAll('#mh_n #C_C font[color="#7E7E7E"]')[0];
+            const exampleSentenceElement = doc.querySelectorAll('#mh #C_C font[color="#1371BB"]')[0];
             if (exampleSentenceElement) {
                 exampleSentence = exampleSentenceElement.innerText;
             }
 
             // In ra các giá trị để kiểm tra
+            console.log("doc: ", doc);
             console.log('Pronunciation:', pronunciation);
             console.log('Part of Speech:', partOfSpeech);
             console.log('Definition:', definition);
