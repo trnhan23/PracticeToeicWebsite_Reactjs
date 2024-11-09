@@ -108,23 +108,10 @@
             }
         }
     }
-
-
-
     .pagination {
         display: flex;
         justify-content: center;
         gap: 10px;
-        margin-top: 20px;
-    }
-
-    .pagination span {
-        cursor: pointer;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    .pagination span:hover {
-        background-color: #f0f0f0;
+        margin-bottom: 10px;
     }
 }

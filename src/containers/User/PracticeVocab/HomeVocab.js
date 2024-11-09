@@ -21,29 +21,41 @@ class HomeVocab extends Component {
     }
 
     componentDidMount = async () => {
+        await this.fetchVocabInFlashcards();
+    }
+
+
+    fetchVocabInFlashcards = async (page = 1) => {
         const { match } = this.props;
         const { flashcardId } = match.params;
-        let res = await getVocabInFlashcardPagination(flashcardId, 1);
+        let res = await getVocabInFlashcardPagination(flashcardId, page);
         console.log("Kiểm tra res: ", res);
         this.setState({
             flashcardName: res.flashcard.flashcardName,
             amount: res.flashcard.amount,
-            words: res.flashcard.vocabularies
-        })
+            words: res.flashcard.vocabularies,
 
+            currentPage: page,
+            totalPages: Math.ceil(res.totalCount / this.state.numberOfElementPerPAge),
+        })
     }
 
     handlePracticeClick = () => {
         this.setState({ showPractice: true });
     };
 
+    // Hàm xử lý khi chuyển trang
+    handlePageChange = (newPage) => {
+        this.fetchVocabInFlashcards(newPage);
+    }
+
     render() {
         if (this.state.showPractice) {
             return <Practice />;
         }
-        const {flashcardName, amount} = this.state;
+        const { flashcardName, amount, currentPage, totalPages } = this.state;
         return (
-            
+
             <React.Fragment>
                 <HomeHeader />
                 <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
@@ -55,34 +67,43 @@ class HomeVocab extends Component {
                         <div> <span className="pratice-count">List có {amount} từ</span></div>
 
                         <div className="flashcard-list">
-                            {this.state.words.map((word, index) => (
-                                <div key={index} className="flashcard">
-                                    <div className="word-info">
-                                        <h3>{word.word} {word.partOfSpeech} <span className="pronunciation">{word.pronunciation}</span></h3>
-                                        <div className="audio-icons">
-                                            <div className="us" title="Phát âm (US)">
-                                                <i className="fas fa-volume-up"></i>
-                                                <div className='name'> US</div>
+                            {this.state.words <= 0 ? (<div>Chưa có từ vựng bạn ơi</div>)
+                                :
+                                (this.state.words.map((word, index) => (
+                                    <div key={index} className="flashcard">
+                                        <div className="word-info">
+                                            <h3>{word.word} {word.partOfSpeech} <span className="pronunciation">{word.pronunciation}</span></h3>
+                                            <div className="audio-icons">
+                                                <div className="us" title="Phát âm (US)">
+                                                    <i className="fas fa-volume-up"></i>
+                                                    <div className='name'> US</div>
 
+                                                </div>
+                                                <div className="uk" title="Phát âm (UK)">
+                                                    <i className="fas fa-volume-up"></i>
+                                                    <div className='name'> UK</div>
+                                                </div>
                                             </div>
-                                            <div className="uk" title="Phát âm (UK)">
-                                                <i className="fas fa-volume-up"></i>
-                                                <div className='name'> UK</div>
-                                            </div>
-                                        </div>
-                                        <div className='vocab-content'>
-                                            <div className='vocab_name'>
-                                                Định nghĩa:
-                                                <div className='noidung'>{word.definition}</div>
-                                            </div>
-                                            <div className='vocab_name'>
-                                                Ví dụ:
-                                                <div className='noidung'>{word.exampleSentence}</div>
+                                            <div className='vocab-content'>
+                                                <div className='vocab_name'>
+                                                    Định nghĩa:
+                                                    <div className='noidung'>{word.definition}</div>
+                                                </div>
+                                                <div className='vocab_name'>
+                                                    Ví dụ:
+                                                    <div className='noidung'>{word.exampleSentence}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )))}
+                        </div>
+                        <div className='pagination'>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={this.handlePageChange}
+                            />
                         </div>
                     </div>
                     <HomeFooter />
