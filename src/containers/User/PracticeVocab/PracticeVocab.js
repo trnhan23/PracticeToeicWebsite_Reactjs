@@ -61,7 +61,6 @@ class PracticeVocab extends Component {
     }
 
     componentDidMount = async () => {
-        console.log("Kiểm tra word: ", this.state.words);
         const flashcardId = localStorage.getItem('flashcardId');
         this.setState({
             flashcardId: flashcardId
@@ -72,15 +71,7 @@ class PracticeVocab extends Component {
 
     fetchVocabInFlashcards = async () => {
         let res = await getVocabInFlashcard(this.state.flashcardId);
-        console.log("Kiểm tra res: ", res);
-
         this.setState({ words: res.flashcard })
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // if (prevState.pokemons !== this.state.words) {
-        //     console.log('pokemons state has changed.')
-        // }
     }
 
     handleHomeVocabClick = () => {

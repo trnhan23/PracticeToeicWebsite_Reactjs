@@ -24,15 +24,6 @@ class HomeVocab extends Component {
         await this.fetchVocabInFlashcards();
     }
 
-    componentDidUpdate = async (prevProps, prevState) => {
-        if (prevState.words !== this.state.words && this.state.currentPage !== 1) {
-            await this.setState({ currentPage: 1 });
-            await this.fetchVocabInFlashcards(1);
-        }
-    };
-
-
-
     fetchVocabInFlashcards = async (page = 1) => {
         const { match } = this.props;
         const { flashcardId } = match.params;
@@ -40,7 +31,6 @@ class HomeVocab extends Component {
             localStorage.setItem('flashcardId', flashcardId);
         }
         let res = await getVocabInFlashcardPagination(flashcardId, page);
-        console.log("Kiểm tra res: ", res);
         this.setState({
             flashcardName: res.flashcard.flashcardName,
             amount: res.flashcard.amount,
