@@ -130,11 +130,11 @@ class Flashcard extends Component {
                                         <i className="fa-regular fa-copy"></i>
                                         <span>{flashcard.amount} từ | </span>
                                         <span className="icon"><i className="far fa-user"></i></span>
-                                        <span> {flashcard.countVocabularyViewed}</span>
+                                        <span> {flashcard.countUserViewed}</span>
                                     </p>
                                     <p className="list-description">{flashcard.description || 'Không có mô tả'}</p>
                                     <div className="list-author">
-                                        <img src="https://i.pravatar.cc/300?img=2" alt="User Avatar" className="user-avatar" />
+                                        <img src={this.props.userInfor?.avatar} alt="User Avatar" className="user-avatar" />
                                         <span>{this.props.userInfor?.fullName || 'Anonymous'}</span>
                                     </div>
                                 </div>

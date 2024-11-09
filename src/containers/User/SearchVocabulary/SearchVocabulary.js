@@ -213,7 +213,6 @@ class SearchVocabulary extends Component {
 
     render() {
         const { word, result, error, audioUS, audioUK, showModal, flashcards } = this.state;
-        console.log("KT flashcard: ", flashcards);
         return (
             <React.Fragment>
                 <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
