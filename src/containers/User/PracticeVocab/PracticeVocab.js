@@ -9,6 +9,7 @@ import { push } from "connected-react-router";
 import { connect } from 'react-redux';
 import { path } from '../../../utils';
 import { getVocabInFlashcard } from '../../../services/flashcardService';
+import { getAudioVocabularyApi } from '../../../services/vocabularyService';
 
 class PracticeVocab extends Component {
     constructor(props) {
@@ -71,9 +72,21 @@ class PracticeVocab extends Component {
 
     fetchVocabInFlashcards = async () => {
         let res = await getVocabInFlashcard(this.state.flashcardId);
+        const wordsWithAudio = await Promise.all(
+            res.flashcard.vocabularies.map(async (wordObj) => {
+                const dataAudio = await getAudioVocabularyApi(wordObj.word);
+                return {
+                    ...wordObj,
+                    audioUS: dataAudio.audioUS,
+                    audioUK: dataAudio.audioUK,
+                };
+            })
+        );
         this.setState({
-            words: res.flashcard.vocabularies,
+            words: wordsWithAudio,
             flashcardName: res.flashcard.flashcardName,
+        }, async () => {
+            console.log("Kiểm tra audio: ", this.state.words)
         })
     }
 
@@ -91,6 +104,17 @@ class PracticeVocab extends Component {
             currentWordIndex: (prevState.currentWordIndex + 1) % prevState.words.length,
             isFlipped: false
         }));
+    };
+
+    playAudio = (audioUrl) => {
+        if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play();
+            this.toggleFlip();
+
+        } else {
+            console.log("Audio URL not available");
+        }
     };
 
     render() {
@@ -116,15 +140,21 @@ class PracticeVocab extends Component {
                             <div className="flashcard-front">
                                 <h3>{currentWord.word}</h3>
                                 <div className="audio-icons">
-                                    <div className="us" title="Phát âm (US)">
-                                        <i className="fas fa-volume-up"></i>
-                                        <div className='name'> US</div>
 
-                                    </div>
-                                    <div className="uk" title="Phát âm (UK)">
-                                        <i className="fas fa-volume-up"></i>
-                                        <div className='name'> UK</div>
-                                    </div>
+                                    {currentWord.audioUS && (
+                                        <div className="us" title="Phát âm (US)" onClick={() => { this.playAudio(currentWord.audioUS) }}>
+                                            <i className="fas fa-volume-up"></i>
+                                            <div className='name'> US</div>
+                                        </div>
+                                    )}
+
+                                    {currentWord.audioUK && (
+                                        <div className="uk" title="Phát âm (UK)" onClick={() => { this.playAudio(currentWord.audioUK) }}>
+                                            <i className="fas fa-volume-up"></i>
+                                            <div className='name'> UK</div>
+                                        </div>
+                                    )}
+
                                 </div>
                                 <p className="part-of-speech">{currentWord.partOfSpeech} <span>{currentWord.pronunciation}</span></p>
                                 <i className="fa fa-repeat"></i>

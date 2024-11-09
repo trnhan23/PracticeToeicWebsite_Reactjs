@@ -51,9 +51,6 @@ class HomeVocab extends Component {
             words: wordsWithAudio,
             currentPage: page,
             totalPages: Math.ceil(res.totalCount / this.state.numberOfElementPerPAge),
-        }, async () => {
-            console.log("Kiểm tra audio: ", this.state.words)
-
         })
     }
 
