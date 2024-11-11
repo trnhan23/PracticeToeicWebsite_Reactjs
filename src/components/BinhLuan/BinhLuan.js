@@ -24,7 +24,6 @@ const BinhLuan = () => {
 
     const handleGetComments = async () => {
         try {
-            console.log("Checking exam ID: ", exam.id);
             const res = await getComments(exam.id, userInfor.id);
             const normalizedComments = normalizeComments(res);
             setComments(normalizedComments);

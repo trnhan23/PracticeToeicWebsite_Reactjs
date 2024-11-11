@@ -7,7 +7,6 @@ class CategoryExam extends Component {
 
     handleExam = (exam) => {
         this.props.onSelectExam(exam);
-        console.log("Kiểm tra exam: ", exam);
         if (exam) {
             localStorage.setItem("exam", JSON.stringify(exam));
         }

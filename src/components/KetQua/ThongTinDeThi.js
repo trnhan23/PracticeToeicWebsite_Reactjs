@@ -11,14 +11,12 @@ class ThongTinDeThi extends Component {
         this.state = {
             activeButton: 'info',
             exam: [],
-            // examId: this.props.exam.id,
             examId: '',
             parts: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5", "Part 6", "Part 7"],
         };
     }
 
     componentDidMount = async () => {
-        // const { exam } = this.props;
         const exam = JSON.parse(localStorage.getItem("exam"));
         try {
             this.setState({

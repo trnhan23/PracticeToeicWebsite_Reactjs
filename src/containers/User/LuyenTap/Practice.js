@@ -6,6 +6,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import HomeFooter from '../HomePage/HomeFooter';
 import './Practice.scss';
 import { practiceExam, getAnswerExam } from '../../../services/examService';
+import { path } from '../../../utils';
 import { saveTestResult } from '../../../services/testService';
 class Practice extends Component {
     constructor(props) {
@@ -533,7 +534,7 @@ class Practice extends Component {
     };
 
     handleExit = () => {
-        alert("Click exist")
+        this.props.navigate(path.TT_DETHI);
     }
 
     render() {

@@ -134,8 +134,6 @@ class HienThiDapAn extends Component {
 
     renderPart12 = () => {
         const { activePart, questionsData } = this.state;
-        console.log("Kiểm tra da: ", questionsData)
-        // Kiểm tra xem activePart có phải là một phần hợp lệ không
         if (!["Part 1", "Part 2"].includes(activePart)) return null;
 
         return (

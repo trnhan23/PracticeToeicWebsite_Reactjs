@@ -15,7 +15,6 @@ class TTDeThi extends Component {
                 examId: '',
                 userId: '',
             }),
-            // exam: localStorage.getItem('exam')
             exam: '',
         };
     }
