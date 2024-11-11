@@ -13,7 +13,10 @@ class KetQuaLamBai extends Component {
     }
 
     componentDidMount = async () => {
-        const { exam, userInfor } = this.props;
+        const { userInfor } = this.props;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
+
+
         try {
             const res = await getTestResult(exam.id, userInfor.id);
             if (res && res.tests) {
@@ -88,7 +91,7 @@ class KetQuaLamBai extends Component {
             <td>
                 <button className="btn-link" onClick={() => this.handleChiTiet(item.chiTiet)}>
                     {/* {item.chiTiet} dạng /detail/{id của test} */}
-                    Xem chi tiết 
+                    Xem chi tiết
                 </button>
             </td>
         </tr>

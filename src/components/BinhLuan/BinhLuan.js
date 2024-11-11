@@ -7,7 +7,7 @@ import { getComments, createComment, deleteComment } from '../../services/commen
 const BinhLuan = () => {
     const dispatch = useDispatch();
     const userInfor = useSelector(state => state.user.userInfor);
-    const exam = useSelector(state => state.user.selectedExam);
+    const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
 
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,11 +17,14 @@ const BinhLuan = () => {
     const [replyingToReply, setReplyingToReply] = useState(null);
 
     useEffect(() => {
-        handleGetComments();
-    }, []);
+        if (exam?.id && userInfor?.id) {
+            handleGetComments();
+        }
+    }, [exam?.id, userInfor?.id]);
 
     const handleGetComments = async () => {
         try {
+            console.log("Checking exam ID: ", exam.id);
             const res = await getComments(exam.id, userInfor.id);
             const normalizedComments = normalizeComments(res);
             setComments(normalizedComments);
@@ -35,7 +38,7 @@ const BinhLuan = () => {
     const normalizeComments = (commentsData) => {
         const commentsMap = {};
         const rootComments = [];
-    
+
         commentsData.forEach(comment => {
             const formattedDate = comment.cmtDate
                 ? new Date(comment.cmtDate).toLocaleDateString('en-US', {
@@ -44,7 +47,7 @@ const BinhLuan = () => {
                     day: 'numeric',
                 })
                 : 'Chưa có ngày';
-    
+
             commentsMap[comment.id] = {
                 id: comment.id,
                 fullName: comment.comment_UserData?.fullName || 'Người dùng ẩn danh',
@@ -55,7 +58,7 @@ const BinhLuan = () => {
                 replies: [],
             };
         });
-    
+
         commentsData.forEach(comment => {
             if (comment.parentCmtId === null) {
                 rootComments.push(commentsMap[comment.id]);
@@ -66,7 +69,7 @@ const BinhLuan = () => {
                 }
             }
         });
-    
+
         return rootComments;
     };
 
@@ -149,8 +152,8 @@ const BinhLuan = () => {
                 <p className="comment-text">{reply.text}</p>
                 <button className="reply-button" onClick={() => setReplyingToReply(reply.id)}>Trả lời</button>
                 {userInfor.id === reply.userId && (
-                            <button className="delete-button" onClick={() => handleDeleteComment(reply.id)}>Xoá</button>
-                        )}
+                    <button className="delete-button" onClick={() => handleDeleteComment(reply.id)}>Xoá</button>
+                )}
 
                 {replyingToReply === reply.id && (
                     <div className="reply-input">

@@ -532,6 +532,10 @@ class Practice extends Component {
         );
     };
 
+    handleExit = () => {
+        alert("Click exist")
+    }
+
     render() {
         const { selectedParts, exam } = this.props;
         const { activePart, remainingTime } = this.state;
@@ -543,7 +547,7 @@ class Practice extends Component {
                     <div className="luyen-tap-layout">
                         <div className="header">
                             <h3>{exam.titleExam}</h3>
-                            <button className='out'>Thoát</button>
+                            <button className='out' onClick={() => {this.handleExit()}}>Thoát</button>
                         </div>
                         <div className="main-content">
                             <div className="content">

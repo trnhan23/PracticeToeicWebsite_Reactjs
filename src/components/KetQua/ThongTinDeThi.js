@@ -11,25 +11,31 @@ class ThongTinDeThi extends Component {
         this.state = {
             activeButton: 'info',
             exam: [],
-            examId: this.props.exam.id,
+            // examId: this.props.exam.id,
+            examId: '',
             parts: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5", "Part 6", "Part 7"],
         };
     }
 
     componentDidMount = async () => {
-        const { exam } = this.props;
-
+        // const { exam } = this.props;
+        const exam = JSON.parse(localStorage.getItem("exam"));
         try {
-            const res = await getExam(this.state.examId);
+            this.setState({
+                examId: exam.id,
+            }, async() => {
+                const res = await getExam(this.state.examId);
 
-            if (res && res.exam) {
-                this.setState({
-                    exam: {
-                        ...exam,
-                        countUserTest: res.exam.countUserTest
-                    }
-                });
-            }
+                if (res && res.exam) {
+                    this.setState({
+                        exam: {
+                            ...exam,
+                            countUserTest: res.exam.countUserTest
+                        },
+                        
+                    });
+                }
+            })
 
         } catch (error) {
             console.error("Failed to fetch exam data: ", error);

@@ -15,13 +15,15 @@ class TTDeThi extends Component {
                 examId: '',
                 userId: '',
             }),
-            exam: this.props.exam,
+            // exam: localStorage.getItem('exam')
+            exam: '',
         };
     }
-    componentDidMount = async () => {
 
+    componentDidMount = () => {
+        const exam = JSON.parse(localStorage.getItem("exam"));
+        this.setState({exam});
     }
-
 
     render() {
         const { exam } = this.state;

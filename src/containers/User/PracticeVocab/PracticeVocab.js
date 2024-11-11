@@ -85,8 +85,6 @@ class PracticeVocab extends Component {
         this.setState({
             words: wordsWithAudio,
             flashcardName: res.flashcard.flashcardName,
-        }, async () => {
-            console.log("Kiểm tra audio: ", this.state.words)
         })
     }
 
