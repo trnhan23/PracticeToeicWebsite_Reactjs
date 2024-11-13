@@ -1,0 +1,116 @@
+.statistic-container {
+    padding: 0;
+    width: 75%;
+    margin: 0 auto;
+
+    .statistic-title {
+        padding-top: 20px;
+        font-size: 26px;
+        color: #0A73AC;
+        font-weight: bold;
+        margin: 0;
+        text-transform: none;
+        text-align: left;
+    }
+
+    .statistic-content-top {
+
+        .scrpit {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .filter-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+
+            select {
+                padding: 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                background-color: #f9f9f9;
+                width: 15%;
+                font-size: 16px;
+                outline: none;
+
+                &:hover {
+                    background-color: #e6e6e6;
+                }
+            }
+
+            .btn-search {
+                color: white;
+                background-color: #35509A;
+
+                &:hover {
+                    color: white;
+                    background-color: #35509A;
+                }
+            }
+
+            .tbn-clear {
+                color: black;
+                background-color: #F7FAFF;
+
+                &:hover {
+                    color: white;
+                    background-color: #35509A;
+                }
+
+            }
+
+            button {
+                padding: 8px;
+                width: 90px;
+                border-radius: 10px;
+                cursor: pointer;
+                border: none;
+                outline: none;
+            }
+
+        }
+    }
+
+    .statistic-content-center {
+
+        .nav {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+
+            .nav-bar {
+                width: 13%;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                font-size: 20px;
+                padding: 5px 5px;
+                border-radius: 8px;
+                color: #677788;
+                border: 1px solid #ddd;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+                .icon {
+                    font-size: 28px;
+                }
+
+                .number {
+                    color: #000000;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                &:hover {
+                    transform: translateY(-5px);
+                }
+            }
+        }
+
+    }
+
+    .test-result {
+        height: fit-content;
+        margin-bottom: 30px;
+    }
+}
