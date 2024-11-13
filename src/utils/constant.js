@@ -7,6 +7,8 @@ export const path = {
     TT_DETHI: '/thong-tin-de-thi',
     HT_DAPAN: '/hien-thi-dap-an/:part',
     DETAIL: '/detail/:testId',
+    RESULT_PRACTIC: '/result-practic',
+    STATISTIC: '/statistic',
     PRACTICE_VOCAB: '/flashcard/:flashcardId',
     PRACTICE: '/practice-toeic',
     FLASHCARD: '/flashcard',

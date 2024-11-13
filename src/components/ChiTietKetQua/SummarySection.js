@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import './SummarySection.scss';
 import { getDetailTestResult } from '../../services/testService';
 import { useHistory } from "react-router-dom";
-
+import { connect } from 'react-redux';
+import { push } from "connected-react-router";
 const SummarySection = () => {
     const [data, setData] = useState({
         testId: 0,
@@ -56,6 +57,10 @@ const SummarySection = () => {
         }
     }, []);
 
+    // const handleShowResult = () => {
+    //     history.push(`/hien-thi-dap-an/all`);
+    // };
+
     return (
         <div className="summary-section">
             <div className="content-top1">
@@ -68,7 +73,7 @@ const SummarySection = () => {
             </div>
 
             <div className="answer-exam">
-                <div className="answer"><button>Xem chi tiết đáp án</button></div>
+                {/* <div className="answer"><button onClick={handleShowResult}>Xem đáp án</button></div> */}
                 <div className="exam"><button onClick={() => history.goBack()}>Quay về trang đề thi</button></div>
             </div>
 
@@ -135,4 +140,14 @@ const SummarySection = () => {
     );
 };
 
-export default SummarySection;
+const mapStateToProps = (state) => ({
+    isLoggedIn: state.user.isLoggedIn,
+    userInfor: state.user.userInfor,
+    exam: state.user.selectedExam,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    navigate: (path) => dispatch(push(path)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SummarySection);

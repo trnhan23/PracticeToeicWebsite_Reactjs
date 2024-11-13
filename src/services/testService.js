@@ -10,6 +10,12 @@ const getTestResult = (examId, userId) => {
     });
 }
 
+const getAllTestResult = (userId) => {
+    return axios.get('/api/get-all-test-result', {
+        params: { userId }
+    });
+}
+
 const getDetailTestResult = (testId) => {
     return axios.get('/api/get-detail-test-result', {
         params: { testId }
@@ -20,5 +26,6 @@ export {
     saveTestResult,
     getTestResult,
     getDetailTestResult,
+    getAllTestResult,
 
 }

@@ -1,30 +1,42 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import './KetQuaLamBai.scss';
-import { getTestResult } from '../../services/testService';
-
-class KetQuaLamBai extends Component {
+import { push } from "connected-react-router";
+import './ResultPractice.scss';
+import CustomScrollbars from '../../../components/CustomScrollbars';
+import { getAllTestResult } from '../../../services/testService';
+class ResultPractice extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userInfor: [],
             ketQua: [],
         };
-    }
+    };
 
     componentDidMount = async () => {
-        const { userInfor } = this.props;
-        const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
+        const userData = localStorage.getItem("persist:user");
 
-        
         try {
-            const res = await getTestResult(exam.id, userInfor.id);
-            if (res && res.tests) {
-                const ketQua = this.formatKetQua(res.tests);
-                this.setState({ ketQua });
-            } else {
-                console.error("No test results found", res);
+            if (userData) {
+                const parsedData = JSON.parse(userData);
+                const userInfo = JSON.parse(parsedData.userInfor);
+                console.log(userInfo);
+                this.setState({
+                    userInfor: userInfo
+                }, async () => {
+                    const res = await getAllTestResult(this.state.userInfor.id);
+                    if (res && res.tests) {
+                        const ketQua = this.formatKetQua(res.tests);
+                        this.setState({ ketQua }, () => {
+                            console.log("Kiểm tra kết quả: ", this.state.ketQua);
+                        });
+                    } else {
+                        console.error("No test results found", res);
+                    }
+                })
             }
+
+
         } catch (error) {
             console.error("Error fetching test results: ", error);
         }
@@ -101,28 +113,30 @@ class KetQuaLamBai extends Component {
         const { ketQua } = this.state;
 
         return (
-            <div className="ket-qua-lam-bai-container">
-                <h3>Kết quả làm bài của bạn:</h3>
-                <table className="ket-qua-table">
-                    <thead>
-                        <tr>
-                            <th>Ngày làm</th>
-                            <th>Kết quả</th>
-                            <th>Thời gian làm bài</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ketQua.length > 0 ? (
-                            ketQua.map(this.renderKetQuaRow)
-                        ) : (
+            <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
+                <div className="ket-qua-lam-bai-container">
+                    <h3>Kết quả làm bài của bạn:</h3>
+                    <table className="ket-qua-table">
+                        <thead>
                             <tr>
-                                <td colSpan="4">Không có kết quả nào để hiển thị.</td>
+                                <th>Ngày làm</th>
+                                <th>Kết quả</th>
+                                <th>Thời gian làm bài</th>
+                                <th></th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {ketQua.length > 0 ? (
+                                ketQua.map(this.renderKetQuaRow)
+                            ) : (
+                                <tr>
+                                    <td colSpan="4">Không có kết quả nào để hiển thị.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </CustomScrollbars>
         );
     }
 }
@@ -137,4 +151,4 @@ const mapDispatchToProps = (dispatch) => ({
     navigate: (path) => dispatch(push(path)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(KetQuaLamBai);
+export default connect(mapStateToProps, mapDispatchToProps)(ResultPractice);

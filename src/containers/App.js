@@ -19,6 +19,8 @@ import HienThiDapAn from '../components/KetQua/HienThiDapAn.js';
 import ResultContainer from './User/ChiTietKetQua/ResultContainer.js';
 import Flashcard from './User/FlashCard/FlashCard.js';
 import HomeVocab from './User/PracticeVocab/HomeVocab.js';
+import Statistic from './User/Statistic/Statistic.js';
+import ResultPractice from './User/Statistic/ResultPractice.js';
 class App extends Component {
 
     handlePersistorState = () => {
@@ -53,6 +55,8 @@ class App extends Component {
                                 <Route path={path.PRACTICE} component={(Practice)} />
                                 <Route path={path.DETAIL} component={(ResultContainer)} />
                                 <Route path={path.TT_DETHI} component={(TTDeThi)} />
+                                <Route path={path.STATISTIC} component={(Statistic)} />
+                                <Route path={path.RESULT_PRACTIC} component={(ResultPractice)} />
                                 <Route path={path.REGISTER} component={(Register)} />
                                 <Route path={path.PRACTICE_VOCAB} component={(HomeVocab)} />
                                 <Route path={path.HT_DAPAN} component={(HienThiDapAn)} />

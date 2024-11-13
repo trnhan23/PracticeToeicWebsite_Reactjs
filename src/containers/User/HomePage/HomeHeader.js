@@ -62,11 +62,11 @@ class HomeHeader extends Component {
                             <div className={`child-content ${currentPath === path.FLASHCARD || currentPath === path.FLASHCARD+"/" ? 'active' : ''}`}>
                                 <div><a href={path.FLASHCARD}><b>Flashcards</b></a></div>
                             </div>
-                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
+                            {/* <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
                                 <div><a href="#"><b>Blog</b></a></div>
-                            </div>
-                            <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
-                                <div><a href="#"><b>Kết quả luyện thi</b></a></div>
+                            </div> */}
+                            <div className={`child-content ${currentPath === path.RESULT_PRACTIC ? 'active' : ''}`}>
+                                <div><a href={path.RESULT_PRACTIC}><b>Kết quả luyện thi</b></a></div>
                             </div>
                         </div>
 
@@ -84,7 +84,7 @@ class HomeHeader extends Component {
                                 {isMenuOpen && isLoggedIn && (
                                     <div className="dropdown-menu show">
                                         <a className="dropdown-item" href="#">Thông tin cá nhân</a>
-                                        {/* <a className="dropdown-item" href="#">Another action</a> */}
+                                        <a className="dropdown-item" href={path.STATISTIC}>Thống kê kết quả luyện thi</a>
                                         {/* <a className="dropdown-item" href="#">Something else here</a> */}
                                         <div className="dropdown-divider"></div>
                                         <a
