@@ -25,16 +25,7 @@ class ResultContainer extends Component {
     if (testId) {
       localStorage.setItem('testId', testId);
     }
-    // const summaryData = {
-    //   totalQuestions: 200,
-    //   correctAnswers: 24,
-    //   incorrectAnswers: 16,
-    //   skippedAnswers: 160,
-    //   score: 130,
-    //   completionTime: "18:12:18",
-    //   listeningScore: "130/495",
-    //   readingScore: "0/495",
-    // };
+
     return (
       <React.Fragment>
         <CustomScrollbars style={{ height: '100vh', width: '100%' }}>
@@ -43,7 +34,6 @@ class ResultContainer extends Component {
             <div className='content-top'>
               <div className='summary-section'>
                 <SummarySection />
-                {/* <SummarySection data={summaryData} /> */}
               </div>
 
             </div>

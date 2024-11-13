@@ -22,10 +22,17 @@ const getDetailTestResult = (testId) => {
     })
 }
 
+const getTitleExam = (testId) => {
+    return axios.get('/api/get-title-exam', {
+        params: { testId }
+    })
+}
+
 export {
     saveTestResult,
     getTestResult,
     getDetailTestResult,
     getAllTestResult,
-
+    getTitleExam,
+    
 }

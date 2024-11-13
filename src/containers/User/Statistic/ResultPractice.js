@@ -4,12 +4,14 @@ import { push } from "connected-react-router";
 import './ResultPractice.scss';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import { getAllTestResult } from '../../../services/testService';
+import { getExam } from '../../../services/examService';
 class ResultPractice extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userInfor: [],
             ketQua: [],
+            exams: {},
         };
     };
 
@@ -20,26 +22,40 @@ class ResultPractice extends Component {
             if (userData) {
                 const parsedData = JSON.parse(userData);
                 const userInfo = JSON.parse(parsedData.userInfor);
-                console.log(userInfo);
-                this.setState({
-                    userInfor: userInfo
-                }, async () => {
+                this.setState({ userInfor: userInfo }, async () => {
                     const res = await getAllTestResult(this.state.userInfor.id);
                     if (res && res.tests) {
                         const ketQua = this.formatKetQua(res.tests);
-                        this.setState({ ketQua }, () => {
-                            console.log("Kiểm tra kết quả: ", this.state.ketQua);
-                        });
+                        this.setState({ ketQua }, this.fetchExamTitles);
                     } else {
                         console.error("No test results found", res);
                     }
-                })
+                });
             }
-
-
         } catch (error) {
             console.error("Error fetching test results: ", error);
         }
+    };
+
+    fetchExamTitles = async () => {
+        const { ketQua } = this.state;
+        const uniqueExamIds = [...new Set(ketQua.map(item => item.examId))];
+
+        const exams = {};
+        await Promise.all(uniqueExamIds.map(async (examId) => {
+            try {
+                const response = await getExam(examId);
+                exams[examId] = response.exam?.titleExam || "Title not found";
+            } catch (error) {
+                console.error(`Error fetching title for examId ${examId}:`, error);
+            }
+        }));
+
+        const updatedKetQua = ketQua.map(item => ({
+            ...item,
+            titleExam: exams[item.examId]
+        }));
+        this.setState({ exams, ketQua: updatedKetQua });
     };
 
     formatKetQua = (tests) => {
@@ -67,6 +83,7 @@ class ResultPractice extends Component {
             });
 
             return {
+                examId: test.examId,
                 ngayLam: formattedDate,
                 ketQua: resultString,
                 thoiGian: formattedTime,
@@ -102,7 +119,6 @@ class ResultPractice extends Component {
             <td>{item.thoiGian}</td>
             <td>
                 <button className="btn-link" onClick={() => this.handleChiTiet(item.chiTiet)}>
-                    {/* {item.chiTiet} dạng /detail/{id của test} */}
                     Xem chi tiết
                 </button>
             </td>
@@ -112,29 +128,49 @@ class ResultPractice extends Component {
     render() {
         const { ketQua } = this.state;
 
+        // Group ketQua entries by titleExam
+        const groupedKetQua = ketQua.reduce((acc, item) => {
+            const title = item.titleExam || "Unknown Title";
+            if (!acc[title]) acc[title] = [];
+            acc[title].push(item);
+            return acc;
+        }, {});
+
         return (
             <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
                 <div className="ket-qua-lam-bai-container">
                     <h3>Kết quả làm bài của bạn:</h3>
-                    <table className="ket-qua-table">
-                        <thead>
-                            <tr>
-                                <th>Ngày làm</th>
-                                <th>Kết quả</th>
-                                <th>Thời gian làm bài</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {ketQua.length > 0 ? (
-                                ketQua.map(this.renderKetQuaRow)
-                            ) : (
+                    {Object.entries(groupedKetQua).length > 0 ? (
+                        Object.entries(groupedKetQua).map(([titleExam, items], index) => (
+                            <React.Fragment key={index}>
+                                <div className="title-exam-header">
+                                    <div className='title-name-exam'>{titleExam}</div>
+                                </div>
+                                <table className="ket-qua-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ngày làm</th>
+                                            <th>Kết quả</th>
+                                            <th>Thời gian làm bài</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {items.map(this.renderKetQuaRow)}
+                                    </tbody>
+                                </table>
+                            </React.Fragment>
+                        ))
+                    ) : (
+                        <table className="ket-qua-table">
+                            <tbody>
                                 <tr>
                                     <td colSpan="4">Không có kết quả nào để hiển thị.</td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    )}
+
                 </div>
             </CustomScrollbars>
         );

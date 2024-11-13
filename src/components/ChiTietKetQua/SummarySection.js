@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './SummarySection.scss';
-import { getDetailTestResult } from '../../services/testService';
+import { getDetailTestResult, getTitleExam } from '../../services/testService';
 import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
@@ -17,8 +17,10 @@ const SummarySection = () => {
         totalQuestion: 0,
         score: 0,
         testTime: 0,
-        parts: []
+        parts: [],
+        
     });
+    const [title, setTitle] = useState('');
     const history = useHistory();
 
     const formatTime = (seconds) => {
@@ -29,11 +31,12 @@ const SummarySection = () => {
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
-    useEffect(async () => {
-        const testId = localStorage.getItem('testId');
-        if (testId) {
-            await getDetailTestResult(testId)
-                .then(response => {
+    useEffect(() => {
+        const fetchData = async () => {
+            const testId = localStorage.getItem('testId');
+            if (testId) {
+                try {
+                    const response = await getDetailTestResult(testId);
                     if (response.tests) {
                         setData({
                             testId: response.tests.testId,
@@ -47,24 +50,28 @@ const SummarySection = () => {
                             totalQuestion: response.tests.totalQuestion || 0,
                             score: response.tests.score || 0,
                             testTime: formatTime(response.tests.testTime),
-                            parts: response.tests.parts
+                            parts: response.tests.parts,
                         });
                     }
-                })
-                .catch(error => {
+
+                    const res = await getTitleExam(testId);
+                    setTitle(res?.tests?.[0]?.Test_ExamData?.titleExam || 'Unknown Title');
+                } catch (error) {
                     console.error("Error fetching test result:", error);
-                });
-        }
+                }
+            }
+        };
+
+        fetchData();
     }, []);
 
-    // const handleShowResult = () => {
-    //     history.push(`/hien-thi-dap-an/all`);
-    // };
+    useEffect(() => {
+    }, [title]);
 
     return (
         <div className="summary-section">
             <div className="content-top1">
-                <div className="title">Kết quả thi: Practice Set TOEIC 2020 Test 1</div>
+                <div className="title">{title}</div>
                 <div className="tags">
                     {data.parts.map((part, index) => (
                         <span key={index} className="tag">{part}</span>
