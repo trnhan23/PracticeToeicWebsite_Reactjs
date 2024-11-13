@@ -1,72 +1,45 @@
-.ket-qua-lam-bai-container {
-    padding: 20px;
+.lam-bai-container {
+    padding: 0;
+    width: 75%;
+    margin: 0 auto;
 
-    h3 {
-        margin-bottom: 15px;
-        font-weight: 600;
-        font-size: 19px;
+    .title {
+        padding-top: 20px;
+        font-size: 26px;
+        color: #0A73AC;
+        font-weight: bold;
+        margin: 0;
+        text-transform: none;
+        text-align: left;
     }
 
-    .title-exam-header {
-        .title-name-exam {
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 30px;
-            margin-bottom: 10px;
-            padding-left: 20px;
+    .btn-statistic {
+        margin-top: 10px;
+
+        .btn {
+            i {
+                font-size: 20px;
+                margin-right: 5px;
+            }
+
+            border: 1px solid #35509A;
+            padding: 5px 10px;
+            height: fit-content;
+            font-size: 20px;
+            width: 100%;
+            border-radius: 10px;
+            background-color: #E8F2FF;
+
+            &:hover {
+                background-color: #465a92;
+                color: white;
+            }
         }
-    }
-}
 
-.ket-qua-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        vertical-align: middle;
-        font-size: 18px;
     }
 
-    th {
-        background-color: #f2f2f2;
-        font-size: 18px;
+    .test-result {
+        height: fit-content;
+        margin-bottom: 30px;
     }
-
-    // Thêm hiệu ứng hàng xen kẽ
-    tr:nth-child(even) {
-        background-color: #f9f9f9; // Màu nền cho hàng chẵn
-    }
-
-    tr:nth-child(odd) {
-        background-color: #ffffff; // Màu nền cho hàng lẻ
-    }
-}
-
-.ngay-lam {
-    text-align: left;
-}
-
-.tags {
-    margin-top: 5px;
-    font-size: 15px;
-}
-
-.tag {
-    background-color: #ffa500;
-    color: white;
-    padding: 5px 10px;
-    margin: 2px;
-    border-radius: 15px;
-    display: inline-block;
-}
-
-.btn-link {
-    background: none;
-    border: none;
-    color: #007bff;
-    text-decoration: none;
-    cursor: pointer;
 }
