@@ -83,7 +83,7 @@ class HomeHeader extends Component {
                                 </button>
                                 {isMenuOpen && isLoggedIn && (
                                     <div className="dropdown-menu show">
-                                        <a className="dropdown-item" href="#">Thông tin cá nhân</a>
+                                        <a className="dropdown-item" href={path.PROFILE}>Thông tin cá nhân</a>
                                         <a className="dropdown-item" href={path.STATISTIC}>Thống kê kết quả luyện thi</a>
                                         {/* <a className="dropdown-item" href="#">Something else here</a> */}
                                         <div className="dropdown-divider"></div>

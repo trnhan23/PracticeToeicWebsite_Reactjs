@@ -1,0 +1,36 @@
+.profile-container {
+    padding: 0;
+    width: 75%;
+    margin: 0 auto;
+
+    .profile-title {
+        padding-top: 20px;
+        font-size: 26px;
+        color: #0A73AC;
+        font-weight: bold;
+        margin: 0;
+        text-transform: none;
+        text-align: left;
+    }
+
+    .profile-banner {
+        background: url('../../../assets/user_banner.png') no-repeat;
+        height: 30vh;
+    }
+
+    .user-profile {
+        position: relative;
+        top: -60px;
+        // transform: translateY(-60px);
+    }
+
+    .test-result {
+        height: fit-content;
+        margin-bottom: 30px;
+
+        .test-result-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+    }
+}
