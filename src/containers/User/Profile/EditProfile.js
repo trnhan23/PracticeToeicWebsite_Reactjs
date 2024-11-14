@@ -11,6 +11,7 @@ const EditProfile = ({ toggleEditMode }) => {
                         alt="Profile"
                         className="profile-image"
                     />
+                    <i className="fas fa-camera"></i>
                 </div>
                 <div className='btn-click'>
                     <button className="edit-profile-button" onClick={toggleEditMode}>
