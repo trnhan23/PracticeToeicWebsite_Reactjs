@@ -13,7 +13,7 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isEditing: false, // Controls whether we're in "view" or "edit" mode
+            isEditing: false,
         };
     }
 
