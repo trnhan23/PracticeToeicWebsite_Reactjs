@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './CropImagePopup.scss';
-
 const CropImagePopup = ({ image, onCrop, onClose }) => {
     const cropperRef = useRef(null);
 

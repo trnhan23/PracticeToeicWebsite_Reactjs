@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { push } from "connected-react-router";
 import { toast } from 'react-toastify';
 import CropImagePopup from './CropImagePopup';
+import { uploadFile } from '../../../services/uploadService';
+
 
 const EditProfile = ({ toggleEditMode, userInfor }) => {
     const [email, setEmail] = useState('');
@@ -14,6 +16,7 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
     const [info, setInfo] = useState({});
     const [selectedAvatar, setSelectedAvatar] = useState(null);
     const [isCropPopupVisible, setIsCropPopupVisible] = useState(false);
+    const [fileUrl, setFileUrl] = useState('');
 
     useEffect(() => {
         const fetchAllUsers = async () => {
@@ -47,20 +50,66 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
         });
     };
 
+    const base64ToFile = (base64, fileName = 'file.jpg') => {
+        const [header, data] = base64.split(',');
+        const byteCharacters = atob(data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset++) {
+            byteArrays.push(byteCharacters.charCodeAt(offset));
+        }
+        const blob = new Blob([new Uint8Array(byteArrays)], { type: 'image/jpeg' });
+        const file = new File([blob], fileName, { type: 'image/jpeg' });
+
+        return file;
+    }
+
+    const uploadAvatar = async (image) => {
+        try {
+            let fileOld = image;
+            let fileNew = base64ToFile(fileOld);
+            let formData = new FormData();
+            formData.append('file', fileNew);
+            let res = await uploadFile(formData);
+            if(res){
+                return res.fileUrl;
+            }
+            toast.error("An error occurred while uploading the avatar.");
+            return;
+        } catch (error) {
+            console.error("Error uploading avatar: ", error);
+            toast.error("An error occurred while uploading the avatar.");
+            return;
+        }
+    };
+
     const handleClick = async () => {
         try {
+            let finalAvatar = avatar;
+            let fileUrl = '';
+            if (finalAvatar) {
+                const uploadedUrl = await uploadAvatar(finalAvatar);
+                if (uploadedUrl) {
+                    fileUrl = uploadedUrl;
+                } else {
+                    return;
+                }
+            }
+            // Chuẩn bị dữ liệu cập nhật
             const updatedInfo = {
                 id: userInfor?.id,
                 fullName,
-                avatar,
+                avatar: fileUrl,
                 bio,
             };
 
+            // Kiểm tra xem dữ liệu có thay đổi không
             if (isSame(info, updatedInfo)) {
                 toggleEditMode();
                 return;
             }
 
+            // Gửi dữ liệu cập nhật lên server
             const response = await editUserService(updatedInfo);
             if (response?.errCode === 0) {
                 toast.success("Profile updated successfully!");
@@ -74,6 +123,7 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
         }
     };
 
+
     const handleChooseAvatar = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -86,18 +136,15 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
             reader.readAsDataURL(file);
         }
     };
-    
+
     const handleClosePopup = () => {
         setIsCropPopupVisible(false);
         setSelectedAvatar(null);
     };
-    
 
     const handleCrop = (croppedImage) => {
         setAvatar(croppedImage);
     };
-
-    
 
     return (
         <div className="user-profile">
