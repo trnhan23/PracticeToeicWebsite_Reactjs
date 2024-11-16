@@ -4,13 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { push } from "connected-react-router";
 import { toast } from 'react-toastify';
+import CropImagePopup from './CropImagePopup';
 
 const EditProfile = ({ toggleEditMode, userInfor }) => {
-    const [email, setEmail] = useState([]);
+    const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [avatar, setAvatar] = useState('');
     const [bio, setBio] = useState('');
     const [info, setInfo] = useState({});
+    const [selectedAvatar, setSelectedAvatar] = useState(null);
+    const [isCropPopupVisible, setIsCropPopupVisible] = useState(false);
 
     useEffect(() => {
         const fetchAllUsers = async () => {
@@ -42,7 +45,7 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
             avatar: updatedInfo.avatar,
             bio: updatedInfo.bio,
         });
-    }
+    };
 
     const handleClick = async () => {
         try {
@@ -54,7 +57,6 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
             };
 
             if (isSame(info, updatedInfo)) {
-                toast.info("No changes made to the profile.");
                 toggleEditMode();
                 return;
             }
@@ -72,17 +74,48 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
         }
     };
 
+    const handleChooseAvatar = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedAvatar(reader.result);
+                setIsCropPopupVisible(false);
+                setTimeout(() => setIsCropPopupVisible(true), 0);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    
+    const handleClosePopup = () => {
+        setIsCropPopupVisible(false);
+        setSelectedAvatar(null);
+    };
+    
+
+    const handleCrop = (croppedImage) => {
+        setAvatar(croppedImage);
+    };
+
+    
 
     return (
         <div className="user-profile">
             <div className='profile-avatar'>
                 <div className='img'>
                     <img
-                        src={avatar ? avatar : "https://i.pravatar.cc/300?img=2"}
+                        src={avatar || "https://i.pravatar.cc/300?img=2"}
                         alt="Profile"
                         className="profile-image"
                     />
-                    <i className="fas fa-camera"></i>
+                    <input
+                        type="file"
+                        id="avatarInput"
+                        style={{ display: 'none' }}
+                        accept="image/*"
+                        onChange={handleChooseAvatar}
+                    />
+                    <i className="fas fa-camera" onClick={() => document.getElementById('avatarInput').click()}></i>
                 </div>
                 <div className='btn-click'>
                     <button className="edit-profile-button" onClick={handleClick}>
@@ -121,6 +154,13 @@ const EditProfile = ({ toggleEditMode, userInfor }) => {
                 </div>
             </div>
 
+            {isCropPopupVisible && (
+                <CropImagePopup
+                    image={selectedAvatar}
+                    onCrop={handleCrop}
+                    onClose={handleClosePopup}
+                />
+            )}
         </div>
     );
 };
