@@ -52,6 +52,7 @@ class Practice extends Component {
 
     handleQuestionExam = async (examId, questionType) => {
         try {
+            console.log("kiểm tra exam: ", examId);
             let res = await practiceExam(examId, questionType);
             if (res.errCode === 0) {
                 this.setState({
@@ -278,7 +279,9 @@ class Practice extends Component {
 
     handlePartChange = (part) => {
         const { exam } = this.props;
+        const title = JSON.parse(localStorage.getItem("exam"));
 
+        console.log("kiểm tra title: ", title);
         this.setState((prevState) => ({
             activePart: part,
             answers: {
@@ -287,7 +290,7 @@ class Practice extends Component {
             },
         }), () => {
             this.restoreAnswers(part);
-            this.handleQuestionExam(exam.id, part);
+            this.handleQuestionExam(title.id, part);
         });
     };
 
@@ -540,6 +543,8 @@ class Practice extends Component {
     render() {
         const { selectedParts, exam } = this.props;
         const { activePart, remainingTime } = this.state;
+        const title = JSON.parse(localStorage.getItem("exam"));
+
 
         return (
             <React.Fragment>
@@ -547,8 +552,8 @@ class Practice extends Component {
                     <HomeHeader />
                     <div className="luyen-tap-layout">
                         <div className="header">
-                            <h3>{exam.titleExam}</h3>
-                            <button className='out' onClick={() => {this.handleExit()}}>Thoát</button>
+                            <h3>{title.titleExam}</h3>
+                            <button className='out' onClick={() => { this.handleExit() }}>Thoát</button>
                         </div>
                         <div className="main-content">
                             <div className="content">
