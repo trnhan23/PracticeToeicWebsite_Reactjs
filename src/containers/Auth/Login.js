@@ -98,7 +98,6 @@ class Login extends Component {
                 const errMessage = error.response.data.message;
                 this.setState({ errMessage });
             }
-            console.log('Error', error.response || error);
         }
     }
 

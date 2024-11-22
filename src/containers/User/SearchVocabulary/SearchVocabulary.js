@@ -113,13 +113,6 @@ class SearchVocabulary extends Component {
                 exampleSentence = exampleSentenceElement.innerText;
             }
 
-            // In ra các giá trị để kiểm tra
-            console.log("doc: ", doc);
-            console.log('Pronunciation:', pronunciation);
-            console.log('Part of Speech:', partOfSpeech);
-            console.log('Definition:', definition);
-            console.log('Example Sentence:', exampleSentence);
-
             // Gửi dữ liệu từ vựng đến API
             const response = await saveVocabtoFlashcard({
                 word,

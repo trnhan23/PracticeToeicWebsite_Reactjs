@@ -53,7 +53,6 @@ class Statistic extends Component {
             const res = await getInfoStatistic(userInfo.id);
 
             if (res.errCode === 0) {
-                console.log("Kiểm tra res: ", res);
                 this.setState({
                     info: res.info,
                     chartData: {

@@ -214,8 +214,6 @@ export default class UploadFile extends React.Component {
         if (res && res.errCode === 0) {
             this.setState({
                 examId: res.id
-            }, () => {
-                console.log("KT mã examId: ", this.state.examId);
             })
         } else {
             toast.error("Error tạo exam: ", res.errMessage);
@@ -228,7 +226,6 @@ export default class UploadFile extends React.Component {
             await this.handleCreateExam();
 
             const formattedData = this.formatData(this.state.data);
-            console.log("Formatted Data:", formattedData);
 
             // Send the formatted data to the backend API
             const response = await importFileExam(formattedData);

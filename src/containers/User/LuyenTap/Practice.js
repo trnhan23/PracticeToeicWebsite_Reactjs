@@ -12,6 +12,7 @@ class Practice extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            flagSubmit: false,
             activePart: (this.props.selectedParts && this.props.selectedParts[0]) || 'Part 1',
             startTime: this.props.selectedTime ? this.props.selectedTime : 120 * 60,
             remainingTime: this.props.selectedTime ? this.props.selectedTime : 120 * 60,
@@ -72,6 +73,7 @@ class Practice extends Component {
                     return { remainingTime: prevState.remainingTime - 1 };
                 } else {
                     clearInterval(this.timer);
+                    this.handleSubmit();
                     alert('Hết thời gian làm bài!');
                     return { remainingTime: 0 };
                 }
@@ -138,29 +140,29 @@ class Practice extends Component {
     formatResultData(correctAnswers, userAnswers) {
         const questions = [];
         const correctCountByPart = {}; // Lưu trữ số câu đúng cho từng part
-    
+
         correctAnswers.answers.data.forEach((questionData) => {
             const part = questionData.questionType;
-    
+
             if (this.props.selectedParts.includes(part)) {
                 const rlqaData = questionData.RLQA_ReadAndListenData || [];
-    
+
                 // Đảm bảo đếm số câu đúng bắt đầu từ 0 cho mỗi part
                 if (!correctCountByPart[part]) {
                     correctCountByPart[part] = 0;
                 }
-    
+
                 rlqaData.forEach((rlqa) => {
                     let questionDetails = rlqa.RLQA_QuestionAndAnswerData || [];
-    
+
                     questionDetails = Array.isArray(questionDetails) ? questionDetails : [questionDetails];
-    
+
                     questionDetails.forEach((question) => {
                         const questionId = question.id;
                         const correctAnswer = question.correctAnswer;
                         const numberQuestion = question.numberQuestion;
                         const userAnswer = userAnswers[part]?.[numberQuestion];
-    
+
                         let stateAnswer;
                         if (userAnswer === undefined) {
                             stateAnswer = "SKIP";
@@ -170,7 +172,7 @@ class Practice extends Component {
                         } else {
                             stateAnswer = "INCORRECT";
                         }
-    
+
                         questions.push({
                             questionId: questionId.toString(),
                             answer: userAnswer || null,
@@ -180,51 +182,51 @@ class Practice extends Component {
                 });
             }
         });
-    
-        return { 
-            result: { 
+
+        return {
+            result: {
                 questions,
                 correctCounts: correctCountByPart // Trả về số câu đúng theo từng part
-            } 
+            }
         };
     }
-    
-
-
 
     // hàm xử lý khi nộp bài
     handleSubmit = async () => {
         //const { exam } = this.props;
-        const { answers } = this.state;
-        const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
+        const { answers, flagSubmit } = this.state;
+        if (flagSubmit === false) {
+            this.setState({flagSubmit: true});
+            const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
 
-        clearInterval(this.timer);
-        let res = await getAnswerExam(exam.id);
-        let saveResult = await this.formatResultData(res, answers);
+            clearInterval(this.timer);
+            let res = await getAnswerExam(exam.id);
+            let saveResult = await this.formatResultData(res, answers);
 
-        let test = ({
-            examId: exam.id,
-            userId: this.props.userInfor.id,
-            testTime: this.state.startTime - this.state.remainingTime
-        })
+            let test = ({
+                examId: exam.id,
+                userId: this.props.userInfor.id,
+                testTime: this.state.startTime - this.state.remainingTime
+            })
 
-        let save = await saveTestResult({
-            test,
-            result: saveResult.result
-        });
+            let save = await saveTestResult({
+                test,
+                result: saveResult.result
+            });
 
-        const correctAnswers = this.formatCorrectAnswers(res.answers.data);
-        const resultAnswers = this.checkAnswers(correctAnswers, answers);
+            const correctAnswers = this.formatCorrectAnswers(res.answers.data);
+            const resultAnswers = this.checkAnswers(correctAnswers, answers);
 
-        const questionResults = {};
-        resultAnswers.forEach(({ numberQuestion, isCorrect }) => {
-            questionResults[numberQuestion] = isCorrect === true ? 'true' : 'false';
-        });
+            const questionResults = {};
+            resultAnswers.forEach(({ numberQuestion, isCorrect }) => {
+                questionResults[numberQuestion] = isCorrect === true ? 'true' : 'false';
+            });
 
-        this.setState({
-            answerExam: correctAnswers,
-            questionResults
-        });
+            this.setState({
+                answerExam: correctAnswers,
+                questionResults
+            });
+        }
     };
 
     // hàm chuyển đổi thời gian
@@ -556,7 +558,7 @@ class Practice extends Component {
 
     render() {
         const { selectedParts, exam } = this.props;
-        const { activePart, remainingTime } = this.state;
+        const { activePart, remainingTime, flagSubmit } = this.state;
         const title = JSON.parse(localStorage.getItem("exam"));
 
 
@@ -593,7 +595,7 @@ class Practice extends Component {
                             <div className="right-panel">
                                 <h4>Thời gian còn lại: </h4>
                                 <h4 className='time'>{this.formatTime(remainingTime)}</h4>
-                                <button className="submit-button" onClick={this.handleSubmit}>
+                                <button className="submit-button" onClick={this.handleSubmit} disabled={flagSubmit}>
                                     Nộp bài
                                 </button>
                                 {this.renderPartButtons()}

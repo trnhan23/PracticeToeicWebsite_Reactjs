@@ -18,7 +18,6 @@ const createFlashcard = (data) => {
 
 const saveWordToFlashcard = async (flashcardId, data) => {
     try {
-        console.log('Sending data to API:', { flashcardId, data });
         const response = await axios.post(`/api/flashcards/${flashcardId}/vocabulary`, data);
         return response.data;
     } catch (error) {
@@ -36,8 +35,6 @@ const saveWordToFlashcard = async (flashcardId, data) => {
 
 const saveVocabtoFlashcard = async (data) => {
     try {
-        console.log('Sending data to API:', { data });
-
         const response = await axios.post('/api/save-vocab-flashcard', data);
         return response;
     } catch (error) {
@@ -48,8 +45,6 @@ const saveVocabtoFlashcard = async (data) => {
 
 const deleteVocabFromFlashcard = async (data) => {
     try {
-        console.log('Sending data to API for deletion:', { data });
-
         const response = await axios.delete('/api/delete-vocab-flashcard', { data });
         return response;
     } catch (error) {

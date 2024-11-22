@@ -27,7 +27,6 @@ class TestManage extends Component {
     fetchExams = async () => {
         try {
             const res = await getAllCategoryExams('ALL');
-            console.log("Kiểm tra cate exam: ", res);
             this.setState({
                 exams: res.cateExams,
                 loading: false,
@@ -44,9 +43,7 @@ class TestManage extends Component {
 
     handleDropdownChange = (event) => {
         const examId = parseInt(event.target.value, 10);
-        this.setState({ selectedExamId: examId }, () => {
-            console.log("Kiểm tra handleDropdownChange: " + this.state.selectedExamId);
-        });
+        this.setState({ selectedExamId: examId });
     };
 
     handleOnChange = (event) => {
