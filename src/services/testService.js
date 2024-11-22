@@ -28,11 +28,17 @@ const getTitleExam = (testId) => {
     })
 }
 
+const getInfoStatistic = (userId, type) => {
+    return axios.get('/api/get-info-statistic', {
+        params: { userId, type: "LIS" }
+    })
+}
+
 export {
     saveTestResult,
     getTestResult,
     getDetailTestResult,
     getAllTestResult,
     getTitleExam,
-    
+    getInfoStatistic,
 }
