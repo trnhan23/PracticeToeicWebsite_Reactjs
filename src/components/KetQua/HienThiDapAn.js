@@ -21,7 +21,8 @@ class HienThiDapAn extends Component {
     async componentDidMount() {
         await this.fetchAnswers();
         const { part } = this.props.match.params;
-        const { exam } = this.props;
+        //const { exam } = this.props;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
 
         if (part === 'all') {
             this.setState({
@@ -41,10 +42,12 @@ class HienThiDapAn extends Component {
     }
 
     async componentDidUpdate(prevProps) {
-        const { exam, match } = this.props;
+        const { match } = this.props;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
+
         const { part } = match.params;
 
-        if ((exam && exam.id !== prevProps.exam.id) || (part !== prevProps.match.params.part)) {
+        if ((part !== prevProps.match.params.part)) {
             await this.fetchAnswers();
             this.setState({
                 activePart: part,
@@ -83,8 +86,9 @@ class HienThiDapAn extends Component {
 
     // lấy đáp án từ API theo từng phần
     fetchAnswers = async () => {
-        const { exam, match } = this.props;
+        const { match } = this.props;
         const { part } = match.params;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
 
         if (exam && exam.id) {
             try {
@@ -112,7 +116,9 @@ class HienThiDapAn extends Component {
     }
 
     handlePartChange = (part) => {
-        const { exam } = this.props
+        //const { exam } = this.props;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
+
         this.setState({
             activePart: part
         }, () => {
@@ -231,7 +237,7 @@ class HienThiDapAn extends Component {
 
     render() {
         const { parts } = this.state;
-        const { exam } = this.props;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
 
         return (
             <React.Fragment>
@@ -240,7 +246,7 @@ class HienThiDapAn extends Component {
                     <div className="luyen-tap-layout">
                         <div className="header">
                             <h3>Đáp án: {exam.titleExam}</h3>
-                            <button className='out'>Thoát</button>
+                            {/* <button className='out'>Thoát</button> */}
                         </div>
                         <div className="main-content">
                             <div className="content">

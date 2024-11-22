@@ -8,6 +8,7 @@ import './Practice.scss';
 import { practiceExam, getAnswerExam } from '../../../services/examService';
 import { path } from '../../../utils';
 import { saveTestResult } from '../../../services/testService';
+import { toast } from 'react-toastify';
 class Practice extends Component {
     constructor(props) {
         super(props);
@@ -197,7 +198,7 @@ class Practice extends Component {
         const { answers, flagSubmit } = this.state;
         if (flagSubmit === false) {
             this.setState({flagSubmit: true});
-            const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
+            const exam = JSON.parse(localStorage.getItem("selectedExam")) || this.props.exam || {};
 
             clearInterval(this.timer);
             let res = await getAnswerExam(exam.id);
@@ -226,6 +227,8 @@ class Practice extends Component {
                 answerExam: correctAnswers,
                 questionResults
             });
+            alert("Nộp bài thi thành công!");
+            toast.success("Nộp bài thi thành công!");
         }
     };
 
