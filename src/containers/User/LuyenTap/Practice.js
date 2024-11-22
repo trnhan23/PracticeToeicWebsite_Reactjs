@@ -52,7 +52,6 @@ class Practice extends Component {
 
     handleQuestionExam = async (examId, questionType) => {
         try {
-            console.log("kiểm tra exam: ", examId);
             let res = await practiceExam(examId, questionType);
             if (res.errCode === 0) {
                 this.setState({
@@ -138,58 +137,77 @@ class Practice extends Component {
     // hàm chuẩn hoá dữ liệu để lưu kết quả làm bài vào database
     formatResultData(correctAnswers, userAnswers) {
         const questions = [];
-
+        const correctCountByPart = {}; // Lưu trữ số câu đúng cho từng part
+    
         correctAnswers.answers.data.forEach((questionData) => {
             const part = questionData.questionType;
-
+    
             if (this.props.selectedParts.includes(part)) {
-                const questionDetails = questionData.RLQA_ReadAndListenData[0].RLQA_QuestionAndAnswerData;
-
-                const questionArray = Array.isArray(questionDetails) ? questionDetails : [questionDetails];
-
-                questionArray.forEach((question) => {
-                    const questionId = question.id;
-                    const correctAnswer = question.correctAnswer;
-                    const numberQuestion = question.numberQuestion;
-
-                    const userAnswer = userAnswers[part]?.[numberQuestion];
-
-                    let stateAnswer;
-                    if (userAnswer === undefined) {
-                        stateAnswer = "SKIP";
-                    } else if (userAnswer === correctAnswer) {
-                        stateAnswer = "CORRECT";
-                    } else {
-                        stateAnswer = "INCORRECT";
-                    }
-
-                    questions.push({
-                        questionId: questionId.toString(),
-                        answer: userAnswer || null,
-                        stateAnswer: stateAnswer
+                const rlqaData = questionData.RLQA_ReadAndListenData || [];
+    
+                // Đảm bảo đếm số câu đúng bắt đầu từ 0 cho mỗi part
+                if (!correctCountByPart[part]) {
+                    correctCountByPart[part] = 0;
+                }
+    
+                rlqaData.forEach((rlqa) => {
+                    let questionDetails = rlqa.RLQA_QuestionAndAnswerData || [];
+    
+                    questionDetails = Array.isArray(questionDetails) ? questionDetails : [questionDetails];
+    
+                    questionDetails.forEach((question) => {
+                        const questionId = question.id;
+                        const correctAnswer = question.correctAnswer;
+                        const numberQuestion = question.numberQuestion;
+                        const userAnswer = userAnswers[part]?.[numberQuestion];
+    
+                        let stateAnswer;
+                        if (userAnswer === undefined) {
+                            stateAnswer = "SKIP";
+                        } else if (userAnswer === correctAnswer) {
+                            stateAnswer = "CORRECT";
+                            correctCountByPart[part] += 1; // Tăng số câu đúng nếu câu trả lời chính xác
+                        } else {
+                            stateAnswer = "INCORRECT";
+                        }
+    
+                        questions.push({
+                            questionId: questionId.toString(),
+                            answer: userAnswer || null,
+                            stateAnswer: stateAnswer
+                        });
                     });
                 });
             }
         });
-
-        return { result: { questions } };
+    
+        return { 
+            result: { 
+                questions,
+                correctCounts: correctCountByPart // Trả về số câu đúng theo từng part
+            } 
+        };
     }
+    
+
+
 
     // hàm xử lý khi nộp bài
     handleSubmit = async () => {
-        const { exam } = this.props;
+        //const { exam } = this.props;
         const { answers } = this.state;
+        const exam = JSON.parse(localStorage.getItem("selectedExam")) || {};
 
         clearInterval(this.timer);
         let res = await getAnswerExam(exam.id);
         let saveResult = await this.formatResultData(res, answers);
-        console.log("Kiểm tra lưu kết quả: ", saveResult);
 
         let test = ({
             examId: exam.id,
             userId: this.props.userInfor.id,
             testTime: this.state.startTime - this.state.remainingTime
         })
+
         let save = await saveTestResult({
             test,
             result: saveResult.result
@@ -249,7 +267,6 @@ class Practice extends Component {
                                             key={questionNumber}
                                             className={`question-button ${hasAnswer ? 'selected' : ''} ${resultClass}`}
                                             onClick={() => {
-                                                console.log("Kiểm tra questionNumber: ", questionNumber)
                                                 this.handlePartChange(part)
                                             }}
                                         >
@@ -281,7 +298,6 @@ class Practice extends Component {
         const { exam } = this.props;
         const title = JSON.parse(localStorage.getItem("exam"));
 
-        console.log("kiểm tra title: ", title);
         this.setState((prevState) => ({
             activePart: part,
             answers: {
@@ -462,9 +478,7 @@ class Practice extends Component {
                     [questionIndex]: answer,
                 },
             },
-        }), () => {
-            console.log("Kiểm tra đáp án: ", this.state.answers);
-        });
+        }));
     };
 
     renderPart125 = () => {

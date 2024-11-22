@@ -110,7 +110,6 @@ class Login extends Component {
 
     handleGoogleLogin = () => {
         const googleLoginUrl = `https://accounts.google.com/o/oauth2/auth?redirect_uri=` + `${process.env.REACT_APP_BACKEND_URL}` + `/auth/google/callback&client_id=` + `${process.env.REACT_APP_GG_CLIENT_ID}` + `&scope=profile email&response_type=code&access_type=offline&prompt=consent`;
-        console.log("kt: ", googleLoginUrl);
         const width = 500;
         const height = 600;
         const left = (window.screen.width - width) / 2;
