@@ -89,7 +89,7 @@ class Login extends Component {
                 });
             }
             if (data && data.errCode === 0) {
-                toast.success("Login success");
+                toast.success("Đăng nhập thành công!");
                 this.props.userLoginSuccess(data.user);
                 this.props.navigate(path.HOMEPAGE);
             }

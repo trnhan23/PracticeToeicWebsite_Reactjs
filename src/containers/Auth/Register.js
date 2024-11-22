@@ -12,6 +12,7 @@ import { createNewUserService } from '../../services/userService';
 import { validateAlphabetic, validateEmail, validatePassword } from '../../validation/Validated'
 
 import { path } from '../../utils';
+import { toast } from 'react-toastify';
 class Register extends Component {
     constructor(props) {
         super(props);
@@ -86,11 +87,13 @@ class Register extends Component {
                 fullName: formData.fullName,
                 email: formData.email,
                 password: formData.password,
+                avatar: 'https://i.pravatar.cc/300?img=2',
                 roleId: ROLE.User
             });
 
             if (data && data.errCode === 0) {
                 this.props.navigate(path.LOGIN);
+                toast.success("Đăng kí tài khoản thành công!");
             } else {
                 this.setState({
                     errMessage: data.errMessage

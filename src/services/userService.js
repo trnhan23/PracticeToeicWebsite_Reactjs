@@ -34,6 +34,10 @@ const getAllCode = (type) => {
     })
 }
 
+const verifyEmailAccount = (data) => {
+    return axios.post('/api/verify-account-user', data);
+}
+
 export {
     handleLoginApi,
     getAllUsers,
@@ -41,5 +45,6 @@ export {
     deleteUserService,
     editUserService,
     getAllCode,
+    verifyEmailAccount,
 
 }

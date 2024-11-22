@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { userIsAuthenticated, userIsNotAuthenticated } from '../hoc/authentication';
 import { path } from '../utils'
 import Login from './Auth/Login.js';
+import VerifyEmailAccount from './Auth/VerifyEmailAccount.js';
 import Register from './Auth/Register.js';
 import System from '../routes/System';
 import HomePage from './User/HomePage/HomePage.js';
@@ -63,6 +64,7 @@ class App extends Component {
                                 <Route path={path.PRACTICE_VOCAB} component={(HomeVocab)} />
                                 <Route path={path.HT_DAPAN} component={(HienThiDapAn)} />
                                 <Route path={path.FLASHCARD} component={(Flashcard)} />
+                                <Route path={path.VERIFY_EMAIL_ACCOUNT} component={(VerifyEmailAccount)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>

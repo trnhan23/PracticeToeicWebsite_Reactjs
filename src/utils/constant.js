@@ -11,6 +11,7 @@ export const path = {
     RESULT_PRACTIC: '/result-practic',
     STATISTIC: '/statistic',
     PRACTICE_VOCAB: '/flashcard/:flashcardId',
+    VERIFY_EMAIL_ACCOUNT: '/verify',
     PRACTICE: '/practice-toeic',
     FLASHCARD: '/flashcard',
     REGISTER: '/register',
