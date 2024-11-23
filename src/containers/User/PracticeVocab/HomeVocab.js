@@ -96,7 +96,7 @@ class HomeVocab extends Component {
                                 (this.state.words.map((word, index) => (
                                     <div key={index} className="flashcard">
                                         <div className="word-info">
-                                            <h3>{word.word} {word.partOfSpeech} <span className="pronunciation">{word.pronunciation}</span></h3>
+                                            <h3><div className='word'>{word.word}</div> -- {word.partOfSpeech} <span className="pronunciation"><i>{word.pronunciation}</i></span></h3>
                                             <div className="audio-icons">
 
                                                 {word.audioUS && (

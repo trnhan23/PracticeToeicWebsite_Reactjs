@@ -108,14 +108,35 @@ body {
                 transform: translateY(-5px);
             }
 
-            .list-title {
-                font-size: 15px;
-                font-weight: bold;
-                margin-bottom: 5px;
-                color: #333;
-                height: 40px;
-                text-align: center;
+            .header-flash {
+                display: flex;
+                align-items: flex-start;
+                width: 100%;
+                justify-content: space-between;
+                
+                .list-title {
+                    font-size: 15px;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                    color: #333;
+                    height: 40px;
+                    text-align: center;
+                }
+
+                .icon {
+                    color: #9e9a9aae;
+
+                    &:hover {
+                        i {
+                            color: #f71212ae;
+                        }
+                    }
+                }
+
+                
             }
+
+            
 
             .list-meta {
                 font-size: 13px;

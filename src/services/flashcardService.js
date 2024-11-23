@@ -72,11 +72,9 @@ const getVocabInFlashcard = async (flashcardId) => {
 //     });
 // };
 
-// const deleteFlashcard = (flashcardId) => {
-//     return axios.delete('/api/delete-flashcard', {
-//         data: { flashcardId: flashcardId }
-//     });
-// };
+const deleteFlashcard = (data) => {
+    return axios.delete('/api/delete-flashcard', {data});
+};
 
 export {
     getAllFlashcards,
@@ -87,6 +85,7 @@ export {
     deleteVocabFromFlashcard,
     getVocabInFlashcardPagination,
     getVocabInFlashcard,
+    deleteFlashcard,
 
 };
 

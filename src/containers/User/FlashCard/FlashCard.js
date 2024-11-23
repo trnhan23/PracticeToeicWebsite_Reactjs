@@ -8,6 +8,8 @@ import { getAllFlashcardsPagination, createFlashcard } from '../../../services/f
 import './FlashCard.scss';
 import Loading from '../../../components/Loading/Loading';
 import Pagination from '../../../components/Pagination/Pagination';
+import { deleteFlashcard } from '../../../services/flashcardService';
+import { toast } from 'react-toastify';
 
 class Flashcard extends Component {
     constructor(props) {
@@ -110,6 +112,21 @@ class Flashcard extends Component {
         this.fetchFlashcards(newPage);
     }
 
+    handleClickTrash = async (event, flashcardId) => {
+        event.stopPropagation();
+        let res = await deleteFlashcard({id: flashcardId});
+        if (res.errCode === 0) {
+            await this.fetchFlashcards();
+            toast.success("Xoá flashcard thành công");
+        } else {
+            toast.error("Xoá flashcard thất bại!");
+        }
+    }
+
+    handleClickFlashcard = (id) => {
+        this.props.navigate(`/flashcard/${id}`);
+    }
+
     // hàm render flashcard
     renderFlashcards = () => {
         const { flashcards } = this.state;
@@ -123,14 +140,18 @@ class Flashcard extends Component {
                                 <div
                                     key={flashcard.id}
                                     className="flashcard-item"
-                                    onClick={() => this.props.navigate(`/flashcard/${flashcard.id}`)}
+                                    onClick={() => { this.handleClickFlashcard(flashcard.id) }}
                                 >
-                                    <div className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</div>
+                                    <div className='header-flash'>
+                                        <div className="list-title">{flashcard.flashcardName || 'Không có tiêu đề'}</div>
+                                        <div className='icon' onClick={(event) => { this.handleClickTrash(event, flashcard.id) }}><i className="fas fa-trash"></i></div>
+                                    </div>
+
                                     <p className="list-meta">
                                         <i className="fa-regular fa-copy"></i>
-                                        <span>{flashcard.amount} từ | </span>
-                                        <span className="icon"><i className="far fa-user"></i></span>
-                                        <span> {flashcard.countUserViewed}</span>
+                                        <span>{flashcard.amount} từ </span>
+                                        {/* <span className="icon"><i className="far fa-user"></i></span>
+                                        <span> {flashcard.countUserViewed}</span> */}
                                     </p>
                                     <p className="list-description">{flashcard.description || 'Không có mô tả'}</p>
                                     <div className="list-author">
