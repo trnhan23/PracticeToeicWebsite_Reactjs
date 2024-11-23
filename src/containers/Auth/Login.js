@@ -87,6 +87,7 @@ class Login extends Component {
                     isErrorEmail: true,
                     isErrorPassword: true,
                 });
+                toast.error("Đăng nhập thất bại!");
             }
             if (data && data.errCode === 0) {
                 toast.success("Đăng nhập thành công!");
@@ -153,7 +154,6 @@ class Login extends Component {
             }
         });
     };
-
 
     render() {
         return (
