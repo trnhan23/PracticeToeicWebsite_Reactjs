@@ -69,7 +69,7 @@ class VerifyEmailAccount extends Component {
                                         }`}
                                     >
                                         <h1>
-                                            {errCode === 1
+                                            {errCode === 0
                                                 ? '🎉 Chúc mừng! Xác thực thành công!'
                                                 : '😢 Rất tiếc! Xác thực thất bại!'}
                                         </h1>
