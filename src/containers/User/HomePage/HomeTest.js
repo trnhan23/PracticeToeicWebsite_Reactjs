@@ -30,7 +30,8 @@ class HomeTest extends Component {
                             titleExam: exam.titleExam,
                             stateExam: exam.stateExam,
                             countUserTest: exam.countUserTest,
-                            countComment: exam.countComment
+                            countComment: exam.countComment,
+                            statusExam: exam.userExam_ExamData?.statusExam || 0
                         });
                     }
                 });
@@ -39,20 +40,19 @@ class HomeTest extends Component {
                     categoryExams: cateExams,
                 });
             } else {
-                console.error('Error handleGet8LatestExams:', res);
                 this.setState({
                     loading: false,
                     errMessage: res.errMessage
                 });
             }
         } catch (error) {
-            console.error('Error fetching exams:', error);
             this.setState({
                 loading: false,
                 errMessage: 'Failed to fetch exams.'
             });
         }
-    }
+    };
+    
 
     handleSelectExam = (selectedExam) => {
         const updatedExam = { ...selectedExam, userId: this.props.userInfor };

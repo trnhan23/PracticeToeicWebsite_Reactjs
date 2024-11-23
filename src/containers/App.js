@@ -52,19 +52,19 @@ class App extends Component {
                             <Switch>
                                 {/* <Route path={path.HOME} exact component={(Home)} /> */}
                                 <Route path={path.HOMEPAGE} exact component={(HomePage)} />
-                                <Route path={path.SEARCH_WORD} component={(SearchVocabulary)} />
-                                <Route path={path.TOEIC_EXAM} component={(ToeicExam)} />
-                                <Route path={path.PRACTICE} component={(Practice)} />
-                                <Route path={path.DETAIL} component={(ResultContainer)} />
-                                <Route path={path.TT_DETHI} component={(TTDeThi)} />
-                                <Route path={path.STATISTIC} component={(Statistic)} />
-                                <Route path={path.RESULT_PRACTIC} component={(ResultPractice)} />
-                                <Route path={path.REGISTER} component={(Register)} />
-                                <Route path={path.PROFILE} component={(Profile)} />
-                                <Route path={path.PRACTICE_VOCAB} component={(HomeVocab)} />
-                                <Route path={path.HT_DAPAN} component={(HienThiDapAn)} />
-                                <Route path={path.FLASHCARD} component={(Flashcard)} />
-                                <Route path={path.VERIFY_EMAIL_ACCOUNT} component={(VerifyEmailAccount)} />
+                                <Route path={path.SEARCH_WORD} component={userIsAuthenticated(SearchVocabulary)} />
+                                <Route path={path.TOEIC_EXAM} component={userIsAuthenticated(ToeicExam)} />
+                                <Route path={path.PRACTICE} component={userIsAuthenticated(Practice)} />
+                                <Route path={path.DETAIL} component={userIsAuthenticated(ResultContainer)} />
+                                <Route path={path.TT_DETHI} component={userIsAuthenticated(TTDeThi)} />
+                                <Route path={path.STATISTIC} component={userIsAuthenticated(Statistic)} />
+                                <Route path={path.RESULT_PRACTIC} component={userIsAuthenticated(ResultPractice)} />
+                                <Route path={path.REGISTER} component={userIsNotAuthenticated(Register)} />
+                                <Route path={path.PROFILE} component={userIsAuthenticated(Profile)} />
+                                <Route path={path.PRACTICE_VOCAB} component={userIsAuthenticated(HomeVocab)} />
+                                <Route path={path.HT_DAPAN} component={userIsAuthenticated(HienThiDapAn)} />
+                                <Route path={path.FLASHCARD} component={userIsAuthenticated(Flashcard)} />
+                                <Route path={path.VERIFY_EMAIL_ACCOUNT} component={userIsAuthenticated(VerifyEmailAccount)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>
