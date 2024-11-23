@@ -17,10 +17,16 @@ const getAudioVocabularyApi = async (word) => {
     })
 };
 
+const createVocabularyInFlashcard = (data) => {
+    return axios.post('/api/create-vocabulary-in-flashcard', data);
+}
+
+
 export {
     getSearchVocabularyApi,
     getAudioVocabularyApi,
-
+    createVocabularyInFlashcard,
+    
 }
 
 

@@ -26,6 +26,48 @@
         }
     }
 
+    .btn-add-word {
+        margin-top: 10px;
+        text-align: -webkit-left;
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            // Đổ bóng
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+            &:hover {
+                background-color: #45a049;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+            }
+
+            &:active {
+                transform: translateY(0);
+                box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+
+            &.outline {
+                background-color: transparent;
+                color: #4CAF50;
+                border: 2px solid #4CAF50;
+
+                &:hover {
+                    background-color: #4CAF50;
+                    color: white;
+                }
+            }
+        }
+
+    }
+
     .pratice-count {
         font-size: 17px;
         color: gray;
@@ -33,8 +75,6 @@
         margin-top: 22px;
         justify-content: left;
     }
-
-
 
     .flashcard-list {
         display: flex;
@@ -125,4 +165,82 @@
         gap: 10px;
         margin-bottom: 10px;
     }
+
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        display: block;
+        text-align: left;
+    }
+
+    .popup-content h3 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .popup-form label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .popup-form input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+
+        &:focus {
+            border-color: #007BFF;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+    }
+
+    .popup-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .popup-buttons button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .popup-buttons button:hover {
+        background-color: #45a049;
+    }
+
+    .popup-buttons button:last-child {
+        background-color: #f44336;
+    }
+
+    .popup-buttons button:last-child:hover {
+        background-color: #d32f2f;
+    }
+
 }
