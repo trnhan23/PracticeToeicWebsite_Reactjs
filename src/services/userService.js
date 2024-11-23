@@ -42,6 +42,10 @@ const sendCode = (data) => {
     return axios.post('/api/send-code', data);
 }
 
+const checkSendCode = (data) => {
+    return axios.post('/api/check-send-code', data);
+}
+
 export {
     handleLoginApi,
     getAllUsers,
@@ -51,5 +55,6 @@ export {
     getAllCode,
     verifyEmailAccount,
     sendCode,
-
+    checkSendCode,
+    
 }

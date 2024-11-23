@@ -8,7 +8,8 @@ import './ResetPassword.scss';
 import { validateEmail, validatePassword } from '../../validation/Validated';
 import { path } from '../../utils';
 import { toast } from 'react-toastify';
-import { sendCode } from '../../services/userService';
+import { sendCode, checkSendCode } from '../../services/userService';
+import * as actions from "../../store/actions";
 
 class ResetPassword extends Component {
     constructor(props) {
@@ -103,27 +104,37 @@ class ResetPassword extends Component {
 
     handleResetPassword = async () => {
         this.setState({ errMessage: '' });
-
-        // Validate before submitting
-        if (this.state.isErrorEmail || this.state.isErrorPassword || this.state.isErrorConfirmPassword) {
-            toast.error("Please fix the errors before submitting.");
-            return;
-        }
-
+    
         try {
-            alert("Click reset password")
-            // let data = await handleResetPasswordApi(this.state.email, this.state.password);
-            // if (data && data.errCode === 0) {
-            //     toast.success("Password reset successfully!");
-            //     this.props.navigate(path.LOGIN);
-            // } else {
-            //     this.setState({ errMessage: data.message });
-            //     toast.error("Password reset failed!");
-            // }
+            const { email, code, password, confirmPassword } = this.state;
+    
+            // Kiểm tra các trường nhập liệu
+            if (email === '' || code == '' || password === '' || confirmPassword === '') {
+                this.setState({ errMessage: 'Vui lòng nhập đầy đủ thông tin' });
+                return;
+            } else if (password !== confirmPassword) {
+                this.setState({ errMessage: 'Password không trùng khớp' });
+                return;
+            }
+    
+            let res = await checkSendCode({
+                email: email,
+                otp: code,
+                password: password
+            });
+    
+            if (res.errCode === 0) {
+                this.props.processLogout();
+                this.props.navigate(`${path.LOGIN}`);
+                toast.success("Đổi mật khẩu thành công.");
+            } else {
+                toast.error("Đổi mật khẩu thất bại: " + res.errMessage);
+            }
         } catch (error) {
-            this.setState({ errMessage: 'Something went wrong, please try again later.' });
+            this.setState({ errMessage: 'Lỗi trong quá trình xử lý' });
+            console.error('Error:', error);
         }
-    }
+    };
 
     hanldeShowHidePassword = () => {
         this.setState({ isShowPassword: !this.state.isShowPassword });
@@ -139,13 +150,12 @@ class ResetPassword extends Component {
                 errMessage: 'Vui lòng nhập email'
             })
         } else {
+            this.setState({ errMessage: '' })
             const resSendCode = await sendCode({
                 email: this.state.email
             });
-            if (resSendCode.errCode === 0){
+            if (resSendCode.errCode === 0) {
                 toast.success("Gửi email thành công!");
-
-                
 
 
             } else {
@@ -256,6 +266,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigate: (path) => dispatch(push(path)),
+        processLogout: () => dispatch(actions.processLogout()),
     };
 };
 
