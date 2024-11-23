@@ -31,7 +31,7 @@ class HomeTest extends Component {
                             stateExam: exam.stateExam,
                             countUserTest: exam.countUserTest,
                             countComment: exam.countComment,
-                            statusExam: exam.userExam_ExamData?.statusExam || 0
+                            statusExam: 0
                         });
                     }
                 });

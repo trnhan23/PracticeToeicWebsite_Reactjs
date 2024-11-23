@@ -64,7 +64,7 @@ class App extends Component {
                                 <Route path={path.PRACTICE_VOCAB} component={userIsAuthenticated(HomeVocab)} />
                                 <Route path={path.HT_DAPAN} component={userIsAuthenticated(HienThiDapAn)} />
                                 <Route path={path.FLASHCARD} component={userIsAuthenticated(Flashcard)} />
-                                <Route path={path.VERIFY_EMAIL_ACCOUNT} component={userIsAuthenticated(VerifyEmailAccount)} />
+                                <Route path={path.VERIFY_EMAIL_ACCOUNT} component={userIsNotAuthenticated(VerifyEmailAccount)} />
                                 <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>
