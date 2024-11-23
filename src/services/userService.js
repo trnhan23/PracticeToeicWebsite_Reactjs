@@ -38,6 +38,10 @@ const verifyEmailAccount = (data) => {
     return axios.post('/api/verify-account-user', data);
 }
 
+const sendCode = (data) => {
+    return axios.post('/api/send-code', data);
+}
+
 export {
     handleLoginApi,
     getAllUsers,
@@ -46,5 +50,6 @@ export {
     editUserService,
     getAllCode,
     verifyEmailAccount,
+    sendCode,
 
 }

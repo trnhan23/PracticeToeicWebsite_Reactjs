@@ -195,7 +195,7 @@ class Login extends Component {
                                     <button className='btn-login' onClick={this.handleLogin}>Login</button>
                                 </div>
                                 <div className='col-12 forgot-register'>
-                                    <span className='forgot-password'><a href='#'>Forgot your password?</a></span>
+                                    <span className='forgot-password'><a href={path.RESET_PASSWORD+"?type=forget"}>Forgot your password?</a></span>
                                     <span className='register'><a href={path.REGISTER}>Register here</a></span>
                                 </div>
                                 <div className='col-12 text-center mt-3'>

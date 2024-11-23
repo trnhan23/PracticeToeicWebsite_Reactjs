@@ -23,6 +23,7 @@ import HomeVocab from './User/PracticeVocab/HomeVocab.js';
 import Statistic from './User/Statistic/Statistic.js';
 import ResultPractice from './User/Statistic/ResultPractice.js';
 import Profile from './User/Profile/Profile.js';
+import ResetPassword from './Auth/ResetPassword.js';
 class App extends Component {
 
     handlePersistorState = () => {
@@ -60,6 +61,7 @@ class App extends Component {
                                 <Route path={path.STATISTIC} component={userIsAuthenticated(Statistic)} />
                                 <Route path={path.RESULT_PRACTIC} component={userIsAuthenticated(ResultPractice)} />
                                 <Route path={path.REGISTER} component={userIsNotAuthenticated(Register)} />
+                                <Route path={path.RESET_PASSWORD} component={(ResetPassword)} />
                                 <Route path={path.PROFILE} component={userIsAuthenticated(Profile)} />
                                 <Route path={path.PRACTICE_VOCAB} component={userIsAuthenticated(HomeVocab)} />
                                 <Route path={path.HT_DAPAN} component={userIsAuthenticated(HienThiDapAn)} />

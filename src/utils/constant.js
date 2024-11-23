@@ -8,6 +8,7 @@ export const path = {
     HT_DAPAN: '/hien-thi-dap-an/:part',
     DETAIL: '/detail/:testId',
     PROFILE: '/profile',
+    RESET_PASSWORD: '/reset-password',
     RESULT_PRACTIC: '/result-practic',
     STATISTIC: '/statistic',
     PRACTICE_VOCAB: '/flashcard/:flashcardId',
