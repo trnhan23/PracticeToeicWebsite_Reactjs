@@ -9,7 +9,10 @@ import BlogManage from '../containers/Admin/BlogManage';
 import Header from '../containers/Header/Header';
 class System extends Component {
     render() {
-        const { systemMenuPath, isLoggedIn } = this.props;
+        const { systemMenuPath, isLoggedIn, userInfor } = this.props;
+        if (!isLoggedIn || userInfor?.roleId !== 'R1') {
+            return <Redirect to="/home" />;
+        }
         return (
             <React.Fragment>
                 {isLoggedIn && <Header />}
@@ -34,7 +37,8 @@ class System extends Component {
 const mapStateToProps = state => {
     return {
         systemMenuPath: state.app.systemMenuPath,
-        isLoggedIn: state.user.isLoggedIn
+        isLoggedIn: state.user.isLoggedIn,
+        userInfor: state.user.userInfor,
     };
 };
 
