@@ -40,7 +40,7 @@ class HomeHeader extends Component {
 
     render() {
         const { isMenuOpen, currentPath } = this.state;
-        const { isLoggedIn, userInfor, processLogout } = this.props;
+        const { isLoggedIn, userInfor, processLogout, navigate } = this.props;
         return (
             <React.Fragment>
                 <div className='home-header-container'>
@@ -59,7 +59,7 @@ class HomeHeader extends Component {
                             <div className={`child-content ${currentPath === path.TOEIC_EXAM ? 'active' : ''}`}>
                                 <div><a href={path.TOEIC_EXAM}><b>Đề thi TOEIC</b></a></div>
                             </div>
-                            <div className={`child-content ${currentPath === path.FLASHCARD || currentPath === path.FLASHCARD+"/" ? 'active' : ''}`}>
+                            <div className={`child-content ${currentPath === path.FLASHCARD || currentPath === path.FLASHCARD + "/" ? 'active' : ''}`}>
                                 <div><a href={path.FLASHCARD}><b>Flashcards</b></a></div>
                             </div>
                             {/* <div className={`child-content ${currentPath === '/' ? 'active' : ''}`}>
@@ -85,7 +85,19 @@ class HomeHeader extends Component {
                                     <div className="dropdown-menu show">
                                         <a className="dropdown-item" href={path.PROFILE}>Thông tin cá nhân</a>
                                         <a className="dropdown-item" href={path.STATISTIC}>Thống kê kết quả luyện thi</a>
-                                        <a className="dropdown-item" href={path.RESET_PASSWORD+"?type=change"}>Đổi mật khẩu</a>
+                                        <a className="dropdown-item" href={path.RESET_PASSWORD + "?type=change"}>Đổi mật khẩu</a>
+
+                                        {userInfor.roleId === 'R1' && (
+                                            <>
+                                                <div className="dropdown-divider"></div>
+                                                <a
+                                                    className="dropdown-item"
+                                                    href={path.SYSTEM}
+                                                >
+                                                    Admin
+                                                </a>
+                                            </>
+                                        )}
 
                                         <div className="dropdown-divider"></div>
                                         <a

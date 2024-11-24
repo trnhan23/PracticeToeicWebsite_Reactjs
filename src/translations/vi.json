@@ -16,6 +16,11 @@
             }
         },
         "admin": {
+            "parent-manage": "Quản lý hệ thống",
+            "manage": {
+                "user": "Quản lý người dùng",
+                "test-add": "Thêm bài thi"
+            },
             "parent-user-manage": "Quản lý người dùng",
             "user-manage": {
                 "admin": "Quản lý admin",
@@ -28,17 +33,9 @@
                 "update": "Chỉnh sửa bài thi",
                 "delete": "Xoá bài thi"
             },
-            "parent-vocabulary-manage": "Quản lý từ vựng",
-            "vocabulary-manage": {
-                "add": "Thêm từ vựng",
-                "update": "Chỉnh sửa từ vựng",
-                "delete": "Xoá từ vựng"
-            },
-            "parent-blog-manage": "Quản lý bài viết",
-            "blog-manage": {
-                "add": "Thêm bài viết",
-                "update": "Chỉnh sửa bài viết",
-                "delete": "Xoá bài viết"
+            "parent-user": "USER",
+            "user": {
+                "change": "Chuyển trang USER"
             }
         }
     }

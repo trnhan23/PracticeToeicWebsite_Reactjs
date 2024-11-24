@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from 'react-router-dom';
 import UserManage from '../containers/Admin/UserManage';
-import UserRedux from '../containers/Admin/UserRedux';
 import TestManage from '../containers/Admin/TestManage';
-import VocabularyManage from '../containers/Admin/VocabularyManage';
-import BlogManage from '../containers/Admin/BlogManage';
 import Header from '../containers/Header/Header';
 class System extends Component {
     render() {
@@ -21,10 +18,7 @@ class System extends Component {
 
                         <Switch>
                             <Route path="/system/user-manage" component={UserManage} />
-                            <Route path="/system/user-redux" component={UserRedux} />
                             <Route path="/system/test-manage" component={TestManage} />
-                            <Route path="/system/vocabulary-manage" component={VocabularyManage} />
-                            <Route path="/system/blog-manage" component={BlogManage} />
                             <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                         </Switch>
                     </div>

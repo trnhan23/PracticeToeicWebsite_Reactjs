@@ -1,62 +1,25 @@
 export const adminMenu = [
-    //quản lý người dùng
+    
+    //quản lý hệ thống
     {
-        name: 'menu.admin.parent-user-manage',
+        name: 'menu.admin.parent-manage',
         menus: [
             {
-                name: 'menu.admin.user-manage.user', link: '/system/user-manage'
+                name: 'menu.admin.manage.user', link: '/system/user-manage'
             },
             {
-                name: 'menu.admin.user-manage.redux', link: '/system/user-redux'
+                name: 'menu.admin.manage.test-add', link: '/system/test-manage'
             },
         ]
     },
 
-    //quản lý bài thi
+    // chuyển trang user
     {
-        name: 'menu.admin.parent-test-manage',
+        name: 'menu.admin.parent-user',
         menus: [
             {
-                name: 'menu.admin.test-manage.add', link: '/system/test-manage'
-            },
-            {
-                name: 'menu.admin.test-manage.update'
-            },
-            {
-                name: 'menu.admin.test-manage.delete'
-            },
-        ]
-    },
-
-    //quản lý từ vựng
-    {
-        name: 'menu.admin.parent-vocabulary-manage',
-        menus: [
-            {
-                name: 'menu.admin.vocabulary-manage.add', link: '/system/vocabulary-manage'
-            },
-            {
-                name: 'menu.admin.vocabulary-manage.update'
-            },
-            {
-                name: 'menu.admin.vocabulary-manage.delete'
-            },
-        ]
-    },
-
-    //quản lý bài viết
-    {
-        name: 'menu.admin.parent-blog-manage',
-        menus: [
-            {
-                name: 'menu.admin.blog-manage.add', link: '/system/blog-manage'
-            },
-            {
-                name: 'menu.admin.blog-manage.update'
-            },
-            {
-                name: 'menu.admin.blog-manage.delete'
-            },
+                name: 'menu.admin.user.change', link: '/home'
+            }
         ]
     },
 ];
