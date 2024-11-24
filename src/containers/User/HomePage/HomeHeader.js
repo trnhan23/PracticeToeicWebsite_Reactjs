@@ -94,7 +94,7 @@ class HomeHeader extends Component {
                                                     className="dropdown-item"
                                                     href={path.SYSTEM}
                                                 >
-                                                    Admin
+                                                    ADMIN
                                                 </a>
                                             </>
                                         )}

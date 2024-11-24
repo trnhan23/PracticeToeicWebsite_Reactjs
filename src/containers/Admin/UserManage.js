@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './UserManage.scss';
-import { getAllUsers } from '../../services/userService.js';
+import { getAllUsers, editUserService } from '../../services/userService.js';
 import { formatDateTime } from "../../validation/FormatDateTime.js"
 import Popup from './Popup.js';
-
+import { toast } from 'react-toastify';
 class UserManage extends Component {
 
     constructor(props) {
@@ -63,10 +63,28 @@ class UserManage extends Component {
         await this.getAllUserFromReact();
     };
 
+    handleUpdateStatus = async (userId, value) => {
+        let status = false;
+        if (value === 'EDIT')
+            status = true;
+        
+        let res = await editUserService({
+            id: userId,
+            status: status,
+        })
+        if (res && res.errCode === 0 && value === 'EDIT')
+            toast.success("Kích hoạt tài khoản thành công!");
+        else if (res && res.errCode === 0 && value === 'DELE')
+            toast.warn("Khoá tài khoản thành công!");
+        else 
+            toast.error("Kích hoạt tài khoản thất bại");
+        
+        await this.getAllUserFromReact();
+    }
+
     render() {
         let arrUsers = this.state.arrUsers;
         const { isPopupOpen, formData } = this.state;
-
         return (
             <div className="users-container">
                 <div className='title text-center'>Manage users</div>
@@ -99,9 +117,9 @@ class UserManage extends Component {
                                 <th>Hành động</th>
                             </tr>
                             {
-                                arrUsers && arrUsers.map((item, index) => {
+                                arrUsers && arrUsers.map((item) => {
                                     return (
-                                        <tr key={index}>
+                                        <tr key={item.id}>
                                             <td>{item.email}</td>
                                             <td>{item.fullName}</td>
                                             <td>{item.bio}</td>
@@ -111,11 +129,9 @@ class UserManage extends Component {
                                             </td>
                                             <td>{item.status === true ? '✔️ Active' : '❌ Inactive'}</td>
                                             <td>
-                                                <button className='btn-edit'><i className="fas fa-pencil-alt"></i></button>
-                                                <button className='btn-delete'><i className="fas fa-trash"></i></button>
+                                                <button className='btn-edit' onClick={() => {this.handleUpdateStatus(item.id, 'EDIT')}}><i className="fas fa-pencil-alt"></i></button>
+                                                <button className='btn-delete' onClick={() => {this.handleUpdateStatus(item.id, 'DELE')}}><i className="fas fa-trash"></i></button>
                                             </td>
-
-
                                         </tr>
                                     )
                                 })
