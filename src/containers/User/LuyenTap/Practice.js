@@ -527,7 +527,7 @@ class Practice extends Component {
                                                         {question.questionText}
                                                     </div>
                                                 )}
-                                                {(activePart === "Part 1" ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C']).map((choice) => (
+                                                {(activePart === "Part 1" || activePart === "Part 5" ? ['A', 'B', 'C', 'D'] : ['A', 'B', 'C']).map((choice) => (
                                                     <label key={choice} className="choice-label">
                                                         <input
                                                             type="radio"

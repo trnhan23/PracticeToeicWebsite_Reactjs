@@ -209,6 +209,7 @@ export default class UploadFile extends React.Component {
         data.titleExam = this.props.titleExam;
         data.countUserTest = 0;
         data.countComment = 0;
+        data.status = true
 
         const res = await createExam(data);
         if (res && res.errCode === 0) {
@@ -273,7 +274,7 @@ export default class UploadFile extends React.Component {
                     </div>
                     {/* {this.state.message && <p className="message">{this.state.message}</p>} */}
                     <div className="table-responsive">
-                        <OutTable data={this.state.data} cols={this.state.cols} />
+                        {/* <OutTable data={this.state.data} cols={this.state.cols} /> */}
                     </div>
                 </DragDropFile>
             </div>
