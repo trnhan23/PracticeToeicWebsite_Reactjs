@@ -135,7 +135,7 @@ class Statistic extends Component {
                 <CustomScrollbars style={{ height: '95vh', width: '100%' }}>
                     <div className='statistic-container'>
                         <div className='statistic-title'>Thống kê kết quả luyện thi</div>
-                        <div className='statistic-content-top'>
+                        {/* <div className='statistic-content-top'>
                             <div className='scrpit'>Lọc kết quả theo ngày (Tính từ bài thi cuối)</div>
                             <div className="filter-section">
                                 <select>
@@ -145,7 +145,7 @@ class Statistic extends Component {
                                 <button className='btn-search'>Search</button>
                                 <button className='btn-clear'>Clear</button>
                             </div>
-                        </div>
+                        </div> */}
                         <div className='statistic-content-center'>
                             <div className='nav'>
                                 <div className='nav-bar'>
