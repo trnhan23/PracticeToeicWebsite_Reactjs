@@ -12,9 +12,22 @@ class SpeechBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTopicId: null,
-
+            selectedTopicId: '',
+            searchTopic: '',
+            topics: [],
         };
+    }
+
+    componentDidMount = async () => {
+        this.setState({
+            topics: [
+                { id: 1, title: "FOOD", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
+                { id: 2, title: "BOOK", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
+                { id: 3, title: "TRAVEL", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" },
+                { id: 4, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
+                { id: 5, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" }
+            ]
+        })
     }
 
     handleTopicSelect = (id) => {
@@ -23,19 +36,26 @@ class SpeechBox extends Component {
 
     handlePractice = () => {
         const id = this.state.selectedTopicId;
-        const { navigate } = this.props;
-        const redirectPath = `/speech-box/${id}`;
-        navigate(`${redirectPath}`);
+        if (id !== null || id !== '') {
+            const { navigate } = this.props;
+            const redirectPath = `/speech-box/${id}`;
+            navigate(`${redirectPath}`);
+        }
+    }
+
+    handleOnChangeSearch = (event) => {
+        this.setState({ searchTopic: event.target.value });
+    }
+
+    filterTopics = () => {
+        const { searchTopic, topics } = this.state;
+        return topics.filter(topic =>
+            topic.title.toLowerCase().includes(searchTopic.toLowerCase())
+        );
     }
 
     render() {
-        const topics = [
-            { id: 1, title: "FOOD", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-            { id: 2, title: "BOOK", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-            { id: 3, title: "TRAVEL", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" },
-            { id: 4, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-            { id: 5, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" }
-        ];
+        const topics = this.filterTopics();
 
         return (
             <React.Fragment>
@@ -49,9 +69,10 @@ class SpeechBox extends Component {
                                 <input
                                     className='speech-box-search-input'
                                     type='text'
-                                    placeholder='Nhập chủ đề bạn muốn luyện nói'
+                                    placeholder='Tìm kiếm: Nhập chủ đề bạn muốn luyện nói'
+                                    value={this.state.searchTopic}
+                                    onChange={(event) => { this.handleOnChangeSearch(event) }}
                                 />
-                                <button className='speech-box-search-button'>Tìm kiếm</button>
                             </div>
 
                             <div className='speech-box-topic-card'>
@@ -59,10 +80,7 @@ class SpeechBox extends Component {
                             </div>
                             <button className='button' onClick={this.handlePractice}>Luyện tập</button>
                         </div>
-
-
                     </div>
-
                 </CustomScrollbars>
             </React.Fragment>
         );
