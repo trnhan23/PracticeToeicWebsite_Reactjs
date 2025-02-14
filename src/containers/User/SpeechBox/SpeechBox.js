@@ -21,6 +21,13 @@ class SpeechBox extends Component {
         this.setState({ selectedTopicId: id });
     };
 
+    handlePractice = () => {
+        const id = this.state.selectedTopicId;
+        const { navigate } = this.props;
+        const redirectPath = `/speech-box/${id}`;
+        navigate(`${redirectPath}`);
+    }
+
     render() {
         const topics = [
             { id: 1, title: "FOOD", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
@@ -50,7 +57,7 @@ class SpeechBox extends Component {
                             <div className='speech-box-topic-card'>
                                 <TopicCard topics={topics} onSelectTopic={this.handleTopicSelect} />
                             </div>
-                            <button className='button'>Luyện tập</button>
+                            <button className='button' onClick={this.handlePractice}>Luyện tập</button>
                         </div>
 
 
