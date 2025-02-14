@@ -24,6 +24,9 @@ import Statistic from './User/Statistic/Statistic.js';
 import ResultPractice from './User/Statistic/ResultPractice.js';
 import Profile from './User/Profile/Profile.js';
 import ResetPassword from './Auth/ResetPassword.js';
+import SpeechBox from './User/SpeechBox/SpeechBox.js';
+import Situation from './User/SpeechBox/Situation.js';
+
 class App extends Component {
 
     handlePersistorState = () => {
@@ -57,7 +60,9 @@ class App extends Component {
                                 <Route path={path.TOEIC_EXAM} component={userIsAuthenticated(ToeicExam)} />
                                 <Route path={path.PRACTICE} component={userIsAuthenticated(Practice)} />
                                 <Route path={path.DETAIL} component={userIsAuthenticated(ResultContainer)} />
+                                <Route path={path.SITUATION} component={userIsAuthenticated(Situation)} />
                                 <Route path={path.TT_DETHI} component={userIsAuthenticated(TTDeThi)} />
+                                <Route path={path.SPEECH_BOX} component={userIsAuthenticated(SpeechBox)} />
                                 <Route path={path.STATISTIC} component={userIsAuthenticated(Statistic)} />
                                 <Route path={path.RESULT_PRACTIC} component={userIsAuthenticated(ResultPractice)} />
                                 <Route path={path.REGISTER} component={userIsNotAuthenticated(Register)} />

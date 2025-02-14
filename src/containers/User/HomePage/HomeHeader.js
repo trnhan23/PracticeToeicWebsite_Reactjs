@@ -68,6 +68,9 @@ class HomeHeader extends Component {
                             <div className={`child-content ${currentPath === path.RESULT_PRACTIC ? 'active' : ''}`}>
                                 <div><a href={path.RESULT_PRACTIC}><b>Kết quả luyện thi</b></a></div>
                             </div>
+                            <div className={`child-content ${currentPath === path.SPEECH_BOX ? 'active' : ''}`}>
+                                <div><a href={path.SPEECH_BOX}><b>Speech box</b></a></div>
+                            </div>
                         </div>
 
                         <div className='right-content'>

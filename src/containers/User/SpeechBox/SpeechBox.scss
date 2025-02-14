@@ -1,0 +1,81 @@
+.speech-box-container {
+    width: 100%;
+
+    .speech-box-content {
+        width: 75%;
+        margin: 0 auto;
+
+        .speech-box-title {
+            font-size: 26px;
+            color: #0A73AC;
+            font-weight: bold;
+            padding-top: 20px;
+            padding-left: 45px;
+
+        }
+
+        .speech-box-search {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+
+            .speech-box-search-input {
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                margin-right: 15px;
+                transition: border-color 0.3s;
+                font-size: 16px;
+                width: 84%;
+                background: #fefcfc;
+
+                &:focus {
+                    border-color: #007BFF;
+                    outline: none;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                }
+            }
+
+            .speech-box-search-button {
+                padding: 12px 24px;
+                background-color: #586ea8;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+                font-size: 17px;
+
+                &:hover {
+                    background-color: #35509A;
+                    transform: translateY(-2px);
+                }
+            }
+        }
+
+        .speech-box-topic-card {
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 12px 24px;
+            background-color: #586ea8;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 17px;
+            display: flex;
+            justify-self: anchor-center;
+            margin-top: 20px;
+            width: 160px;
+            justify-content: center;
+
+            &:hover {
+                background-color: #35509A;
+                transform: scale(1.05);
+            }
+        }
+    }
+}
