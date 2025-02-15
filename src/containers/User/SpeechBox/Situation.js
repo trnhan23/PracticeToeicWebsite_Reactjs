@@ -4,17 +4,45 @@ import HomeHeader from '../HomePage/HomeHeader';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import { push } from "connected-react-router";
 import './Situation.scss';
+import moment from "moment";
 
 class Situation extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            messages: [],
         };
     }
 
     componentDidMount = async () => {
+        const sampleMessages = [
+            { id: 1, text: "Hello! How can I assist you today?", voice: "voice1.mp3", role: "AI", createdAt: "2024-02-10T09:15:00Z" },
+            { id: 2, text: "I need help with my TOEIC test preparation.", voice: "voice2.mp3", role: "User", createdAt: "2024-02-10T09:17:30Z" },
+            { id: 3, text: "Sure! Which section are you struggling with?", voice: "voice3.mp3", role: "AI", createdAt: "2024-02-10T09:19:45Z" },
+            { id: 4, text: "Listening part 3 is quite difficult for me.", voice: "voice4.mp3", role: "User", createdAt: "2024-02-10T09:22:10Z" },
 
+            { id: 5, text: "Good morning! Have you completed your assignment?", voice: "voice5.mp3", role: "AI", createdAt: "2024-02-12T07:30:00Z" },
+            { id: 6, text: "Yes, I finished it last night.", voice: "voice6.mp3", role: "User", createdAt: "2024-02-12T07:35:45Z" },
+            { id: 7, text: "Great! Let's review it together.", voice: "voice7.mp3", role: "AI", createdAt: "2024-02-12T07:40:20Z" },
+
+            { id: 8, text: "I have a job interview tomorrow.", voice: "voice8.mp3", role: "User", createdAt: "2024-02-14T18:50:10Z" },
+            { id: 9, text: "Good luck! Do you need some tips?", voice: "voice9.mp3", role: "AI", createdAt: "2024-02-14T18:55:30Z" },
+
+            { id: 10, text: "Happy Valentine's Day!", voice: "voice10.mp3", role: "AI", createdAt: "2024-02-14T12:00:00Z" },
+            { id: 11, text: "Thank you! Wishing you a great day too!", voice: "voice11.mp3", role: "User", createdAt: "2024-02-14T12:05:15Z" },
+
+            { id: 12, text: "I don’t like people who take advantage of relationships to get a job.", voice: "voice12.mp3", role: "AI", createdAt: "2024-02-15T08:00:00Z" },
+            { id: 13, text: "My name is Hien", voice: "voice13.mp3", role: "User", createdAt: "2024-02-15T08:01:00Z" },
+            { id: 14, text: "What makes you think you are suitable for this job?", voice: "voice14.mp3", role: "AI", createdAt: "2024-02-15T08:02:00Z" },
+            { id: 15, text: "I have 5 years of experience in this field.", voice: "voice15.mp3", role: "User", createdAt: "2024-02-15T08:03:00Z" },
+
+            { id: 16, text: "Let's schedule a meeting for next Monday.", voice: "voice16.mp3", role: "AI", createdAt: "2024-02-16T16:30:20Z" },
+            { id: 17, text: "Sure, I will be available at 10 AM.", voice: "voice17.mp3", role: "User", createdAt: "2024-02-16T16:35:10Z" }
+        ];
+
+
+        const sortedMessages = sampleMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        this.setState({ messages: sortedMessages });
     }
 
     render() {
@@ -44,26 +72,51 @@ class Situation extends Component {
                                 </div>
                             </div>
                             <div className="content-bottom">
+                                {this.state.messages
+                                    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)) // Sắp xếp tin nhắn theo thời gian
+                                    .reduce((acc, msg, index, arr) => {
+                                        const formattedDate = moment(msg.createdAt).format("DD/MM/YYYY HH:mm");
+                                        const prevDate = index > 0 ? moment(arr[index - 1].createdAt).format("DD/MM/YYYY") : null;
+                                        const currentDate = moment(msg.createdAt).format("DD/MM/YYYY");
 
-                                <div className="mess received">
-                                    <img className="avatar" src="https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg" alt="Bot" />
-                                    <div className="mess-box">
-                                        <div className="text">
-                                            I don’t like people who take advantage of relationships to get a job.
-                                            But since my daughter brought you here, I will make an exception.
-                                            So, what is your name?
-                                        </div>
-                                    </div>
-                                </div>
+                                        if (prevDate !== currentDate) {
+                                            acc.push(
+                                                <div key={`date-${msg.id}`} className="message-date">
+                                                    {formattedDate}
+                                                </div>
+                                            );
+                                        }
 
-                                <div className="mess sent">
-                                    <div className="mess-box">
-                                        <div className="text">My name is Hien</div>
-                                        <button className="detail-button">Chi tiết</button>
-                                    </div>
-                                    <img className="avatar" src="https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg" alt="User" />
-                                </div>
+                                        acc.push(
+                                            <div key={msg.id} className={`mess ${msg.role === "AI" ? "received" : "sent"}`}>
+                                                {msg.role === "AI" && <img className="avatar" src="https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg" alt="Bot" />}
+                                                <div className="box-option">
+                                                    {msg.role === "User" && (
+                                                        <>
+                                                            <img className="option-icon" src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png" alt="Loudspeaker" />
+                                                            <img className="option-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/768px-Google_Translate_logo.svg.png" alt="Translate" />
+                                                        </>
+                                                    )}
+                                                    <div className="mess-box">
+                                                        <div className="text">{msg.text}</div>
+                                                        {msg.role === "User" && <button className="detail-button">Chi tiết</button>}
+                                                    </div>
+
+                                                    {msg.role === "AI" && (
+                                                        <>
+                                                            <img className="option-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/768px-Google_Translate_logo.svg.png" alt="Translate" />
+                                                            <img className="option-icon" src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png" alt="Loudspeaker" />
+                                                        </>
+                                                    )}
+                                                </div>
+                                                {msg.role === "User" && <img className="avatar" src="https://i.pinimg.com/564x/24/21/85/242185eaef43192fc3f9646932fe3b46.jpg" alt="User" />}
+                                            </div>
+                                        );
+
+                                        return acc;
+                                    }, [])}
                             </div>
+
                         </div>
                     </div>
 
