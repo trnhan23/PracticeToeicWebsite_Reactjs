@@ -34,7 +34,8 @@ export const SIGNUP = {
 
 export const ROLE = {
     Admin: 'R1',
-    User: 'R2'
+    User: 'R2',
+    AI: 'R3'
 }
 
 export const manageActions = {
