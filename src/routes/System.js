@@ -3,6 +3,10 @@ import { connect } from "react-redux";
 import { Redirect, Route, Switch } from 'react-router-dom';
 import UserManage from '../containers/Admin/UserManage';
 import TestManage from '../containers/Admin/TestManage';
+<<<<<<< HEAD
+=======
+import TopicManage from '../containers/Admin/TopicManager'
+>>>>>>> 6aee17e (Cập nhật code)
 import Header from '../containers/Header/Header';
 class System extends Component {
     render() {
@@ -19,6 +23,10 @@ class System extends Component {
                         <Switch>
                             <Route path="/system/user-manage" component={UserManage} />
                             <Route path="/system/test-manage" component={TestManage} />
+<<<<<<< HEAD
+=======
+                            <Route path="/system/topic-manage" component={TopicManage} />
+>>>>>>> 6aee17e (Cập nhật code)
                             <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                         </Switch>
                     </div>

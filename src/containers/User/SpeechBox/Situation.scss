@@ -60,6 +60,19 @@
                 align-self: center;
             }
 
+<<<<<<< HEAD
+=======
+            .advice {
+                border-radius: 10px;
+                /* border: 1px solid black; */
+                width: 60px;
+                color: white;
+                background: #6ba1f9;
+                text-align: center;
+                cursor: pointer;
+            }
+
+>>>>>>> 6aee17e (Cập nhật code)
             .mess {
                 display: flex;
                 align-items: flex-start;
@@ -134,4 +147,76 @@
             }
         }
     }
+<<<<<<< HEAD
+=======
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    width: 800px;
+    height: 600px;
+    max-width: 70%;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h2 {
+        color: #0A73AC;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    .close-button {
+        background-color: #ff4d4f;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.2s;
+
+        &:hover {
+            background-color: #d9363e;
+        }
+    }
+}
+
+// Hiệu ứng mượt khi hiện modal
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+>>>>>>> 6aee17e (Cập nhật code)
 }

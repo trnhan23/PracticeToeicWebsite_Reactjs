@@ -7,12 +7,26 @@ import './Situation.scss';
 import moment from "moment";
 import { ROLE } from '../../../utils';
 import logo from "../../../assets/logo.png";
+<<<<<<< HEAD
+=======
+import DetailModal from './DetailModal';
+>>>>>>> 6aee17e (Cập nhật code)
 class Situation extends Component {
     constructor(props) {
         super(props);
         this.state = {
             messages: [],
+<<<<<<< HEAD
         };
+=======
+            translatedMessages: {}, // Lưu bản dịch
+            isTranslatedMessages: {}, // Theo dõi trạng thái dịch của tin nhắn
+            selectedMessage: null,
+            isModalOpen: false,
+            showHint: false,
+        };
+
+>>>>>>> 6aee17e (Cập nhật code)
     }
 
     componentDidMount = async () => {
@@ -20,6 +34,7 @@ class Situation extends Component {
             { id: 1, text: "Hello! How can I assist you today?", voice: "voice1.mp3", role: "R3", createdAt: "2024-02-10T09:15:00Z" },
             { id: 2, text: "I need help with my TOEIC test preparation.", voice: "voice2.mp3", role: "R2", createdAt: "2024-02-10T09:17:30Z" },
             { id: 3, text: "Sure! Which section are you struggling with?", voice: "voice3.mp3", role: "R3", createdAt: "2024-02-10T09:19:45Z" },
+<<<<<<< HEAD
             { id: 4, text: "Listening part 3 is quite difficult for me.", voice: "voice4.mp3", role: "R2", createdAt: "2024-02-10T09:22:10Z" },
 
             { id: 5, text: "Good morning! Have you completed your assignment?", voice: "voice5.mp3", role: "R3", createdAt: "2024-02-12T07:30:00Z" },
@@ -48,10 +63,54 @@ class Situation extends Component {
 
     handleSelect = (id) => {
         console.log("Kiểm tra id chat: ", id);
+=======
+            { id: 4, text: "Listening part 3 is quite difficult for me.", voice: "voice4.mp3", role: "R2", createdAt: "2024-02-10T09:22:10Z" }
+        ];
+
+        const sortedMessages = sampleMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        this.setState({ messages: sortedMessages });
+    }
+    translateText = async (id, text) => {
+        const translations = {
+            "Hello! How can I assist you today?": "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?",
+            "I need help with my TOEIC test preparation.": "Tôi cần giúp đỡ trong việc luyện thi TOEIC.",
+            "Sure! Which section are you struggling with?": "Chắc chắn rồi! Bạn đang gặp khó khăn ở phần nào?",
+            "Listening part 3 is quite difficult for me.": "Phần nghe số 3 khá khó đối với tôi."
+        };
+
+        this.setState(prevState => {
+            const isTranslated = prevState.isTranslatedMessages[id] || false;
+            return {
+                translatedMessages: {
+                    ...prevState.translatedMessages,
+                    [id]: isTranslated ? text : (translations[text] || "Bản dịch chưa có")
+                },
+                isTranslatedMessages: {
+                    ...prevState.isTranslatedMessages,
+                    [id]: !isTranslated
+                }
+            };
+        });
+    };
+    handleSelect = (id) => {
+        const selectedMessage = this.state.messages.find(msg => msg.id === id);
+        this.setState({ selectedMessage, isModalOpen: true });
+    }
+    toggleHint = () => {
+        this.setState((prevState) => ({ showHint: !prevState.showHint }));
+    };
+
+    closeModal = () => {
+        this.setState({ isModalOpen: false, selectedMessage: null });
+>>>>>>> 6aee17e (Cập nhật code)
     }
 
     render() {
         const { userInfor } = this.props;
+<<<<<<< HEAD
+=======
+        const { isModalOpen, selectedMessage } = this.state;
+>>>>>>> 6aee17e (Cập nhật code)
 
         return (
             <React.Fragment>
@@ -72,6 +131,7 @@ class Situation extends Component {
                                 </div>
                                 <div className='cont right'>
                                     <div className='tle'>Gợi ý</div>
+<<<<<<< HEAD
                                     <div className='context'>
                                         My name is Hien
                                     </div>
@@ -156,12 +216,96 @@ class Situation extends Component {
 
                                         return acc;
                                     }, [])}
+=======
+                                    {this.state.showHint && (
+                                        <div className='context'>My name is Hien</div>
+                                    )}
+                                </div></div>
+                            <div className='content-bottom'>
+                                {this.state.messages.map(msg => (
+                                    <div key={msg.id} className={`mess ${msg.role === ROLE.AI ? "received" : "sent"}`}>
+                                        {msg.role === ROLE.AI &&
+                                            <img className="avatar" src={logo} alt="Bot" />}
+                                        <div className="box-option">
+                                            {msg.role === ROLE.User && (
+                                                <>
+                                                    <img
+                                                        className="option-icon"
+                                                        src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png"
+                                                        alt="Loudspeaker"
+
+
+                                                    />
+
+
+                                                    <img
+                                                        className="option-icon"
+                                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/768px-Google_Translate_logo.svg.png"
+                                                        alt="Translate"
+                                                        onClick={() => this.translateText(msg.id, msg.text)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    />
+
+                                                </>
+                                            )}
+                                            <div className="mess-box">
+                                                <div className="text">
+                                                    {this.state.translatedMessages[msg.id] || msg.text}
+                                                </div>
+
+                                                {msg.role === ROLE.User &&
+                                                    <button className="detail-button" onClick={() => this.handleSelect(msg.id)}>
+                                                        Chi tiết
+                                                    </button>}
+                                            </div>
+                                            {msg.role === ROLE.AI && (
+                                                <>
+                                                    <img
+                                                        className="option-icon"
+                                                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/768px-Google_Translate_logo.svg.png"
+                                                        alt="Translate"
+                                                        onClick={() => this.translateText(msg.id, msg.text)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    />
+
+                                                    <img
+                                                        className="option-icon"
+                                                        src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png"
+                                                        alt="Loudspeaker"
+
+                                                    />
+                                                </>
+                                            )}
+                                        </div>
+                                        {msg.role === ROLE.User &&
+                                            <img className="avatar" src={userInfor.avatar} alt="User" />}
+
+                                    </div>
+                                ))}
+                                <div className='advice' onClick={this.toggleHint}>
+                                    Gợi ý
+                                </div>
+>>>>>>> 6aee17e (Cập nhật code)
                             </div>
 
                         </div>
                     </div>
+<<<<<<< HEAD
 
                 </CustomScrollbars>
+=======
+                </CustomScrollbars>
+
+                {/* Modal hiển thị chi tiết tin nhắn */}
+                {isModalOpen && (
+                    <DetailModal
+                        isOpen={isModalOpen}
+                        onClose={this.closeModal}
+                        message={selectedMessage}
+                    />
+                )}
+
+>>>>>>> 6aee17e (Cập nhật code)
             </React.Fragment>
         );
     }
@@ -169,6 +313,7 @@ class Situation extends Component {
 
 const mapStateToProps = (state) => ({
     userInfor: state.user.userInfor,
+<<<<<<< HEAD
     exam: state.user.selectedExam,
 });
 
@@ -177,3 +322,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Situation);
+=======
+});
+
+export default connect(mapStateToProps)(Situation);
+>>>>>>> 6aee17e (Cập nhật code)
