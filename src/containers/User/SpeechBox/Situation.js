@@ -4,7 +4,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import { push } from "connected-react-router";
 import './Situation.scss';
-import "./ReactMic.scss";
+import './ReactMic.scss';
 import { ROLE } from '../../../utils';
 import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
@@ -138,6 +138,22 @@ class Situation extends Component {
         this.setState({ isModalOpen: false, selectedMessage: null });
 
     }
+    playTextToSpeech = async (text) => {
+        try {
+            const response = await axios.post(
+                "http://localhost:5050/text-to-speech/",
+                { text },
+                { responseType: "blob" } // Nhận dữ liệu dạng blob (file âm thanh)
+            );
+
+            const audioBlob = new Blob([response.data], { type: "audio/wav" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } catch (error) {
+            console.error("Lỗi khi gọi API chuyển văn bản thành giọng nói:", error);
+        }
+    }
 
     render() {
         const { userInfor } = this.props;
@@ -183,8 +199,9 @@ class Situation extends Component {
                                                         className="option-icon"
                                                         src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png"
                                                         alt="Loudspeaker"
+                                                        onClick={() => this.playTextToSpeech(msg.text)}
+                                                        style={{ cursor: 'pointer' }}
                                                     />
-
 
                                                     <img
                                                         className="option-icon"
@@ -220,8 +237,10 @@ class Situation extends Component {
                                                         className="option-icon"
                                                         src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png"
                                                         alt="Loudspeaker"
-
+                                                        onClick={() => this.playTextToSpeech(msg.text)}
+                                                        style={{ cursor: 'pointer' }}
                                                     />
+
                                                 </>
                                             )}
                                         </div>
