@@ -4,7 +4,7 @@ import HomeHeader from '../HomePage/HomeHeader';
 import CustomScrollbars from '../../../components/CustomScrollbars';
 import { push } from "connected-react-router";
 import './Situation.scss';
-import moment from "moment";
+import "./ReactMic.scss";
 import { ROLE } from '../../../utils';
 import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
@@ -57,8 +57,6 @@ class Situation extends Component {
         }
     };
 
-
-
     stopListening = () => {
         if (this.state.recognition) {
             this.state.recognition.stop();
@@ -74,7 +72,6 @@ class Situation extends Component {
             console.error("Không có file âm thanh");
             return;
         }
-
 
         const formData = new FormData();
         formData.append("file", recordedBlob.blob, "audio.wav");
@@ -144,10 +141,7 @@ class Situation extends Component {
 
     render() {
         const { userInfor } = this.props;
-
-
         const { isModalOpen, selectedMessage } = this.state;
-
 
         return (
             <React.Fragment>
@@ -249,7 +243,7 @@ class Situation extends Component {
                                     backgroundColor="#FF4081"
                                 />
 
-                                <i className={`fa-solid fa-microphone ${this.state.isListening ? 'listening' : ''}`}
+                                <i className={`micro fa-solid fa-microphone ${this.state.isListening ? 'listening' : ''}`}
                                     onClick={() => {
                                         if (this.state.isListening) {
                                             this.stopListening();
@@ -275,14 +269,10 @@ class Situation extends Component {
                         />
                     )
                 }
-
-
             </React.Fragment >
         );
     }
 }
-
-
 
 const mapStateToProps = (state) => ({
     userInfor: state.user.userInfor,

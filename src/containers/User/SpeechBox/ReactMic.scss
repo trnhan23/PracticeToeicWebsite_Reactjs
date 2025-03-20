@@ -1,0 +1,14 @@
+.sound-wave {
+    display: flex;
+    width: 40%;
+    align-self: center;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #ff9a9e, #fad0c4);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+    canvas {
+        border-radius: 10px;
+        border: 2px solid #000000;
+    }
+}
