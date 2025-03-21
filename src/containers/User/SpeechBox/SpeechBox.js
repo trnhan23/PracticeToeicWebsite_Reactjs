@@ -5,7 +5,7 @@ import CustomScrollbars from '../../../components/CustomScrollbars';
 import { push } from "connected-react-router";
 import './SpeechBox.scss';
 import TopicCard from '../../../components/LuyenNoi/TopicCard';
-
+import { getAllTopics } from '../../../services/topicService';
 
 class SpeechBox extends Component {
     constructor(props) {
@@ -18,16 +18,21 @@ class SpeechBox extends Component {
     }
 
     componentDidMount = async () => {
-        this.setState({
-            topics: [
-                { id: 1, title: "FOOD", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-                { id: 2, title: "BOOK", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-                { id: 3, title: "TRAVEL", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" },
-                { id: 4, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-102.jpg" },
-                { id: 5, title: "TECH", image: "https://cdn-media.sforum.vn/storage/app/media/anh-dep-53.jpg" }
-            ]
-        })
+        this.getAllTopicsFromReact();
     }
+
+    getAllTopicsFromReact = async () => {
+        try {
+            let response = await getAllTopics('ALL');
+            if (response && response.errCode === 0 && Array.isArray(response.topics)) {
+                this.setState({ topics: response.topics });
+            } else {
+                console.error("Lỗi: response không chứa mảng topics hợp lệ", response);
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi API:", error);
+        }
+    };
 
     handleTopicSelect = (id) => {
         this.setState({ selectedTopicId: id });

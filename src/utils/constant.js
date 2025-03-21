@@ -2,7 +2,7 @@ export const path = {
     HOME: '/',
     HOMEPAGE: '/home',
     SPEECH_BOX: '/speech-box',
-    SITUATION: '/speech-box/:situation',
+    SITUATION: '/speech-box/:topicId',
     SEARCH_WORD: '/search-word',
     TOEIC_EXAM: '/toeic-exam',
     LOGIN: '/login',

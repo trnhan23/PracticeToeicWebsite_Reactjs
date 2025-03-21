@@ -9,6 +9,8 @@ import { ROLE } from '../../../utils';
 import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
 import axios from "axios";
+import { getAllTopics } from '../../../services/topicService';
+import { useParams } from "react-router-dom";
 
 import DetailModal from './DetailModal';
 class Situation extends Component {
@@ -16,6 +18,7 @@ class Situation extends Component {
         super(props);
         this.state = {
             messages: [],
+            topic: [],
             translatedMessages: {},
             isTranslatedMessages: {},
             selectedMessage: null,
@@ -29,6 +32,7 @@ class Situation extends Component {
     }
 
     async componentDidMount() {
+        this.getTopic();
         const sampleMessages = [
             { id: 1, text: "Hello! How can I assist you today?", voice: "voice1.mp3", role: "R3", createdAt: "2024-02-10T09:15:00Z" },
             { id: 2, text: "I need help with my TOEIC test preparation.", voice: "voice2.mp3", role: "R2", createdAt: "2024-02-10T09:17:30Z" },
@@ -49,6 +53,21 @@ class Situation extends Component {
             alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
         }
     }
+
+    getTopic = async () => {
+        try {
+            const { match } = this.props;
+            const { topicId } = match.params;
+            let response = await getAllTopics(topicId);
+            if (response && response.errCode === 0) {
+                this.setState({ topic: response.topics });
+            } else {
+                console.error("Lỗi: response không chứa mảng topics hợp lệ", response);
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi API:", error);
+        }
+    };
 
     startListening = () => {
         if (this.state.recognition) {
@@ -157,7 +176,7 @@ class Situation extends Component {
 
     render() {
         const { userInfor } = this.props;
-        const { isModalOpen, selectedMessage } = this.state;
+        const { isModalOpen, selectedMessage, topic } = this.state;
 
         return (
             <React.Fragment>
@@ -165,7 +184,7 @@ class Situation extends Component {
                     <HomeHeader />
                     <div className='situation-container'>
                         <div className='situation-content'>
-                            <div className='situation-title'>Chủ đề: FOOD</div>
+                            <div className='situation-title'>Chủ đề: {topic.title}</div>
                             <div className='content-top'>
                                 <div className='cont left'>
                                     <div className='tle'>Tình huống</div>
