@@ -8,7 +8,7 @@ const getAllTopics = (id) => {
 
 const deleteTopic = (id) => {
     return axios.delete('/api/delete-topic', {
-        params: { id }
+        data: { id }
     });
 };
 

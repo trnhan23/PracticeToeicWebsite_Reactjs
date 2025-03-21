@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './TopicManager.scss';
-import { getAllTopics } from '../../services/topicService.js';
+import { getAllTopics, deleteTopic } from '../../services/topicService.js';
 import TopicPopup from './TopicPopup';
 
 class TopicManager extends Component {
@@ -10,11 +10,8 @@ class TopicManager extends Component {
         this.state = {
             arrTopics: [],
             isPopupOpen: false,
-            formData: {
-                title: "",
-                image: "",
-            },
-        }
+            editTopic: null, // Lưu chủ đề đang chỉnh sửa
+        };
     }
 
     async componentDidMount() {
@@ -34,36 +31,33 @@ class TopicManager extends Component {
         }
     };
 
-    togglePopup = () => {
-        this.setState((prevState) => ({
-            isPopupOpen: !prevState.isPopupOpen,
-            formData: { title: "", image: "" },
-        }));
-    };
-
-    handleInputChange = (event, field) => {
-        const { formData } = this.state;
+    togglePopup = (topic = null) => {
         this.setState({
-            formData: {
-                ...formData,
-                [field]: event.target.value,
-            },
+            isPopupOpen: !this.state.isPopupOpen,
+            editTopic: topic, // Nếu có topic, sẽ là cập nhật, nếu không thì là thêm mới
         });
     };
 
     handleSave = async () => {
         await this.getAllTopicsFromReact();
-        
-        this.setState({
-            formData: { title: "", image: "" },
-            isPopupOpen: false,
-        });
+        this.setState({ isPopupOpen: false, editTopic: null });
     };
-    
 
+    handleDeleteTopic = async (id) => {
+        try {
+            let response = await deleteTopic(id);
+            if (response && response.errCode === 0) {
+                await this.getAllTopicsFromReact();
+            } else {
+                console.error("Lỗi khi xóa chủ đề:", response.errMessage);
+            }
+        } catch (error) {
+            console.error("Lỗi khi gọi API xóa:", error);
+        }
+    };
 
     render() {
-        let { arrTopics, isPopupOpen, formData } = this.state;
+        let { arrTopics, isPopupOpen, editTopic } = this.state;
 
         if (!Array.isArray(arrTopics)) {
             arrTopics = [];
@@ -73,7 +67,7 @@ class TopicManager extends Component {
             <div className="topics-container">
                 <div className='title text-center'>QUẢN LÝ CHỦ ĐỀ</div>
                 <div className='mx-1'>
-                    <button className='btn btn-primary px-3' onClick={this.togglePopup}>
+                    <button className='btn btn-primary px-3' onClick={() => this.togglePopup()}>
                         <i className="fa fa-plus"></i> Thêm chủ đề
                     </button>
 
@@ -81,8 +75,7 @@ class TopicManager extends Component {
                         isOpen={isPopupOpen}
                         onClose={this.togglePopup}
                         onSave={this.handleSave}
-                        formData={formData}
-                        onChange={this.handleInputChange}
+                        editTopic={editTopic} // Truyền topic cần sửa
                     />
                 </div>
 
@@ -105,10 +98,10 @@ class TopicManager extends Component {
                                         <img src={item.image} alt="Topic" />
                                     </td>
                                     <td>
-                                        <button className="btn-edit">
+                                        <button className="btn-edit" onClick={() => this.togglePopup(item)}>
                                             <i className="fas fa-edit"></i>
                                         </button>
-                                        <button className="btn-delete">
+                                        <button className="btn-delete" onClick={() => this.handleDeleteTopic(item.id)}>
                                             <i className="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -123,12 +116,4 @@ class TopicManager extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {};
-};
-
-const mapDispatchToProps = dispatch => {
-    return {};
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TopicManager);
+export default connect(null, null)(TopicManager);
