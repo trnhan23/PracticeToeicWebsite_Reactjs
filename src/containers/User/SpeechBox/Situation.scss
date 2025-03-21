@@ -132,6 +132,22 @@
                     }
                 }
             }
+
+            .micro {
+                font-size: 40px;
+                align-self: center;
+                color: #0000ff8c;
+                border: 1px solid;
+                border-radius: 50%;
+                padding: 5px 11px;
+                cursor: pointer;
+
+                &:hover {
+                    color: blue;
+                }
+            }
+
+
         }
     }
 }

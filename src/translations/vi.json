@@ -19,7 +19,8 @@
             "parent-manage": "Quản lý hệ thống",
             "manage": {
                 "user": "Quản lý người dùng",
-                "test-add": "Thêm bài thi"
+                "test-add": "Thêm bài thi",
+                "topic": "Quản lý chủ đề"
             },
             "parent-user-manage": "Quản lý người dùng",
             "user-manage": {

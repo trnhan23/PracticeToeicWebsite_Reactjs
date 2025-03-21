@@ -30,6 +30,7 @@
     "react-flatpickr": "^3.10.7",
     "react-intl": "^5.20.2",
     "react-loading": "^2.0.3",
+    "react-mic": "^12.4.6",
     "react-redux": "^7.2.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
