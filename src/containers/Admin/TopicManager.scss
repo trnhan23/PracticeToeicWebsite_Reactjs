@@ -1,0 +1,82 @@
+.topics-table {
+    max-height: 80vh;
+    /* Giới hạn chiều cao của bảng */
+    overflow-y: auto;
+    /* Cho phép cuộn theo chiều dọc */
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#customers td,
+#customers th {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+#customers tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#customers tr:hover {
+    background-color: #f1f1f1;
+}
+
+#customers th {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    background-color: #028a56;
+    color: white;
+    text-transform: uppercase;
+}
+
+td img {
+    width: 60px;
+    /* Giữ ảnh có kích thước cố định */
+    height: 60px;
+    object-fit: cover;
+    /* Đảm bảo ảnh không bị méo */
+    border-radius: 6px;
+    transition: transform 0.3s ease-in-out;
+}
+
+td img:hover {
+    transform: scale(1.2);
+    /* Phóng to ảnh nhẹ khi hover */
+}
+
+.btn-delete,
+.btn-edit {
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.btn-delete {
+    color: red;
+}
+
+.btn-delete:hover {
+    color: darkred;
+}
+
+.btn-edit {
+    color: orange;
+}
+
+.btn-edit:hover {
+    color: darkorange;
+}

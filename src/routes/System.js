@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import UserManage from '../containers/Admin/UserManage';
 import TestManage from '../containers/Admin/TestManage';
 import Header from '../containers/Header/Header';
+import TopicManager from '../containers/Admin/TopicManager';
 class System extends Component {
     render() {
         const { systemMenuPath, isLoggedIn, userInfor } = this.props;
@@ -19,6 +20,7 @@ class System extends Component {
                         <Switch>
                             <Route path="/system/user-manage" component={UserManage} />
                             <Route path="/system/test-manage" component={TestManage} />
+                            <Route path="/system/topic-manage" component={TopicManager} />
                             <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                         </Switch>
                     </div>

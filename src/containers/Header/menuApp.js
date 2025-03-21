@@ -10,6 +10,9 @@ export const adminMenu = [
             {
                 name: 'menu.admin.manage.test-add', link: '/system/test-manage'
             },
+            {
+                name: 'menu.admin.manage.topic', link: '/system/topic-manage'
+            },
         ]
     },
 

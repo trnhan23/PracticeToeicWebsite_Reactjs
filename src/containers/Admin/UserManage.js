@@ -87,11 +87,11 @@ class UserManage extends Component {
         const { isPopupOpen, formData } = this.state;
         return (
             <div className="users-container">
-                <div className='title text-center'>Manage users</div>
+                <div className='title text-center'>QUẢN LÝ NGƯỜI DÙNG</div>
                 <div className='mx-1'>
                     <button className='btn btn-primary px-3'
                         onClick={() => this.togglePopup()}
-                    ><i className="fa fa-plus"></i> Add new users
+                    ><i className="fa fa-plus"></i> Thêm người dùng
                     </button>
 
                     {/* Sử dụng Popup component */}
