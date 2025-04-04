@@ -10,7 +10,7 @@ import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
 import axios from "axios";
 import { getAllTopics } from '../../../services/topicService';
-import { createSituationApi } from '../../../services/geminiService';
+import { createSituationApi, createQuestionOrAnswerApi } from '../../../services/geminiService';
 import DetailModal from './DetailModal';
 
 class Situation extends Component {
@@ -23,11 +23,12 @@ class Situation extends Component {
             isTranslatedMessages: {},
             selectedMessage: null,
             isModalOpen: false,
+            isModalOpen: true,
             showHint: false,
             isListening: false,
             blobURL: null,
             audioBlob: null,
-            generatedSituations: {},
+            generatedSituations: null,
             sampleMessages: [],
         };
         this.translateText = this.translateText.bind(this);
@@ -39,8 +40,8 @@ class Situation extends Component {
         const sortedMessages = this.state.sampleMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         this.setState({ messages: sortedMessages });
 
-        await this.createSituation("situation_1");
-        if (this.state.generatedSituations["situation_1"]) {
+        await this.createSituation();
+        if (this.state.generatedSituations) {
             this.createQuestionOrAnswer();
         }
 
@@ -53,7 +54,7 @@ class Situation extends Component {
         } else {
             alert("Trình duyệt của bạn không hỗ trợ nhận diện giọng nói.");
         }
-    }
+    };
 
     getTopic = async () => {
         try {
@@ -187,41 +188,39 @@ class Situation extends Component {
         }
     };
 
-    createSituation = async (id) => {
+    createSituation = async () => {
         try {
             const { topic } = this.state;
             if (!topic || topic.length === 0) {
                 console.error("Không có chủ đề nào để tạo tình huống!");
                 return;
             }
+
             const response = await createSituationApi(topic.title);
             console.log("Chủ đề được tạo:", topic.title);
             console.log("Tình huống được tạo:", response);
 
-            this.setState((prevState) => ({
-                generatedSituations: { ...prevState.generatedSituations, [id]: response.situation }
-            }), () => {
-                // Gọi createQuestionOrAnswer ngay sau khi state cập nhật
-                // this.createQuestionOrAnswer();
-            });
+            this.setState(() => ({
+                generatedSituations: response.situation
+            }));
 
         } catch (error) {
-            console.error("Situation generation error:", error.response?.data || error.message);
+            console.error("Lỗi trong createSituation:", error);
         }
     };
 
     createQuestionOrAnswer = async (userText = null) => {
         try {
             const { messages, generatedSituations } = this.state;
-            let textToSend = userText?.trim() || generatedSituations["situation_1"];
+            let textToSend = userText?.trim() || generatedSituations;
+            console.log("Kiểm tra textToSend:", textToSend);
 
             if (!textToSend) {
-                console.warn("Không có tình huống ban đầu hoặc tin nhắn từ người dùng để gửi!");
+                console.error("Không có tình huống ban đầu hoặc tin nhắn từ người dùng để gửi!");
                 return;
             }
 
             let newMessages = [...messages];
-
             // Nếu user nhập tin nhắn, thêm vào danh sách tin nhắn
             if (userText?.trim()) {
                 newMessages.push({
@@ -231,41 +230,26 @@ class Situation extends Component {
                     createdAt: new Date().toISOString(),
                 });
             }
+            const response = await createQuestionOrAnswerApi(textToSend);
 
-            console.log("Gửi tin nhắn lên API:", textToSend);
-
-            // Gọi API lấy phản hồi từ AI
-            const response = await fetch("http://localhost:9090/api/gemini-questionandanswer", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: textToSend }),
-            });
-
-            if (!response.ok) {
-                console.error("Lỗi API:", response.status, response.statusText);
+            if (!response || !response.result) {
+                console.error("Lỗi API: ", response);
                 return;
             }
 
-            const data = await response.json();
-            if (data.error) {
-                console.error("Lỗi từ API:", data.error);
-                return;
-            }
+            console.log("Kiểm tra createQuestionOrAnswer:", response);
 
-            console.log("Dữ liệu từ API:", data); // Debug kiểm tra API có trả về 2 lần không
-
-            // Cập nhật state chỉ một lần sau khi có dữ liệu từ API
             this.setState(prevState => ({
                 messages: [
-                    ...prevState.messages, // Lấy danh sách tin nhắn hiện tại
+                    ...prevState.messages,
                     {
                         id: prevState.messages.length + 1,
-                        text: data.result || "Không có phản hồi từ AI", // Đề phòng dữ liệu rỗng
+                        text: response.result || "Không có phản hồi từ AI",
                         role: ROLE.AI,
                         createdAt: new Date().toISOString(),
                     }
                 ]
-            }), () => console.log("Tin nhắn mới cập nhật:", this.state.messages));
+            }));
 
         } catch (error) {
             console.error("Lỗi trong createQuestionOrAnswer:", error);
@@ -286,8 +270,8 @@ class Situation extends Component {
                             <div className='content-top'>
                                 <div className='cont left'>
                                     <div className='tle'>Tình huống</div>
-                                    <div className="context" onClick={() => this.createSituation("situation_1")}>
-                                        {this.state.generatedSituations["situation_1"] || (
+                                    <div className="context">
+                                        {this.state.generatedSituations || (
                                             <>
                                                 Chưa có tình huống nào được tạo ra.
                                             </>
@@ -417,4 +401,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Situation);
-

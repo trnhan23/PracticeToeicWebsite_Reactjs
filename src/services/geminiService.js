@@ -8,7 +8,16 @@ const createSituationApi = (topic) => {
     });
 }
 
+const createQuestionOrAnswerApi = (text) => {
+    return axios.post('/api/gemini-questionandanswer', {
+        text: text
+    }, {
+        headers: { "Content-Type": "application/json" }
+    });
+}
+
 export {
     createSituationApi,
+    createQuestionOrAnswerApi,
 
 }
