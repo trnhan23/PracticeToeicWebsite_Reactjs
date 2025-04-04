@@ -152,6 +152,63 @@ class Situation extends Component {
         }
     };
 
+        if (!recordedBlob.blob) {
+            console.error("Không có file âm thanh");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", recordedBlob.blob, "audio.wav");
+
+        try {
+            const response = await axios.post("http://localhost:5050/transcribe/", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            const transcribedText = response.data.text;
+            console.log("Kết quả nhận diện:", transcribedText);
+
+
+            const newMessage = {
+                id: this.state.messages.length + 1,
+                text: transcribedText,
+                role: "R2",
+                createdAt: new Date().toISOString(),
+            };
+
+            this.setState((prevState) => ({
+                messages: [...prevState.messages, newMessage],
+                isListening: false,
+            }));
+
+        } catch (error) {
+            console.error("Lỗi khi gửi file lên API:", error);
+        }
+    };
+
+
+    translateText = async (id, text) => {
+        const translations = {
+            "Hello! How can I assist you today?": "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?",
+            "I need help with my TOEIC test preparation.": "Tôi cần giúp đỡ trong việc luyện thi TOEIC.",
+            "Sure! Which section are you struggling with?": "Chắc chắn rồi! Bạn đang gặp khó khăn ở phần nào?",
+            "Listening part 3 is quite difficult for me.": "Phần nghe số 3 khá khó đối với tôi."
+        };
+
+        this.setState(prevState => {
+            const isTranslated = prevState.isTranslatedMessages[id] || false;
+            return {
+                translatedMessages: {
+                    ...prevState.translatedMessages,
+                    [id]: isTranslated ? text : (translations[text] || "Bản dịch chưa có")
+                },
+                isTranslatedMessages: {
+                    ...prevState.isTranslatedMessages,
+                    [id]: !isTranslated
+                }
+            };
+        });
+    };
     handleSelect = (id) => {
         const selectedMessage = this.state.messages.find(msg => msg.id === id);
 
@@ -162,7 +219,6 @@ class Situation extends Component {
 
         this.setState({ selectedMessage, selectedQuestion: question, isModalOpen: true });
     };
-
     toggleHint = () => {
         this.setState((prevState) => ({ showHint: !prevState.showHint }));
     };
@@ -171,7 +227,6 @@ class Situation extends Component {
         this.setState({ isModalOpen: false, selectedMessage: null });
 
     };
-
     playTextToSpeech = async (text) => {
         try {
             const response = await axios.post(
@@ -284,8 +339,8 @@ class Situation extends Component {
                                         </div>
                                     )}
                                 </div>
-                            </div>
 
+                            </div>
                             <div className='content-bottom'>
                                 {this.state.messages.map(msg => (
                                     <div key={msg.id} className={`mess ${msg.role === ROLE.AI ? "received" : "sent"}`}>
@@ -317,7 +372,7 @@ class Situation extends Component {
                                                     {this.state.translatedMessages[msg.id] || msg.text}
                                                 </div>
 
-                                                {msg.role === ROLE.AI &&
+                                                {msg.role === ROLE.User &&
                                                     <button className="detail-button" onClick={() => this.handleSelect(msg.id)}>
                                                         Chi tiết
                                                     </button>}
@@ -331,7 +386,6 @@ class Situation extends Component {
                                                         onClick={() => this.translateText(msg.id, msg.text)}
                                                         style={{ cursor: 'pointer' }}
                                                     />
-
                                                     <img
                                                         className="option-icon"
                                                         src="https://img.lovepik.com/png/20231005/Cartoon-speaker-player-Volume-Icon-speaker-icons-loudspeaker-players_83590_wh860.png"
@@ -339,13 +393,11 @@ class Situation extends Component {
                                                         onClick={() => this.playTextToSpeech(msg.text)}
                                                         style={{ cursor: 'pointer' }}
                                                     />
-
                                                 </>
                                             )}
                                         </div>
                                         {msg.role === ROLE.User &&
                                             <img className="avatar" src={userInfor.avatar} alt="User" />}
-
                                     </div>
                                 ))}
                                 <div className='advice' onClick={this.toggleHint}>
@@ -360,7 +412,6 @@ class Situation extends Component {
                                     strokeColor="#000000"
                                     backgroundColor="#FF4081"
                                 />
-
                                 <i className={`micro fa-solid fa-microphone ${this.state.isListening ? 'listening' : ''}`}
                                     onClick={() => {
                                         if (this.state.isListening) {
@@ -385,6 +436,7 @@ class Situation extends Component {
                             avatar={userInfor.avatar}
                             situation={generatedSituations}
                             question={selectedQuestion}
+
                         />
                     )
                 }
