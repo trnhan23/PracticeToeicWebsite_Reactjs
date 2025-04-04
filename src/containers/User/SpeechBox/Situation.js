@@ -10,9 +10,9 @@ import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
 import axios from "axios";
 import { getAllTopics } from '../../../services/topicService';
-import { useParams } from "react-router-dom";
-
+import { createSituationApi } from '../../../services/geminiService';
 import DetailModal from './DetailModal';
+
 class Situation extends Component {
     constructor(props) {
         super(props);
@@ -27,21 +27,22 @@ class Situation extends Component {
             isListening: false,
             blobURL: null,
             audioBlob: null,
+            generatedSituations: {},
+            sampleMessages: [],
         };
-
+        this.translateText = this.translateText.bind(this);
     }
 
     async componentDidMount() {
-        this.getTopic();
-        const sampleMessages = [
-            { id: 1, text: "Hello! How can I assist you today?", voice: "voice1.mp3", role: "R3", createdAt: "2024-02-10T09:15:00Z" },
-            { id: 2, text: "I need help with my TOEIC test preparation.", voice: "voice2.mp3", role: "R2", createdAt: "2024-02-10T09:17:30Z" },
-            { id: 3, text: "Sure! Which section are you struggling with?", voice: "voice3.mp3", role: "R3", createdAt: "2024-02-10T09:19:45Z" },
-        ];
+        await this.getTopic();
 
-        const sortedMessages = sampleMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        const sortedMessages = this.state.sampleMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         this.setState({ messages: sortedMessages });
 
+        await this.createSituation("situation_1");
+        if (this.state.generatedSituations["situation_1"]) {
+            this.createQuestionOrAnswer();
+        }
 
         if ("webkitSpeechRecognition" in window) {
             const recognition = new window.webkitSpeechRecognition();
@@ -86,7 +87,6 @@ class Situation extends Component {
     onStop = async (recordedBlob) => {
         this.setState({ blobURL: recordedBlob.blobURL, audioBlob: recordedBlob.blob });
 
-
         if (!recordedBlob.blob) {
             console.error("Không có file âm thanh");
             return;
@@ -102,7 +102,7 @@ class Situation extends Component {
 
             const transcribedText = response.data.text;
             console.log("Kết quả nhận diện:", transcribedText);
-
+            this.createQuestionOrAnswer(transcribedText);
 
             const newMessage = {
                 id: this.state.messages.length + 1,
@@ -121,48 +121,61 @@ class Situation extends Component {
         }
     };
 
-
     translateText = async (id, text) => {
-        const translations = {
-            "Hello! How can I assist you today?": "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?",
-            "I need help with my TOEIC test preparation.": "Tôi cần giúp đỡ trong việc luyện thi TOEIC.",
-            "Sure! Which section are you struggling with?": "Chắc chắn rồi! Bạn đang gặp khó khăn ở phần nào?",
-            "Listening part 3 is quite difficult for me.": "Phần nghe số 3 khá khó đối với tôi."
-        };
+        try {
+            const isTranslated = !!this.state.translatedMessages[id];
+            const sourceLang = isTranslated ? "vi" : "en";
+            const targetLang = isTranslated ? "en" : "vi";
 
-        this.setState(prevState => {
-            const isTranslated = prevState.isTranslatedMessages[id] || false;
-            return {
-                translatedMessages: {
-                    ...prevState.translatedMessages,
-                    [id]: isTranslated ? text : (translations[text] || "Bản dịch chưa có")
-                },
-                isTranslatedMessages: {
-                    ...prevState.isTranslatedMessages,
-                    [id]: !isTranslated
+            const response = await axios.post("http://localhost:9090/api/gemini-translate", {
+                prompt: text,
+                sourceLang,
+                targetLang
+            }, {
+                headers: { "Content-Type": "application/json" }
+            });
+
+            this.setState((prevState) => {
+                const updatedTranslatedMessages = { ...prevState.translatedMessages };
+                if (isTranslated) {
+                    delete updatedTranslatedMessages[id];
+                } else {
+                    updatedTranslatedMessages[id] = response.data.text;
                 }
-            };
-        });
+
+                return { translatedMessages: updatedTranslatedMessages };
+            });
+        } catch (error) {
+            console.error("Translation error:", error.response?.data || error.message);
+        }
     };
+
     handleSelect = (id) => {
         const selectedMessage = this.state.messages.find(msg => msg.id === id);
-        this.setState({ selectedMessage, isModalOpen: true });
-    }
+
+        // Kiểm tra nếu tin nhắn là của AI thì lấy text của AI
+        const question = selectedMessage.role === ROLE.AI
+            ? selectedMessage.text
+            : this.state.messages.find(msg => msg.role === ROLE.AI)?.text || selectedMessage.text;
+
+        this.setState({ selectedMessage, selectedQuestion: question, isModalOpen: true });
+    };
+
     toggleHint = () => {
         this.setState((prevState) => ({ showHint: !prevState.showHint }));
     };
 
-
     closeModal = () => {
         this.setState({ isModalOpen: false, selectedMessage: null });
 
-    }
+    };
+
     playTextToSpeech = async (text) => {
         try {
             const response = await axios.post(
                 "http://localhost:5050/text-to-speech/",
                 { text },
-                { responseType: "blob" } // Nhận dữ liệu dạng blob (file âm thanh)
+                { responseType: "blob" }
             );
 
             const audioBlob = new Blob([response.data], { type: "audio/wav" });
@@ -172,7 +185,92 @@ class Situation extends Component {
         } catch (error) {
             console.error("Lỗi khi gọi API chuyển văn bản thành giọng nói:", error);
         }
-    }
+    };
+
+    createSituation = async (id) => {
+        try {
+            const { topic } = this.state;
+            if (!topic || topic.length === 0) {
+                console.error("Không có chủ đề nào để tạo tình huống!");
+                return;
+            }
+            const response = await createSituationApi(topic.title);
+            console.log("Chủ đề được tạo:", topic.title);
+            console.log("Tình huống được tạo:", response);
+
+            this.setState((prevState) => ({
+                generatedSituations: { ...prevState.generatedSituations, [id]: response.situation }
+            }), () => {
+                // Gọi createQuestionOrAnswer ngay sau khi state cập nhật
+                // this.createQuestionOrAnswer();
+            });
+
+        } catch (error) {
+            console.error("Situation generation error:", error.response?.data || error.message);
+        }
+    };
+
+    createQuestionOrAnswer = async (userText = null) => {
+        try {
+            const { messages, generatedSituations } = this.state;
+            let textToSend = userText?.trim() || generatedSituations["situation_1"];
+
+            if (!textToSend) {
+                console.warn("Không có tình huống ban đầu hoặc tin nhắn từ người dùng để gửi!");
+                return;
+            }
+
+            let newMessages = [...messages];
+
+            // Nếu user nhập tin nhắn, thêm vào danh sách tin nhắn
+            if (userText?.trim()) {
+                newMessages.push({
+                    id: messages.length + 1,
+                    text: userText.trim(),
+                    role: ROLE.USER,
+                    createdAt: new Date().toISOString(),
+                });
+            }
+
+            console.log("Gửi tin nhắn lên API:", textToSend);
+
+            // Gọi API lấy phản hồi từ AI
+            const response = await fetch("http://localhost:9090/api/gemini-questionandanswer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: textToSend }),
+            });
+
+            if (!response.ok) {
+                console.error("Lỗi API:", response.status, response.statusText);
+                return;
+            }
+
+            const data = await response.json();
+            if (data.error) {
+                console.error("Lỗi từ API:", data.error);
+                return;
+            }
+
+            console.log("Dữ liệu từ API:", data); // Debug kiểm tra API có trả về 2 lần không
+
+            // Cập nhật state chỉ một lần sau khi có dữ liệu từ API
+            this.setState(prevState => ({
+                messages: [
+                    ...prevState.messages, // Lấy danh sách tin nhắn hiện tại
+                    {
+                        id: prevState.messages.length + 1,
+                        text: data.result || "Không có phản hồi từ AI", // Đề phòng dữ liệu rỗng
+                        role: ROLE.AI,
+                        createdAt: new Date().toISOString(),
+                    }
+                ]
+            }), () => console.log("Tin nhắn mới cập nhật:", this.state.messages));
+
+        } catch (error) {
+            console.error("Lỗi trong createQuestionOrAnswer:", error);
+        }
+    };
 
     render() {
         const { userInfor } = this.props;
@@ -188,11 +286,12 @@ class Situation extends Component {
                             <div className='content-top'>
                                 <div className='cont left'>
                                     <div className='tle'>Tình huống</div>
-                                    <div className='context'>
-                                        Người yêu dẫn bạn về nhà chơi.
-                                        Thật trớ trêu bố cô, ông Minh là giám đốc một công ty
-                                        Ông hiểu nhầm con gái mình mang ứng viên đi cửa sau.
-                                        Vậy mới có một buổi phỏng vấn cùng nhạc phụ đại nhân tương lại
+                                    <div className="context" onClick={() => this.createSituation("situation_1")}>
+                                        {this.state.generatedSituations["situation_1"] || (
+                                            <>
+                                                Chưa có tình huống nào được tạo ra.
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                                 <div className='cont right'>
@@ -203,7 +302,6 @@ class Situation extends Component {
                                         </div>
                                     )}
                                 </div>
-
                             </div>
 
                             <div className='content-bottom'>
@@ -296,8 +394,6 @@ class Situation extends Component {
                     </div>
 
                 </CustomScrollbars>
-
-                { }
                 {
                     isModalOpen && (
                         <DetailModal
