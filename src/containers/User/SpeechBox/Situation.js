@@ -195,10 +195,7 @@ class Situation extends Component {
                 console.error("Không có chủ đề nào để tạo tình huống!");
                 return;
             }
-
             const response = await createSituationApi(topic.title);
-            console.log("Chủ đề được tạo:", topic.title);
-            console.log("Tình huống được tạo:", response);
 
             this.setState(() => ({
                 generatedSituations: response.situation
@@ -258,7 +255,7 @@ class Situation extends Component {
 
     render() {
         const { userInfor } = this.props;
-        const { isModalOpen, selectedMessage, topic } = this.state;
+        const { isModalOpen, selectedMessage, topic, generatedSituations } = this.state;
 
         return (
             <React.Fragment>
@@ -319,7 +316,7 @@ class Situation extends Component {
                                                     {this.state.translatedMessages[msg.id] || msg.text}
                                                 </div>
 
-                                                {msg.role === ROLE.User &&
+                                                {msg.role === ROLE.AI &&
                                                     <button className="detail-button" onClick={() => this.handleSelect(msg.id)}>
                                                         Chi tiết
                                                     </button>}
@@ -384,6 +381,8 @@ class Situation extends Component {
                             isOpen={isModalOpen}
                             onClose={this.closeModal}
                             message={selectedMessage}
+                            avatar={userInfor.avatar}
+                            situation={generatedSituations}
                         />
                     )
                 }
