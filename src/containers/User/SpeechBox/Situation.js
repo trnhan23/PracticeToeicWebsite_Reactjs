@@ -30,6 +30,7 @@ class Situation extends Component {
             audioBlob: null,
             generatedSituations: null,
             sampleMessages: [],
+            selectedQuestion: null
         };
         this.translateText = this.translateText.bind(this);
     }
@@ -255,7 +256,7 @@ class Situation extends Component {
 
     render() {
         const { userInfor } = this.props;
-        const { isModalOpen, selectedMessage, topic, generatedSituations } = this.state;
+        const { isModalOpen, selectedMessage, topic, generatedSituations, selectedQuestion } = this.state;
 
         return (
             <React.Fragment>
@@ -383,6 +384,7 @@ class Situation extends Component {
                             message={selectedMessage}
                             avatar={userInfor.avatar}
                             situation={generatedSituations}
+                            question={selectedQuestion}
                         />
                     )
                 }
