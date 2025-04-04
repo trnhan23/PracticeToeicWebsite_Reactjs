@@ -14,6 +14,7 @@
 .modal-content {
     background: white;
     width: 50%;
+    // max-width: 800px;
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -62,7 +63,9 @@
 .message-box {
     background: #ffffff;
     padding: 10px;
+    /* margin-left: 35px; */
     border-radius: 10px;
+    /* width: 100%; */
     text-align: left;
     margin-bottom: 15px;
     border: 1px solid #c1c1c1;

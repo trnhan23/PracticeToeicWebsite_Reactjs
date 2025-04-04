@@ -33,6 +33,7 @@ const DetailModal = ({ isOpen, onClose, message, avatar, situation, question }) 
             setLoading(false);
         }
     };
+
     if (!isOpen || !message) return null;
 
     return (
