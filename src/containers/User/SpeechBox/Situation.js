@@ -10,7 +10,7 @@ import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
 import axios from "axios";
 import { getAllTopics } from '../../../services/topicService';
-import { createSituationApi, createQuestionOrAnswerApi } from '../../../services/geminiService';
+import { createSituationApi, createQuestionOrAnswerApi, createQuestionOrAnswerApi1 } from '../../../services/geminiService';
 import DetailModal from './DetailModal';
 
 class Situation extends Component {
@@ -30,7 +30,7 @@ class Situation extends Component {
             audioBlob: null,
             generatedSituations: null,
             sampleMessages: [],
-            selectedQuestion: null
+            selectedQuestion: null,
         };
         this.translateText = this.translateText.bind(this);
     }
@@ -228,7 +228,16 @@ class Situation extends Component {
                     createdAt: new Date().toISOString(),
                 });
             }
-            const response = await createQuestionOrAnswerApi(textToSend);
+            let questionOfAI = messages[messages.length - 1];
+            console.log("Kiểm tra textToSend:", textToSend);
+            console.log("Kiểm tra generatedSituations:", generatedSituations);
+            console.log("Kiểm tra messages:", messages[messages.length - 1]);
+            let response = "";
+            if (questionOfAI === null || questionOfAI === undefined) {
+                response = await createQuestionOrAnswerApi(textToSend);
+            } else {
+                response = await createQuestionOrAnswerApi1(textToSend, generatedSituations, questionOfAI);
+            }
 
             if (!response || !response.result) {
                 console.error("Lỗi API: ", response);
@@ -317,7 +326,7 @@ class Situation extends Component {
                                                     {this.state.translatedMessages[msg.id] || msg.text}
                                                 </div>
 
-                                                {msg.role === ROLE.AI &&
+                                                {msg.role === ROLE.User &&
                                                     <button className="detail-button" onClick={() => this.handleSelect(msg.id)}>
                                                         Chi tiết
                                                     </button>}
