@@ -10,7 +10,11 @@ import logo from "../../../assets/logo.png";
 import { ReactMic } from "react-mic";
 import axios from "axios";
 import { getAllTopics } from '../../../services/topicService';
-import { createSituationApi, createQuestionOrAnswerApi, createQuestionOrAnswerApi1 } from '../../../services/geminiService';
+import {
+    createSituationApi,
+    createQuestionOrAnswerApi,
+    createQuestionOrAnswerApi1
+} from '../../../services/geminiService';
 import DetailModal from './DetailModal';
 
 class Situation extends Component {
@@ -242,6 +246,8 @@ class Situation extends Component {
             if (!response || !response.result) {
                 console.error("Lỗi API: ", response);
                 return;
+            } else{
+                await this.playTextToSpeech(response.result);
             }
 
             console.log("Kiểm tra createQuestionOrAnswer:", response);
