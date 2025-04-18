@@ -246,8 +246,8 @@ class Situation extends Component {
             if (!response || !response.result) {
                 console.error("Lỗi API: ", response);
                 return;
-            } else{
-                await this.playTextToSpeech(response.result);
+            } else {
+                // await this.playTextToSpeech(response.result);
             }
 
             console.log("Kiểm tra createQuestionOrAnswer:", response);

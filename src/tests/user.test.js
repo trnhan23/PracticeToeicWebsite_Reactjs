@@ -5,11 +5,6 @@ import {
     getAllUsers,
     createNewUserService,
     deleteUserService,
-    editUserService,
-    getAllCode,
-    verifyEmailAccount,
-    sendCode,
-    checkSendCode
 } from "../services/userService";
 
 const mock = new axiosMockAdapter(axios);
