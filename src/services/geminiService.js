@@ -1,5 +1,12 @@
 import axios from "../axios"
 
+const handleGetGeminiApi = (prompt) => {
+    return axios.post('/api/gemini', {
+        prompt: prompt
+    }, {
+        headers: { "Content-Type": "application/json" }
+    });
+}
 const createSituationApi = (topic) => {
     return axios.post('/api/gemini-situation', {
         topic: topic
@@ -30,5 +37,6 @@ export {
     createSituationApi,
     createQuestionOrAnswerApi,
     createQuestionOrAnswerApi1,
+    handleGetGeminiApi,
 
 }

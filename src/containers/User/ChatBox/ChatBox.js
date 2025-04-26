@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatBox.scss";
+import { handleGetGeminiApi } from "../../../services/geminiService";
+import { toast } from "react-toastify";
 
-const ChatBox = ({resetTrigger}) => {
+const ChatBox = ({ resetTrigger }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const messageEndRef = useRef(null);
@@ -49,23 +51,27 @@ const ChatBox = ({resetTrigger}) => {
     };
 
     const fetchAIResponse = async (userInput) => {
-        // Giả lập API bằng timeout
-        setTimeout(() => {
-            const aiMessage = {
-                id: Date.now() + 1,
-                sender: "AI",
-                text: `Đây là phản hồi từ AI cho: "${userInput}"`, // sau này chỉ cần gắn data trả về từ API
-            };
+        const response = await handleGetGeminiApi(userInput);
+        console.log(response);
+        if (!response || response.errCode !== 0) {
+            toast.error("Có lỗi xảy ra, vui lòng thử lại sau!");
+            return;
+        }
 
-            const updatedMessages = [...messages, {
-                id: Date.now(),
-                sender: "Bạn",
-                text: userInput,
-            }, aiMessage];
+        const aiMessage = {
+            id: Date.now() + 1,
+            sender: "AI",
+            text: `${response.response}`,
+        };
 
-            setMessages(updatedMessages);
-            saveMessagesToStorage(updatedMessages);
-        }, 1000); // giả lập chờ 1 giây
+        const updatedMessages = [...messages, {
+            id: Date.now(),
+            sender: "Bạn",
+            text: userInput,
+        }, aiMessage];
+
+        setMessages(updatedMessages);
+        saveMessagesToStorage(updatedMessages);
     };
 
     const handleInputChange = (e) => {

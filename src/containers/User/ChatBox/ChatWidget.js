@@ -4,7 +4,7 @@ import "./ChatWidget.scss";
 import logo from "../../../assets/logo.png";
 
 const ChatWidget = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [resetTrigger, setResetTrigger] = useState(false);
 
     const handleOpen = () => {
