@@ -26,6 +26,7 @@ import Profile from './User/Profile/Profile.js';
 import ResetPassword from './Auth/ResetPassword.js';
 import SpeechBox from './User/SpeechBox/SpeechBox.js';
 import Situation from './User/SpeechBox/Situation.js';
+import ChatWidget from './User/ChatBox/ChatWidget.js';
 
 class App extends Component {
 
@@ -76,6 +77,7 @@ class App extends Component {
                                 <Route path={path.SYSTEM} component={userIsAuthenticated(System)} />
                             </Switch>
                         </span>
+                        <ChatWidget />
                         <ToastContainer
                             position="bottom-right"
                             autoClose={5000}
@@ -93,7 +95,6 @@ class App extends Component {
                             theme="light"
                             transition={Zoom}
                         />
-
                     </div>
                 </Router>
             </Fragment>
