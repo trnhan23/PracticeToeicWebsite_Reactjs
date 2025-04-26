@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown"; // Thêm dòng này
+import ReactMarkdown from "react-markdown";
 import "./ChatBox.scss";
 import { handleGetGeminiApi } from "../../../services/geminiService";
 import { toast } from "react-toastify";

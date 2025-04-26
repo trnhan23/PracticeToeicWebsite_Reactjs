@@ -1,7 +1,7 @@
 import axios from "../axios"
 
 const handleGetGeminiApi = (prompt) => {
-    return axios.post('/api/gemini', {
+    return axios.post('/api/gemini-chatbox', {
         prompt: prompt
     }, {
         headers: { "Content-Type": "application/json" }
