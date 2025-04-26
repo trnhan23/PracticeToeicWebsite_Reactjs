@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown"; // Thêm dòng này
 import "./ChatBox.scss";
 import { handleGetGeminiApi } from "../../../services/geminiService";
 import { toast } from "react-toastify";
-
+import logo from "../../../assets/logo.png";
 const ChatBox = ({ resetTrigger }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
+    const [userInfo, setUserInfo] = useState({});
     const messageEndRef = useRef(null);
     const inputRef = useRef(null);
 
     useEffect(() => {
+        const storedUserInfo = JSON.parse(localStorage.getItem("persist:user"));
+        setUserInfo(JSON.parse(storedUserInfo.userInfor));
+
         const storedMessages = localStorage.getItem("chatMessages");
         if (storedMessages) {
             setMessages(JSON.parse(storedMessages));
@@ -46,13 +51,13 @@ const ChatBox = ({ resetTrigger }) => {
             inputRef.current.style.height = "auto";
         }
 
-        // Giả lập gọi API nhận tin từ AI
         await fetchAIResponse(input.trim());
     };
 
     const fetchAIResponse = async (userInput) => {
         const response = await handleGetGeminiApi(userInput);
         console.log(response);
+
         if (!response || response.errCode !== 0) {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau!");
             return;
@@ -64,11 +69,15 @@ const ChatBox = ({ resetTrigger }) => {
             text: `${response.response}`,
         };
 
-        const updatedMessages = [...messages, {
-            id: Date.now(),
-            sender: "Bạn",
-            text: userInput,
-        }, aiMessage];
+        const updatedMessages = [
+            ...messages,
+            {
+                id: Date.now(),
+                sender: "Bạn",
+                text: userInput,
+            },
+            aiMessage,
+        ];
 
         setMessages(updatedMessages);
         saveMessagesToStorage(updatedMessages);
@@ -92,14 +101,28 @@ const ChatBox = ({ resetTrigger }) => {
             <div className="chatbox-messages">
                 {messages.length > 0 ? (
                     messages.map((msg) => (
-                        <div key={msg.id} className={`chatbox-message ${msg.sender === "AI" ? "ai" : "user"}`}>
-                            <strong>{msg.sender}:</strong> {msg.text}
+                        <div key={msg.id} className={`chatbox-message-wrapper ${msg.sender === "AI" ? "ai" : "user"}`}>
+                            {msg.sender === "AI" && (
+                                <div className="chatbox-avatar">
+                                    <img className="avatar" src={logo} alt="AI" />
+                                </div>
+                            )}
+                            <div className={`chatbox-message ${msg.sender === "AI" ? "ai" : "user"}`}>
+                                {msg.sender === "AI" ? (
+                                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                                ) : (
+                                    <span>{msg.text}</span>
+                                )}
+                            </div>
+                            {msg.sender !== "AI" && (
+                                <div className="chatbox-avatar">
+                                    <img className="avatar" src={userInfo.avatar} alt="User" />
+                                </div>
+                            )}
                         </div>
                     ))
                 ) : (
-                    <div className="chatbox-empty">
-                        Bạn cần giúp gì?
-                    </div>
+                    <div className="chatbox-empty">Bạn cần giúp gì?</div>
                 )}
                 <div ref={messageEndRef} />
             </div>
