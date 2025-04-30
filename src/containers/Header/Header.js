@@ -60,7 +60,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        processLogout: () => dispatch(actions.processLogout()),
+        processLogout: () => {
+            localStorage.clear();
+            dispatch(actions.processLogout());
+        },
     };
 };
 

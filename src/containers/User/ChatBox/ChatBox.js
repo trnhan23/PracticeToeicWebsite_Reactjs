@@ -116,7 +116,7 @@ const ChatBox = ({ resetTrigger }) => {
                             </div>
                             {msg.sender !== "AI" && (
                                 <div className="chatbox-avatar">
-                                    <img className="avatar" src={userInfo.avatar} alt="User" />
+                                    <img className="avatar" src={userInfo !== null ? userInfo.avatar : logo} alt="User" />
                                 </div>
                             )}
                         </div>
