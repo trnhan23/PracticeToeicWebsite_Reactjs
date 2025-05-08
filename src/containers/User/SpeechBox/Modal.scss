@@ -14,12 +14,19 @@
 .modal-content {
     background: white;
     width: 50%;
-    // max-width: 800px;
+    max-width: 800px;
+    /* Bạn có thể thay đổi kích thước này tùy ý */
+    height: auto;
+    /* Chiều cao tự động để hiển thị hết nội dung */
+    max-height: 80vh;
+    /* Giới hạn chiều cao tối đa của modal để tránh chiếm hết màn hình */
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     position: relative;
     text-align: center;
+    overflow: hidden;
+    /* Ẩn phần ngoài giới hạn của modal */
 }
 
 .close-button {
@@ -42,6 +49,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
+    /* Cho phép cuộn dọc nếu cần */
+    max-height: 70vh;
+    /* Giới hạn chiều cao của phần body (80% chiều cao màn hình trừ đi các phần header) */
 }
 
 .avatar11 {
@@ -63,12 +74,14 @@
 .message-box {
     background: #ffffff;
     padding: 10px;
-    /* margin-left: 35px; */
     border-radius: 10px;
-    /* width: 100%; */
     text-align: left;
     margin-bottom: 15px;
     border: 1px solid #c1c1c1;
+    max-height: 150px;
+    /* Giới hạn chiều cao nếu cần */
+    overflow-y: auto;
+    /* Cho phép cuộn nếu nội dung dài */
 }
 
 .option-icon {
@@ -130,12 +143,15 @@ p.textmessage,
 }
 
 .feedback {
-    height: fit-content;
     background: #ffffff;
     padding: 10px;
     border-radius: 10px;
     text-align: left;
     border: 1px solid #c1c1c1;
+    max-height: 200px;
+    /* Giới hạn chiều cao nếu cần */
+    overflow-y: auto;
+    /* Cho phép cuộn nếu nội dung dài */
 }
 
 strong {

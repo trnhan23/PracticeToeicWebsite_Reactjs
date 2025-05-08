@@ -17,22 +17,42 @@ const DetailModal = ({ isOpen, onClose, message, avatar, situation, question }) 
         console.log("Question:", question);
         console.log("Answer:", answer);
         try {
-            const response = await axios.post("http://localhost:9090/api/gemini-judge-answer", {
-                situation,
-                question,
-                answer
-            }, {
-                headers: { "Content-Type": "application/json" }
-            });
+            // Gửi yêu cầu đến cả hai API đồng thời
+            const [responseJudge, responseFluent] = await Promise.all([
+                axios.post("http://localhost:9090/api/gemini-judge-answer", {
+                    situation,
+                    question,
+                    answer
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                }),
+                axios.post("http://localhost:9090/api/gemini-fluent", {
+                    text: message.text
+                }, {
+                    headers: { "Content-Type": "application/json" }
+                })
+            ]);
 
-            setJudgment(response.data);
+            console.log("Response Judge:", responseJudge.data);
+            console.log("Response Fluent:", responseFluent.data);
+
+
+            // Cập nhật lại state với dữ liệu từ cả hai API
+            const { fluencyScore, comment } = responseFluent.data;
+
+            setJudgment({
+                ...responseJudge.data,
+                fluentCorrect: comment, // Cập nhật comment từ API gemini-fluent
+                fluencyScore: fluencyScore, // Cập nhật fluencyScore từ API gemini-fluent
+            });
         } catch (error) {
-            console.error("Error calling API:", error);
+            console.error("Error calling APIs:", error);
             setJudgment({ error: "Không thể đánh giá câu trả lời." });
         } finally {
             setLoading(false);
         }
     };
+
 
     if (!isOpen || !message) return null;
 
@@ -65,6 +85,9 @@ const DetailModal = ({ isOpen, onClose, message, avatar, situation, question }) 
                                 <p className="textmessage">{judgment?.contextCorrect || "Chưa có"}</p>
                                 <strong>Ngữ pháp:</strong>
                                 <p className="textmessage">{judgment?.grammarCorrect || "Chưa có"}</p>
+                                <strong>Độ lưu loát:</strong>
+                                <p className="textmessage highlight">{judgment?.fluencyScore || "Chưa có"}/100</p>
+                                <p className="textmessage">{judgment?.fluentCorrect || "Chưa có"}</p>
                             </div>
                         </div>
                     </div>
