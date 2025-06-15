@@ -32,11 +32,21 @@ const createQuestionOrAnswerApi1 = (text, situation, question) => {
     });
 }
 
+const getSuggestedAnswer = (situation, question) => {
+    return axios.post('/api/gemini-suggested-answer', {
+        situation: situation,
+        question: question
+    }, {
+        headers: { "Content-Type": "application/json" }
+    });
+}
+
 
 export {
     createSituationApi,
     createQuestionOrAnswerApi,
     createQuestionOrAnswerApi1,
     handleGetGeminiApi,
-
+    getSuggestedAnswer,
+    
 }

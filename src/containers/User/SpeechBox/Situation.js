@@ -13,7 +13,8 @@ import { getAllTopics } from '../../../services/topicService';
 import {
     createSituationApi,
     createQuestionOrAnswerApi,
-    createQuestionOrAnswerApi1
+    createQuestionOrAnswerApi1,
+    getSuggestedAnswer
 } from '../../../services/geminiService';
 import DetailModal from './DetailModal';
 
@@ -29,6 +30,8 @@ class Situation extends Component {
             isModalOpen: false,
             isModalOpen: true,
             showHint: false,
+            hint: "Không có gợi ý",
+            questionHint: null,
             isListening: false,
             blobURL: null,
             audioBlob: null,
@@ -168,8 +171,30 @@ class Situation extends Component {
     };
 
     toggleHint = () => {
-        this.setState((prevState) => ({ showHint: !prevState.showHint }));
+        this.setState((prevState) => ({ showHint: !prevState.showHint }), async () => {
+            if (this.state.showHint) {
+                const situation = this.state.selectedSituation || this.state.generatedSituations;
+                const question = this.state.questionHint;
+
+                if (!situation || !question) {
+                    console.error("Thiếu dữ liệu!");
+                    return;
+                }
+
+                try {
+                    let response = await getSuggestedAnswer(situation, question);
+                    console.log("Gợi ý câu trả lời:", response);
+                    this.setState({
+                        hint: response || "Không có gợi ý"
+                    })
+                } catch (error) {
+                    console.error("Lỗi gọi API:", error);
+                }
+            }
+        });
     };
+
+
 
     closeModal = () => {
         this.setState({ isModalOpen: false, selectedMessage: null });
@@ -253,6 +278,7 @@ class Situation extends Component {
             console.log("Kiểm tra createQuestionOrAnswer:", response);
 
             this.setState(prevState => ({
+                questionHint: response.result || "Không có câu hỏi gợi ý",
                 messages: [
                     ...prevState.messages,
                     {
@@ -271,7 +297,7 @@ class Situation extends Component {
 
     render() {
         const { userInfor } = this.props;
-        const { isModalOpen, selectedMessage, topic, generatedSituations, selectedQuestion } = this.state;
+        const { isModalOpen, selectedMessage, topic, generatedSituations, selectedQuestion, hint } = this.state;
 
         return (
             <React.Fragment>
@@ -295,7 +321,7 @@ class Situation extends Component {
                                     <div className='tle'>Gợi ý</div>
                                     {this.state.showHint && (
                                         <div className='context'>
-                                            My name is Hien
+                                            {hint || "Không có gợi ý"}
                                         </div>
                                     )}
                                 </div>

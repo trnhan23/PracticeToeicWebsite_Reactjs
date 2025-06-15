@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './HomeCenter.scss'
+import { path } from '../../../utils';
+import { push } from "connected-react-router";
 
 class HomeCenter extends Component {
+
+    handleSubmit = () => {
+        this.props.navigate(path.TOEIC_EXAM);
+    };
 
     render() {
         return (
@@ -13,7 +19,7 @@ class HomeCenter extends Component {
                             <div className='title1'>HỌC TIẾNG ANH MỌI LÚC MỌI NƠI!</div>
                             <div className='title2'>Website cung cấp những kiến thức cần thiết về ngữ pháp, topic từ vựng theo chủ đề. Ngoài ra bạn còn có thể thi thử online
                                 để đánh giá năng lực của bản thân.</div>
-                            <button>Luyện thi ngay!</button>
+                            <button onClick={this.handleSubmit}>Luyện thi ngay!</button>
                         </div>
                     </div>
                     <div className="services">
@@ -81,6 +87,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        navigate: (path) => dispatch(push(path)),
     };
 };
 
