@@ -186,7 +186,7 @@ class Statistic extends Component {
                                 <div className='nav-bar'>
                                     <div className='cont'>Độ chính xác</div>
                                     <div className='cont'>(#đúng/#tổng)</div>
-                                    <div className='number'>{info.accuracy * 100}%</div>
+                                    <div className='number'>{(info.accuracy * 100).toFixed(2)}%</div>
                                 </div>
                                 <div className='nav-bar'>
                                     <div className='cont'>Thời gian trung bình</div>
